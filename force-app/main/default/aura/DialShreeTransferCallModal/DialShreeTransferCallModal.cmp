@@ -1,0 +1,115 @@
+<aura:component controller="DialShreeApi"
+    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,c:panel"
+    access="global">
+    <aura:attribute name="externalNumber" type="Integer" />
+    <aura:attribute name="internaloptions" type="List" default="[]" />
+    <aura:attribute name="agentoptions" type="List" default="[]" />
+    <aura:attribute name="consult" type="boolean" default="false"/>
+    <aura:attribute name="isAgentDoneRendering" type="boolean" default="false"/>
+    <aura:attribute name="isInternalDoneRendering" type="boolean" default="false"/>
+    <aura:attribute name="dialOver" type="boolean" default="false"/>
+    <aura:attribute name="agent" type="String" default=""/>
+    <aura:attribute name="internalGroup" type="String" default=""/>
+    <aura:attribute name="isPark" type="boolean" default="true" />
+    <aura:attribute name="campaignId" type="String" />
+    <aura:attribute name="isBlindButtonActive" type="Boolean" default="false" />
+    <aura:attribute name="isDialButtonActive" type="Boolean" default="false" />
+    <aura:attribute name="isParkButtonActive" type="Boolean" default="false" />
+    <aura:attribute name="isGrabButtonActive" type="Boolean" default="false" />
+    <aura:attribute name="isInternalButtonActive" type="Boolean" default="false" />
+    <aura:attribute name="wapperApiObj" type="Object" />
+    <aura:attribute name="baseUrl" type="String"/>
+    <aura:attribute name="dialUser" type="String"/>
+    <aura:attribute name="dialPwd" type="String"/>
+    <aura:attribute name="isDoneRendering" type="Boolean" default="false"/>
+    <aura:attribute name="isGrabDoneRendering" type="Boolean" default="false"/>
+    <aura:attribute name="isHangXferDoneRendering" type="Boolean" default="false"/>
+    <aura:attribute name="spinner" type="boolean" default="false" />
+
+    <aura:attribute name="state" type="String" />
+    <aura:attribute name="recordName" type="String" />
+    <aura:attribute name="phone" type="String" />
+    <aura:attribute name="title" type="String" />
+    <aura:attribute name="account" type="Object" />
+    <aura:attribute name="presence" type="String" description="Could be Available, Busy or Pause" />
+    <aura:attribute name="stateId" type="String" />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="countryCode" type="String" description="Country code" />
+    <aura:attribute name="tickerTime" type="Object" description="ticker start time"/>
+    <aura:attribute name="callInitiatePark" type="boolean"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <!-- <lightning:overlayLibrary aura:id="overlayLib" /> -->
+    <div class="slds-grid slds-wrap slds-p-around_x-small">
+        <aura:if isTrue="{!v.spinner}">
+            <div class="loader-wrapper">
+                <div class="throbber-loader"></div>
+            </div>
+            <aura:set attribute="else">
+                <div class="slds-col slds-size_6-of-12 slds-m-bottom_x-small slds-m-right_medium">
+                    <span>
+                        <lightning:input type="text" label="External number" name="externalnumber"
+                            placeholder="Transfer call to" class="slds-p-right_x-small" value="{!v.externalNumber}" />
+                        </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12">
+                    <span>
+                        <lightning:combobox aura:id="selectItem" name="internalTransfer" label="Internal transfer"
+                            placeholder="" class="slds-m-right_x-small" value="" options="{! v.internaloptions }"
+                            onchange="{!c.handleTransferGroup}" onfocus="{!c.handletransGroupList}" /></span>
+                </div>
+                <div class="slds-col slds-size_6-of-12">
+                    <span>
+                        <lightning:combobox aura:id="selectItemAgent" name="agentTransfer" label="Agent transfer"
+                            placeholder="" class="slds-m-right_x-small" value="" options="{! v.agentoptions }"
+                            onchange="{!c.handleTransferAgent}" onfocus="{!c.handletransAgentList}" /></span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-m-top_medium slds-align_absolute-center">
+                    <lightning:input type="checkbox" label="CONSULTATIVE" name="consultative" checked="{!v.consult}" />
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-m-top_medium slds-align_absolute-center">
+                    <lightning:input type="checkbox" label="DIAL OVERRIDE" name="dialoverride"
+                        checked="{!v.dialOver}" />
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-m-top_medium">
+                    <lightning:buttonGroup class="slds-size_12-of-12">
+                        <lightning:button variant="brand" class="slds-col slds-size_3-of-12 button-color"
+                            label="Blind Transfer" onclick="{!c.handleBlind}" disabled="{!v.isBlindButtonActive}" />
+                        <lightning:button variant="brand" class="slds-col slds-size_3-of-12 button-color"
+                            label="Dial with customer" onclick="{!c.handleDialCustom}"
+                            disabled="{!v.isDialButtonActive}" />
+                        <aura:if isTrue="{!v.isPark}">
+                            <lightning:button variant="brand" class="slds-col slds-size_3-of-12 button-color"
+                                label="Park customer dial" onclick="{!c.handleParkDial}"
+                                disabled="{!v.isParkButtonActive}" />
+                            <aura:set attribute="else">
+                                <lightning:button variant="brand" class="slds-col slds-size_3-of-12 button-color"
+                                    label="Grab customer dial" onclick="{!c.handleGrabDial}"
+                                    disabled="{!v.isGrabButtonActive}" />
+                            </aura:set>
+                        </aura:if>
+                        <lightning:button variant="brand" class="slds-col slds-size_3-of-12 button-color"
+                            label="Internal transfer" onclick="{!c.handleInternal}"
+                            disabled="{!v.isInternalButtonActive}" />
+                    </lightning:buttonGroup>
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-m-top_medium">
+                    <lightning:buttonGroup class="slds-size_12-of-12">
+                        <lightning:button variant="destructive" class="slds-col slds-size_4-of-12 d-button-color"
+                            label="Leave 3 way call" onclick="{!c.handleLeaveThreeWay}" />
+                        <lightning:button variant="destructive" class="slds-col slds-size_4-of-12 d-button-color"
+                            label="Hangup Xfer line" onclick="{!c.handleHangupXfer}" />
+                        <lightning:button variant="destructive" class="slds-col slds-size_4-of-12 d-button-color"
+                            label="Hangup both line" onclick="{!c.handleHangupBoth}" />
+                    </lightning:buttonGroup>
+                </div>
+            </aura:set>
+        </aura:if>
+        <div class="footer-modal">           
+            <lightning:button variant="neutral" class="close-btn" name="close" label="Close"
+                onclick="{!c.handleClose}" />
+                <!-- <c:ticker tickerTime="{!v.tickerTime}"/> -->
+        </div>
+    </div>
+</aura:component>

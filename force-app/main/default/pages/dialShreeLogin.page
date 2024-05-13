@@ -1,0 +1,83 @@
+<!--
+Copyright 2016 salesforce.com, inc. All rights reserved. 
+
+Use of this software is subject to the salesforce.com Developerforce Terms of Use and other applicable terms that salesforce.com may make available, as may be amended from time to time. You may not decompile, reverse engineer, disassemble, attempt to derive the source code of, decrypt, modify, or create derivative works of this software, updates thereto, or any part thereof. You may not use the software to engage in any development activity that infringes the rights of a third party, including that which interferes with, damages, or accesses in an unauthorized manner the servers, networks, or other properties or services of salesforce.com or any third party.
+
+WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL SALESFORCE.COM HAVE ANY LIABILITY FOR ANY DAMAGES, INCLUDING BUT NOT LIMITED TO, DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE, OR CONSEQUENTIAL DAMAGES, OR DAMAGES BASED ON LOST PROFITS, DATA OR USE, IN CONNECTION WITH THE SOFTWARE, HOWEVER CAUSED AND, WHETHER IN CONTRACT, TORT OR UNDER ANY OTHER THEORY OF LIABILITY, WHETHER OR NOT YOU HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+-->
+
+<apex:page showHeader="false" sidebar="false" controller="DialShreeApi">
+    <apex:includeLightning />
+       <script src="{!URLFOR($Resource.openCTIJS)}"></script>
+    
+    <div id="lightning"></div>
+    <script type="text/javascript">
+        $Lightning.use("DialShreeCTI2:dialShreeAdapterOut", function () {
+            $Lightning.createComponent("DialShreeCTI2:dialShreeAdapter", {},
+                "lightning",
+                function (component) {
+                    $A.eventService.addHandler({ "event": "DialShreeCTI2:renderFieldEvent", "handler" : visualForceFunction});
+                }
+            );
+        });
+    </script>
+
+    <div id="pageBlockId">
+        <apex:pageBlock >
+            <apex:iframe src="{!apiMeta.Base_Url__c}{!apiMeta.Login__c}&VD_login={!dialCs.Dialshree_User__c}&phone_login={!dialCs.Dialshree_User__c}&phone_pass={!dialCs.Dialshree_Password__c}&VD_pass={!dialCs.Dialshree_Password__c}"
+            scrolling="no" frameborder="0" id="theIframe" />
+        </apex:pageBlock>
+    </div>
+
+    <script>
+        //clear session storage onload of window
+       
+       window.onload = function () {
+            sessionStorage.clear();
+        }
+        document.getElementById('lightning').style.display = "none";
+        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+        var eventer = window[eventMethod];
+        var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+        var visualForceFunction = function(event){
+            var myEventData = event.getParam("userLogged");
+            
+            if(myEventData === "LOGOUT"){
+                setTimeout(()=>{
+                    document.getElementById('lightning').style.display = "none";
+                    document.getElementById('pageBlockId').style.display = "block";
+                }, 3000)
+            }
+        };
+
+        // Listen to message from child window
+        eventer(messageEvent, function (e) {
+            if (typeof e.data == "object") {
+                var d = e.data;
+                var phone;
+                var agent_user;
+                var lead_id;
+                var logged_in;
+                if (d.hasOwnProperty("phone")) {
+                    phone = d.phone;
+                }
+                if (d.hasOwnProperty("agent_user")) {
+                    agent_user = d.agent_user;
+                }
+                if (d.hasOwnProperty("id")) {
+                    lead_id = d.id;
+                }
+                if (d.hasOwnProperty("logged_in")) {
+                    logged_in = d.logged_in;
+                }
+                if(agent_user != undefined){
+                    if (agent_user.length > 0 && logged_in) {
+                        document.getElementById('pageBlockId').style.display = "none";
+                        document.getElementById('lightning').style.display = "block";
+                        sforce.opencti.enableClickToDial();
+                    }
+                }              
+            }
+        }, false);
+    </script>
+</apex:page>

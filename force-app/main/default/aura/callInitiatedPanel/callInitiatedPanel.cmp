@@ -1,0 +1,84 @@
+<!--
+Copyright 2016 salesforce.com, inc. All rights reserved. 
+
+Use of this software is subject to the salesforce.com Developerforce Terms of Use and other applicable terms that salesforce.com may make available, as may be amended from time to time. You may not decompile, reverse engineer, disassemble, attempt to derive the source code of, decrypt, modify, or create derivative works of this software, updates thereto, or any part thereof. You may not use the software to engage in any development activity that infringes the rights of a third party, including that which interferes with, damages, or accesses in an unauthorized manner the servers, networks, or other properties or services of salesforce.com or any third party.
+
+WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL SALESFORCE.COM HAVE ANY LIABILITY FOR ANY DAMAGES, INCLUDING BUT NOT LIMITED TO, DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE, OR CONSEQUENTIAL DAMAGES, OR DAMAGES BASED ON LOST PROFITS, DATA OR USE, IN CONNECTION WITH THE SOFTWARE, HOWEVER CAUSED AND, WHETHER IN CONTRACT, TORT OR UNDER ANY OTHER THEORY OF LIABILITY, WHETHER OR NOT YOU HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+-->
+
+<aura:component
+    description="panel that is shown on dialing, incoming or transferring calls before being connected that displays basic contact info for the call."
+    implements="c:panel" controller="DialShreeApi" access="global">
+    <aura:attribute name="state" type="String" />
+    <aura:attribute name="label" type="String" />
+    <aura:attribute name="recordName" type="String" />
+    <aura:attribute name="Isincoming" type="boolean" />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="account" type="Object" />
+    <aura:attribute name="title" type="String" />
+    <aura:attribute name="phone" type="String" />
+    <aura:attribute name="presence" type="String" description="Could be Available, Busy or Pause" />
+    <aura:attribute name="isPark" type="boolean" default="true" />
+    <aura:attribute name="campaignId" type="String" />
+    <aura:attribute name="wapperApiObj" type="Object" />
+    <aura:attribute name="baseUrl" type="String" />
+    <aura:attribute name="dialUser" type="String" />
+    <aura:attribute name="dialPwd" type="String" />
+    <aura:attribute name="stateId" type="String" />
+    <aura:attribute name="countryCode" type="String" description="Country code" />
+    <aura:attribute name="tickerTime" type="Object" description="ticker start time"/>
+    <aura:attribute name="isDoneRendering" type="Boolean" default="false"/>
+    <aura:attribute name="isDoneGrabRendering" type="Boolean" default="false"/>
+    <aura:attribute name="isDoneEndRendering" type="Boolean" default="false"/>
+    <aura:attribute name="countryCodeMeta" type="String"
+        description="Defualt Country code store in Dialshree_API__mdt Custom Metadata" />
+    <aura:attribute name="liveStatusObj" type="Object"/>
+    <aura:attribute name="isTransferParkActive" type="Boolean" default="true" />
+    <aura:attribute name="numEvents" type="Integer" default="0"/>
+    <aura:attribute name="newLeadPage" type="Boolean" default="true" />
+    <aura:attribute name="accountId" type="String" default="false" />
+    <aura:attribute name="opportunityId" type="String" default="false" />
+ 
+    <aura:handler event="c:StatusCheckEvent" action="{!c.handleApplicationEvent}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <!-- <aura:registerEvent name="dialogShow" type="c:dialogDisplayEvent"/> -->
+
+    <div class="slds-panel">
+        <!--  Top section: Information about the contact, including an avatar -->
+        <div class="slds-panel__section">
+            <div class="avatar slds-align--absolute-center">
+                <div class="slds-avatar slds-avatar--circle slds-avatar--large">
+                    <img src="{!$Resource.DialShreeCTI2__Avater + '/assets/images/avatar1.jpg'}" alt="Contact" />
+                </div>
+            </div>
+            <div class="name slds-text-heading--large slds-text-color--weak slds-text-align--center">{!v.recordName}
+            </div>
+            <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center companyDetails">
+                {!v.account.Name}</div>
+            <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center companyDetails">
+                {!v.title}</div>
+            <div class="incoming slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
+                {!v.state}&nbsp;
+                <ui:outputphone value="{!v.phone}" />...</div>
+            <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
+                <c:ticker tickerTime="{!v.tickerTime}"/>
+            </div>
+        </div>
+
+        <!--  Bottom section: End button on Dialing; Decline and Accept buttons on Incoming or Transferring -->
+        <div class="bottom-panel slds-panel__section slds-align-bottom slds-grid">
+            <button class="slds-size--1-of-3 slds-button slds-button--destructive"
+                onclick="{!c.end}">{!$Label.c.Label_Hangup}</button>
+            <button class="slds-size--1-of-3 slds-button slds-button--brand"
+                onclick="{!c.transfer}" disabled="{!v.isTransferParkActive}">{!$Label.c.Label_Transfercall}</button>
+            <aura:if isTrue="{!v.isPark}">
+                <button class="slds-size--1-of-3 slds-button slds-button--brand"
+                    onclick="{!c.park}" disabled="{!v.isTransferParkActive}">{!$Label.c.Label_Park}</button>
+                <aura:set attribute="else">
+                    <button class="slds-size--1-of-3 slds-button slds-button--brand"
+                        onclick="{!c.grab}">{!$Label.c.Label_Grab}</button>
+                </aura:set>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

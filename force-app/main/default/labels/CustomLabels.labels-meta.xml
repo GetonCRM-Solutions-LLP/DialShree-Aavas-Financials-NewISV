@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Decline_Call</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Decline_Call</shortDescription>
+        <value>Call was declined.</value>
+    </labels>
+    <labels>
+        <fullName>Disposition_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Disposition API</shortDescription>
+        <value>/elision-api/main.php?source=test&amp;action=status</value>
+    </labels>
+    <labels>
+        <fullName>Disposition_List_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Disposition List API</shortDescription>
+        <value>/elision-api/main.php?action=list_disposition</value>
+    </labels>
+    <labels>
+        <fullName>Elision_URL</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elision URL</shortDescription>
+        <value>https://www.elisiontec.com/</value>
+    </labels>
+    <labels>
+        <fullName>HangUP_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>HangUP API</shortDescription>
+        <value>/elision-api/main.php?source=test&amp;action=hangup&amp;value=1&amp;status=NA</value>
+    </labels>
+    <labels>
+        <fullName>Label_Footer</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label Footer</shortDescription>
+        <value>Powered by Elision Technologies Pvt. Ltd.</value>
+    </labels>
+    <labels>
+        <fullName>Label_Grab</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label_Grab</shortDescription>
+        <value>Grab</value>
+    </labels>
+    <labels>
+        <fullName>Label_Hangup</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label_Hangup</shortDescription>
+        <value>Hangup</value>
+    </labels>
+    <labels>
+        <fullName>Label_Park</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label_Park</shortDescription>
+        <value>Park</value>
+    </labels>
+    <labels>
+        <fullName>Label_Transfercall</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label_Transfercall</shortDescription>
+        <value>Transfer call</value>
+    </labels>
+    <labels>
+        <fullName>Logout_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Logout API</shortDescription>
+        <value>/elision-api/main.php?source=test&amp;action=logout&amp;value=LOGOUT</value>
+    </labels>
+    <labels>
+        <fullName>Manual_Dial_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Manual Dial API</shortDescription>
+        <value>/elision-api/main.php?source=test&amp;action=manual_dial&amp;search=YES&amp;preview=NO&amp;focus=YES</value>
+    </labels>
+    <labels>
+        <fullName>Park_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Park API</shortDescription>
+        <value>/elision-api/main.php?source=test&amp;action=park</value>
+    </labels>
+    <labels>
+        <fullName>Pause_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Pause API</shortDescription>
+        <value>/elision-api/main.php?source=test&amp;action=pause&amp;value=PAUSE</value>
+    </labels>
+    <labels>
+        <fullName>Pause_Code_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Pause Code API</shortDescription>
+        <value>/elision-api/main.php?source=test&amp;action=pause_code</value>
+    </labels>
+    <labels>
+        <fullName>Pause_List_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Pause List API</shortDescription>
+        <value>/elision-api/main.php?action=list_pause_code</value>
+    </labels>
+    <labels>
+        <fullName>Regenerate_Session_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Regenerate Session API</shortDescription>
+        <value>/elision-api/main.php?source=test&amp;action=callagent&amp;value=CALL</value>
+    </labels>
+    <labels>
+        <fullName>Resume_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Resume API</shortDescription>
+        <value>/elision-api/main.php?source=test&amp;action=pause&amp;value=RESUME&apos;</value>
+    </labels>
+    <labels>
+        <fullName>SoftPhone_Header</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SoftPhone_Header</shortDescription>
+        <value>Elision Open CTI Phone</value>
+    </labels>
+    <labels>
+        <fullName>Status_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status API</shortDescription>
+        <value>/elision-api/main.php?source=test&amp;action=agent_status&amp;stage=csv&amp;header=YES</value>
+    </labels>
+    <labels>
+        <fullName>Transfer_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Transfer API</shortDescription>
+        <value>/elision-api/main.php?source=test&amp;action=transfer&amp;function=transfer_conference</value>
+    </labels>
+    <labels>
+        <fullName>Transfer_Agent_List_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Transfer Agent List API</shortDescription>
+        <value>/elision-api/main.php?action=list_agents</value>
+    </labels>
+    <labels>
+        <fullName>Transfer_Group_List_API</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Transfer Group List API</shortDescription>
+        <value>/elision-api/main.php?action=list_xfergroups</value>
+    </labels>
+</CustomLabels>

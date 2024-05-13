@@ -1,0 +1,161 @@
+/*
+Copyright 2016 salesforce.com, inc. All rights reserved.
+
+Use of this software is subject to the salesforce.com Developerforce Terms of Use and other applicable terms that salesforce.com may make available, as may be amended from time to time. You may not decompile, reverse engineer, disassemble, attempt to derive the source code of, decrypt, modify, or create derivative works of this software, updates thereto, or any part thereof. You may not use the software to engage in any development activity that infringes the rights of a third party, including that which interferes with, damages, or accesses in an unauthorized manner the servers, networks, or other properties or services of salesforce.com or any third party.
+
+WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL SALESFORCE.COM HAVE ANY LIABILITY FOR ANY DAMAGES, INCLUDING BUT NOT LIMITED TO, DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE, OR CONSEQUENTIAL DAMAGES, OR DAMAGES BASED ON LOST PROFITS, DATA OR USE, IN CONNECTION WITH THE SOFTWARE, HOWEVER CAUSED AND, WHETHER IN CONTRACT, TORT OR UNDER ANY OTHER THEORY OF LIABILITY, WHETHER OR NOT YOU HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+*/
+.THIS .loader-wrapper{
+    position: fixed;
+    text-align: center;
+    top: 306px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+
+@-webkit-keyframes spin {
+    0%   {
+        -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(0deg);  /* IE 9 */
+        transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+    100% {
+        -webkit-transform: rotate(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(360deg);  /* IE 9 */
+        transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+}
+@keyframes spin {
+    0%   {
+        -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(0deg);  /* IE 9 */
+        transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+    100% {
+        -webkit-transform: rotate(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(360deg);  /* IE 9 */
+        transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+}
+
+@-moz-keyframes throbber-loader {
+    0% {
+      background: #dde2e7;
+    }
+    10% {
+      background: #6b9dc8;
+    }
+    40% {
+      background: #dde2e7;
+    }
+  }
+  @-webkit-keyframes throbber-loader {
+    0% {
+      background: #dde2e7;
+    }
+    10% {
+      background: #6b9dc8;
+    }
+    40% {
+      background: #dde2e7;
+    }
+  }
+  @keyframes throbber-loader {
+    0% {
+      background: #dde2e7;
+    }
+    10% {
+      background: #6b9dc8;
+    }
+    40% {
+      background: #dde2e7;
+    }
+  }
+  /* :not(:required) hides these rules from IE9 and below */
+  .THIS .throbber-loader:not(:required) {
+    -moz-animation: throbber-loader 2000ms 300ms infinite ease-out;
+    -webkit-animation: throbber-loader 2000ms 300ms infinite ease-out;
+    animation: throbber-loader 2000ms 300ms infinite ease-out;
+    background: #dde2e7;
+    display: inline-block;
+    position: relative;
+    text-indent: -9999px;
+    width: 0.9em;
+    height: 1.5em;
+    margin: 0 1.6em;
+  }
+  .THIS .throbber-loader:not(:required):before, .THIS .throbber-loader:not(:required):after {
+    background: #dde2e7;
+    content: '\x200B';
+    display: inline-block;
+    width: 0.9em;
+    height: 1.5em;
+    position: absolute;
+    top: 0;
+  }
+  .THIS .throbber-loader:not(:required):before {
+    -moz-animation: throbber-loader 2000ms 150ms infinite ease-out;
+    -webkit-animation: throbber-loader 2000ms 150ms infinite ease-out;
+    animation: throbber-loader 2000ms 150ms infinite ease-out;
+    left: -1.6em;
+  }
+  .THIS .throbber-loader:not(:required):after {
+    -moz-animation: throbber-loader 2000ms 450ms infinite ease-out;
+    -webkit-animation: throbber-loader 2000ms 450ms infinite ease-out;
+    animation: throbber-loader 2000ms 450ms infinite ease-out;
+    right: -1.6em;
+  }
+
+.THIS .forceHighlightsStencil .header.dark {
+    background: white;
+}
+
+.THIS .messageBody {
+	margin-top: 130px;
+	color: #54698d;
+}
+.THIS .pauseText{
+    color: blue;
+    font-weight: bold;
+}
+.THIS .errorCss{
+    color: #ff0000;
+}
+.THIS .toggle {
+    display: none;
+}
+.THIS .valid-border{
+    border: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorderInput,rgb(217, 219, 221));
+}
+.THIS .error-border{
+    border: 1px solid #ff0000 !important;
+}
+.THIS .countryInput{
+	width: 30%;
+}
+
+.THIS .placeHolderText {
+    font-size: 0.8125rem;
+}
+
+.THIS .contact{
+	  background-color: #7F8DE1;
+}
+
+.THIS .button-inv {
+    background: #1589ee;
+}
+
+.THIS .slds-button > lightning-icon {
+  background-color: transparent !important;
+}
+
+.THIS .dial > lightning-primitive-icon > svg {
+  fill: grey !important;
+}
+
+.THIS .dial > lightning-primitive-icon > svg:hover{
+  fill: #1589ee !important;
+}

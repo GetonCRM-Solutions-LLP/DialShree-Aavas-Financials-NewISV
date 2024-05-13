@@ -1,0 +1,60 @@
+<aura:component
+    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,c:panel"
+    controller="DialShreeApi" access="global">
+    <ltng:require scripts="{!$Resource.jqueryv351}"  />     
+    <aura:attribute name="pauseJson" type="Object" />
+    <aura:attribute name="spinner" type="boolean" default="false" />
+    <aura:attribute name="isError" type="boolean" default="false" />
+    <aura:attribute name="campaignId" type="String" />
+    
+    <aura:attribute name="wapperApiObj" type="Object" />
+    <aura:attribute name="baseUrl" type="String"/>
+    <aura:attribute name="dialUser" type="String"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+
+    <div class="slds-grid slds-wrap slds-p-around_small">
+        <aura:if isTrue="{!v.spinner}">
+            <div class="loader-wrapper">
+                <div class="throbber-loader"></div>
+            </div>
+            <aura:set attribute="else">
+                <article class="slds-card slds-size_4-of-4">
+                    <div class="slds-card__header slds-grid custom-pad">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-task" title="task">
+                                    <c:svg class="lds-icon slds-icon_small slds-icon-text-default"
+                                    xlinkHref="/resource/slds/assets/icons/standard-sprite/svg/symbols.svg#task" />
+                                </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <h2 class="slds-card__header-title">
+                                        <strong>Select Pause Code</strong>
+                                </h2>
+                            </div>
+                        </header>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <aura:if isTrue="{!v.isError}">
+                            <div class="slds-col slds-size_4-of-4 slds-align_absolute-center slds-p-bottom_small">
+                                <div>No Data Found</div>
+                            </div>
+                            <aura:set attribute="else">
+                                <!-- content renders if false -->
+                                <aura:iteration items="{!v.pauseJson}" var="pause">
+                                    <div data-id="{!pause.pause_code}" 
+                                        class="slds-col slds-size_1-of-4 slds-p-bottom_small space-div "
+                                        ondblclick="{!c.handleDblClick}" onclick="{!c.handleClick}">
+                                        <span  class="{!pause.isHighlighted == true ? 'highlightText' : ''}">{!pause.pause_code_name}</span>
+                                    </div>
+                                </aura:iteration>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                </article>
+               
+            </aura:set>
+        </aura:if>
+    </div>
+</aura:component>

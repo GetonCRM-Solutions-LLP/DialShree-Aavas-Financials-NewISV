@@ -1,0 +1,5 @@
+<aura:tokens>
+	 <aura:token name="btnRedBorderColor" value="#802513" />
+     <aura:token name="btnBlueBorderColor" value="#133880" />
+     <aura:token name="btnBlueBackgroundColor" value="#337ab7" />
+</aura:tokens>

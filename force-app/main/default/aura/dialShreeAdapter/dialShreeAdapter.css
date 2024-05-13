@@ -1,0 +1,122 @@
+/* include this only once */
+@-webkit-keyframes spin {
+    0%   {
+        -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(0deg);  /* IE 9 */
+        transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+    100% {
+        -webkit-transform: rotate(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(360deg);  /* IE 9 */
+        transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+}
+@keyframes spin {
+    0%   {
+        -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(0deg);  /* IE 9 */
+        transform: rotate(0deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+    100% {
+        -webkit-transform: rotate(360deg);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: rotate(360deg);  /* IE 9 */
+        transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
+    }
+}
+.THIS span {
+    cursor:pointer;
+    color:blue;
+}
+.THIS span:hover {
+    text-decoration:underline;
+    color: #444444;
+}
+.THIS .space-div{
+    white-space: nowrap;
+}
+.THIS .loader-wrapper{
+    position: fixed;
+    text-align: center;
+    top: 306px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+@-moz-keyframes throbber-loader {
+    0% {
+      background: #dde2e7;
+    }
+    10% {
+      background: #6b9dc8;
+    }
+    40% {
+      background: #dde2e7;
+    }
+  }
+  @-webkit-keyframes throbber-loader {
+    0% {
+      background: #dde2e7;
+    }
+    10% {
+      background: #6b9dc8;
+    }
+    40% {
+      background: #dde2e7;
+    }
+  }
+  @keyframes throbber-loader {
+    0% {
+      background: #dde2e7;
+    }
+    10% {
+      background: #6b9dc8;
+    }
+    40% {
+      background: #dde2e7;
+    }
+  }
+  /* :not(:required) hides these rules from IE9 and below */
+  .THIS .throbber-loader:not(:required) {
+    -moz-animation: throbber-loader 2000ms 300ms infinite ease-out;
+    -webkit-animation: throbber-loader 2000ms 300ms infinite ease-out;
+    animation: throbber-loader 2000ms 300ms infinite ease-out;
+    background: #dde2e7;
+    display: inline-block;
+    position: relative;
+    text-indent: -9999px;
+    width: 0.9em;
+    height: 1.5em;
+    margin: 0 1.6em;
+  }
+  .THIS .throbber-loader:not(:required):before, .THIS .throbber-loader:not(:required):after {
+    background: #dde2e7;
+    content: '\x200B';
+    display: inline-block;
+    width: 0.9em;
+    height: 1.5em;
+    position: absolute;
+    top: 0;
+  }
+  .THIS .throbber-loader:not(:required):before {
+    -moz-animation: throbber-loader 2000ms 150ms infinite ease-out;
+    -webkit-animation: throbber-loader 2000ms 150ms infinite ease-out;
+    animation: throbber-loader 2000ms 150ms infinite ease-out;
+    left: -1.6em;
+  }
+  .THIS .throbber-loader:not(:required):after {
+    -moz-animation: throbber-loader 2000ms 450ms infinite ease-out;
+    -webkit-animation: throbber-loader 2000ms 450ms infinite ease-out;
+    animation: throbber-loader 2000ms 450ms infinite ease-out;
+    right: -1.6em;
+  }
+  .THIS .statusIcon svg{
+    fill: #32af5c !important;
+}
+.THIS .info-para{
+    padding-top: 26px;
+    font-size: 20px;
+}
+.THIS .text-css {
+  text-align: center;
+}

@@ -1,0 +1,92 @@
+<aura:component
+    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,c:panel"
+    controller="DialShreeApi" access="global">
+    <ltng:require scripts="{!$Resource.jqueryv351}" />     
+    <aura:attribute name="dispJson" type="Object" />
+    <aura:attribute name="isModalOpen" type="boolean" default="false" />
+    <aura:attribute name="dateTimeValue" type="DateTime" default="" />
+    <aura:attribute name="currentDateTime" type="DateTime" default="" />
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+    <aura:attribute name="isDateTimePicker" type="Boolean" default="false" />
+    <aura:attribute name="callbackValue" type="string" />
+    <aura:attribute name="hideDateTime" type="Boolean" default="true" />
+    <aura:attribute name="closeDesposition" type="Aura.Action" />
+    <aura:attribute name="callbackType" type="boolean" default="false" />
+    <aura:attribute name="callbackComm" type="string" default="" />
+    <aura:attribute name="commTextArea" type="string" default="" />
+    <aura:attribute name="isError" type="boolean" default="false" />
+    <aura:attribute name="spinner" type="boolean" default="false" />
+    <aura:attribute name="campaignId" type="String" />
+    <aura:attribute name="baseUrl" type="String" />
+    <aura:attribute name="dialUser" type="String"/>
+    <aura:attribute name="wapperApiObj" type="Object" />
+    <aura:attribute name="pauseCheck" type="boolean" default="false" />
+
+    <div class="slds-grid slds-wrap slds-p-around_small">
+        <aura:if isTrue="{!v.spinner}">
+            <div class="loader-wrapper">
+                <div class="throbber-loader"></div>
+            </div>
+            <aura:set attribute="else">
+                <article class="slds-card slds-size_4-of-4">
+                    <div class="slds-card__header slds-grid custom-pad">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-task" title="task">
+                                    <c:svg class="lds-icon slds-icon_small slds-icon-text-default"
+                                    xlinkHref="/resource/slds/assets/icons/standard-sprite/svg/symbols.svg#task" />
+                                </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <h2 class="slds-card__header-title">
+                                        <strong>Select Disposition</strong>
+                                </h2>
+                            </div>
+                        </header>
+                    </div>
+                    <div class="slds-card__body slds-card__body_inner">
+                        <aura:if isTrue="{!v.isError}">
+                            <div class="slds-col slds-size_4-of-4 slds-align_absolute-center slds-p-bottom_small">
+                                <div>No Data Found</div><br/>
+                                <button class="slds-button slds-button_brand" onclick="{!c.onInit}">AgainCall</button>
+                            </div>
+                            <aura:set attribute="else">
+                                <!-- content renders if false -->
+                                <aura:if isTrue="{!v.hideDateTime}">
+                                    <aura:iteration items="{!v.dispJson}" var="disp">
+                                        <div data-id="{!disp.status}"
+                                            class="slds-col slds-size_2-of-4 slds-p-bottom_xx-small space-div"
+                                            ondblclick="{!c.handleDblClick}" onclick="{!c.handleClick}">
+                                            <span  class="{!disp.isHighlighted == true ? 'highlightText' : ''}">{!disp.status_name}</span>
+                                        </div>
+                                    </aura:iteration><br />                                    
+                                    <lightning:input type="checkbox" label="PAUSE" name="input1"
+                                        checked="{!v.pauseCheck}" class="pauseCheck"/><br />
+                                </aura:if>
+                                <aura:if isTrue="{!v.isDateTimePicker}">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_11-of-12">
+                                            <lightning:input  type="datetime-local" name="input1" label="Select a CallBack Date"
+                                                value="{!v.dateTimeValue}" min="{!v.currentDateTime}" />
+                                                
+                                            <lightning:input name="input1" label="CB Comments:" value="{!v.callbackComm}" />
+                                            <br />
+                                            <lightning:input type="checkbox" label="MY CALLBACK ONLY" name="input1"
+                                                checked="{!v.callbackType}" /><br />
+                                            <!-- <lightning:textarea aura:id="field" name="reason" placeholder="Enter Comments"
+                                                value="{!v.commTextArea}" /><br /> -->
+                                            <button class="slds-button slds-button_brand"
+                                                onclick="{!c.callBackSet}">Submit</button>
+                                        </div>
+                                    </div>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                </article>
+            </aura:set>
+        </aura:if>
+        
+    </div>
+
+</aura:component>

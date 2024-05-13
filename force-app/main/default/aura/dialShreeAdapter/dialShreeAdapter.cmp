@@ -1,0 +1,94 @@
+<!--
+Copyright 2016 salesforce.com, inc. All rights reserved. 
+
+Use of this software is subject to the salesforce.com Developerforce Terms of Use and other applicable terms that salesforce.com may make available, as may be amended from time to time. You may not decompile, reverse engineer, disassemble, attempt to derive the source code of, decrypt, modify, or create derivative works of this software, updates thereto, or any part thereof. You may not use the software to engage in any development activity that infringes the rights of a third party, including that which interferes with, damages, or accesses in an unauthorized manner the servers, networks, or other properties or services of salesforce.com or any third party.
+
+WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL SALESFORCE.COM HAVE ANY LIABILITY FOR ANY DAMAGES, INCLUDING BUT NOT LIMITED TO, DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE, OR CONSEQUENTIAL DAMAGES, OR DAMAGES BASED ON LOST PROFITS, DATA OR USE, IN CONNECTION WITH THE SOFTWARE, HOWEVER CAUSED AND, WHETHER IN CONTRACT, TORT OR UNDER ANY OTHER THEORY OF LIABILITY, WHETHER OR NOT YOU HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+-->
+
+<aura:component description="The container component that houses the UI of the adapter." controller="DialShreeApi"
+    access="global" implements="lightning:utilityItem">
+    <ltng:require scripts="{!$Resource.jqueryv351}" />
+    <aura:attribute name="supportsPopOut" type="Boolean" default="false" />
+    <aura:attribute name="spinner" type="boolean" default="false" />
+    <aura:attribute name="settings" type="Object" />
+    <aura:attribute name="iconName" type="String" />
+    <aura:attribute name="status" type="String" default="" />
+    <aura:attribute name="logStatus" type="Boolean" default="false" />
+    <aura:attribute name="showfooter" type="Boolean" default="false" />
+    <aura:attribute name="campaignId" type="String" />
+    <aura:attribute name="baseUrl" type="String" default="" />
+    <aura:attribute name="dialUser" type="String" default="" />
+    <aura:attribute name="dialLogin" type="String" default="" />
+    <aura:attribute name="wapperApi" type="Object" />
+    <aura:attribute name="phoneNo" type="String" />
+    <aura:attribute name="presence" type="String" description="Could be Available, Busy or Pause" />
+    <aura:attribute name="countryCodeMeta" type="String"
+        description="Defualt Country code store in Dialshree_API__mdt Custom Metadata" />
+    <aura:attribute name="session" type="boolean" default="true" />
+    <aura:attribute name="pauseLabel" type="String" default="" />
+    <aura:registerEvent name="renderPanel" type="c:renderPanel" />
+    <aura:registerEvent name="editPanel" type="c:editPanel" />
+    <aura:registerEvent name="getSettings" type="c:getSettings" />
+    <aura:registerEvent name="statusObj" type="c:StatusChangeEvent" />
+    <aura:handler event="c:renderFieldEvent" action="{!c.renderFieldEventHandler}" />
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:handler name="renderPanel" action="{!c.renderPanel}" />
+    <aura:handler name="editPanel" action="{!c.editPanel}" />
+    <aura:handler name="getSettings" action="{!c.getSettings}" />
+
+    <div class="slds-panel__section slds-grid slds-theme--shade slds-p-around--xx-small">
+        <div class="status-wrapper" style="width: 100%;">
+            <lightning:icon iconName="{!v.iconName}" size="small"
+                class="slds-float_right slds-m-top_xx-small statusIcon"></lightning:icon>
+            <div class="slds-p-around_x-small slds-float_right">
+                <h2 class="slds-truncate" style="color: #0070D2;
+                font-size: 13px;">{!v.status}</h2>
+            </div>
+        </div>
+    </div>
+
+    <aura:if isTrue="{!v.session == false}">
+        <div class="demo-only" style="height:24rem">
+            <section role="alertdialog" tabindex="0" aria-labelledby="prompt-heading-id"
+                aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt"
+                aria-modal="true">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__content slds-p-around_medium text-css" id="prompt-message-wrapper">
+                        <lightning:icon iconName="action:info" size="large" />
+                        <p class="info-para">No one is in your session</p>
+                    </div>
+                    <footer class="slds-modal__footer slds-theme_default">
+                        <button class="slds-button slds-button--brand" onclick='{!c.regenerateSession}'>Call Agent
+                            Again</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+
+    </aura:if>
+    <c:toast aura:id="toast-message" />
+    <aura:if isTrue="{!v.spinner}">
+        <div class="slds-spinner_container">
+            <div class="slds-spinner slds-spinner--small" aria-hidden="false" role="alert">
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <div style="min-height:320px">
+
+    {!v.body}
+    </div>
+    <footer class="slds-modal__footer">
+    <aura:if isTrue="{!v.showfooter}">
+        <div class="slds-align_absolute-center">
+            <lightning:formattedUrl 
+            value="{!$Label.c.Elision_URL}"
+            label="{!$Label.c.Label_Footer}"
+            target="_blank" />
+        </div>
+    </aura:if>
+    </footer>
+</aura:component>
