@@ -154,7 +154,9 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                  'wapperApiObj': cmp.get("v.wapperApiObj"),
                                  'baseUrl': cmp.get("v.baseUrl"),
                                  'dialUser': cmp.get("v.dialUser"),
-                                 'campaignId': sessionStorage.getItem('campaignId')
+                                 'campaignId': sessionStorage.getItem('campaignId'),
+                                 'recordId' : cmp.get("v.recordId"),
+                                 'NoMatchObject' : cmp.get("v.NoMatchObject")
                              },
 
                          }).fire();
