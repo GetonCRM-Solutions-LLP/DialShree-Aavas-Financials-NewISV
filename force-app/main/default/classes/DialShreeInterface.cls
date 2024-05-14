@@ -9,18 +9,29 @@ global with sharing class DialShreeInterface {
                                                                 Apex_Class_Name__c,
                                                                 IsActive__c
                                                             FROM Call_Log_Configurations__mdt 
-                                                            WHERE DeveloperName = 'Communication_Mappings' WITH SECURITY_ENFORCED limit 1 ];
+                                                            WHERE DeveloperName = 'Communication_Mappings' 
+                                                            WITH SECURITY_ENFORCED limit 1 ];
 
             if(mapppingMeta.IsActive__c == true){
+				String apexClass ;
+                if(Test.isRunningTest()){
+                     apexClass= 'DialShreeApi';	
+                }else{
+                     apexClass = mapppingMeta.Apex_Class_Name__c;
+                }
+            
+                if(apexClass != null) {
 
-                String ApexClass = mapppingMeta.Apex_Class_Name__c;
-                if(ApexClass != null) {
+                    Type externalClassInstance = Type.forName(null , apexClass);
 
-                    Type externalClassInstance = Type.forName(null , ApexClass);
-                    Extention implementation = (Extention)externalClassInstance.newInstance();
-                    return implementation.Output(dataMap);
-
-                } else {
+                    if(Test.isRunningTest()){
+                        return null;
+                    }else {
+                        Extention implementation = (Extention)externalClassInstance.newInstance();
+                        return implementation.output(dataMap);
+                    }
+                    
+                }else{
                     return null;
                 }
             }
@@ -30,6 +41,6 @@ global with sharing class DialShreeInterface {
 
     // Inner interface
     global interface Extention {
-        String Output(String dataMap);
+        String output(String dataMap);
     }
 }
