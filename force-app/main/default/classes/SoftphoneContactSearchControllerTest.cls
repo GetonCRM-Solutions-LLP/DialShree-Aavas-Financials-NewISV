@@ -8,7 +8,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 
 /* 
     Class Name :  SoftphoneContactSearchController 
-    Code-Covege : 94%
+    Code-Covege : 86%
 */
 @isTest
 private class SoftphoneContactSearchControllerTest {

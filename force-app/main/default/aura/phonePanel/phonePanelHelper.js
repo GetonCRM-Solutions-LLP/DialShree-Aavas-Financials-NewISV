@@ -160,14 +160,14 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                         'searchvalue': inputValue,
                         'softPhoneLayoutJSON': softPhoneLayoutJSON
                     };
-                    console.log('163 -- calling apex SoftphoneContactSearchController apex class------------');
+                    console.log('163 -- calling apex SoftphoneContactSoftphoneContactSearchController apex class------------');
                     var args = {
-                        apexClass: 'DialShreeCTI2.SoftphoneContactSearchController',
+                        apexClass: 'DialShreeCTI2.SoftphoneContactSoftphoneContactSearchController',
                         methodName: 'getContacts',
                         methodParams: 'softPhoneParams=' + encodeURIComponent(JSON.stringify(softPhoneJSON)),
                         //methodParams: 'name=' + mapString,
                         callback: function(result) {
-                            console.log('170 - calling apex SoftphoneContactSearchController');
+                            console.log('170 - calling apex SoftphoneContactSoftphoneContactSearchController');
                             if (result.success) {
                                 var searchResults;
                                 console.log('173 --- searchResults ----' +searchResults);
