@@ -53,7 +53,7 @@
                         console.log('mapOfData --- ', mapOfData);
                         const dataMap = Object.fromEntries(mapOfData);
                         console.log('dataMap ---' ,JSON.stringify(dataMap));
-                        helper.handleMapppings(component, event, dataMap);
+                        this.handleMapppings(component, event, dataMap);
 
                         if(!component.get("v.pauseCheck")){
                             
