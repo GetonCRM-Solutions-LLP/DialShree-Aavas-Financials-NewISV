@@ -6,6 +6,8 @@ Use of this software is subject to the salesforce.com Developerforce Terms of Us
 WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL SALESFORCE.COM HAVE ANY LIABILITY FOR ANY DAMAGES, INCLUDING BUT NOT LIMITED TO, DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE, OR CONSEQUENTIAL DAMAGES, OR DAMAGES BASED ON LOST PROFITS, DATA OR USE, IN CONNECTION WITH THE SOFTWARE, HOWEVER CAUSED AND, WHETHER IN CONTRACT, TORT OR UNDER ANY OTHER THEORY OF LIABILITY, WHETHER OR NOT YOU HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 */
 
+/* global $A */
+/* global sforce */
 ({
     // show spinner until the panel is fully rendered
     // render panel of a certain type (i.e. c:phonePanel)
@@ -78,21 +80,16 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 return response.json();
             })
             .then($A.getCallback(data => {
-                if (data.status) {  
-
-                    console.log('statuscheck:',data.status);
-                           
+                if (data.status) {                             
                     sessionStorage.setItem("campaignId", data.data.campaign_id);
                     cmp.set("v.campaignId",data.data.campaign_id);
 
                     if(data.data.phone_number == ''){
-                        console.log('inside phone number',data.data.phone_number);
                         cmp.set('v.phoneNo',data.data.phone_number); 
                     }
                    
                     if((data.data.phone_number != '') && (data.data.phone_number != cmp.get('v.phoneNo'))){                                     
-                        var statusObj2 = $A.get("e.c:StatusChangeEvent");     
-                        console.log('status bject 2:',statusObj2);
+                        var statusObj2 = $A.get("e.c:StatusChangeEvent"); 
                         if(statusObj2){
                             statusObj2.setParams({
                                 "liveStatusObj" : data});
@@ -102,7 +99,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                     }
 
                     var statusObj1 = $A.get("e.c:StatusCheckEvent");
-                    //console.log('status bject 1:',statusObj1);
 
                     if(statusObj1){
                         statusObj1.setParams({

@@ -104,7 +104,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 return response.json();
             })
             .then(data => {
-                console.log('logoutUrl res=', data);
                 var logStatus = data.data.value;
                 var dropdownTarget = cmp.find('dropdownContainer');
                 $A.util.removeClass(dropdownTarget, 'slds-is-open');

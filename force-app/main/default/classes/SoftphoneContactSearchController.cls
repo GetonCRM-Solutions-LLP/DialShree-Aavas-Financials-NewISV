@@ -28,27 +28,19 @@ global class SoftphoneContactSearchController {
             String decodedsoftPhoneParams = EncodingUtil.urlDecode(softPhoneParams, 'UTF-8');
             Map<String, Object> softPhoneConfigMap = (Map<String, Object>) JSON.deserializeUntyped(decodedsoftPhoneParams);
             String searchValue = (String) softPhoneConfigMap.get('searchvalue');
-            system.debug('searchValue -------->  ' +searchValue);
             String softPhoneLayoutJSON = (String) softPhoneConfigMap.get('softPhoneLayoutJSON');
-            system.debug('softPhoneLayoutJSON ------------>  ' +softPhoneLayoutJSON);
             Map<String, Object> resultMap = (Map<String, Object>) JSON.deserializeUntyped(softPhoneLayoutJSON);
-            system.debug('resultMap ------------>  ' +resultMap);
             // Accessed the objects node from the resultMap
             Map<String, Object> objectsMap = (Map<String, Object>) ((Map<String, Object>) ((Map<String, Object>) resultMap.get('returnValue')).get('Inbound')).get('objects');
-            system.debug('objectsMap ------------>  ' +objectsMap);
             // Extract the keys from the objects node
             List<String> objectKeys = new List<String>();
             for (String key : objectsMap.keySet()) {
                 objectKeys.add(key);
             }
-            system.debug('objectKeys ------------>  ' +objectKeys);
-    
+            
             String soslQueryString = 'FIND \'' + searchValue + '\' IN ALL FIELDS RETURNING ';
-            system.debug('soslQueryString ------------>  ' +soslQueryString);
-    
             String objQueryString ;
-            system.debug('objQueryString ------------>  ' +objQueryString);
-    
+            
             for (String objectKey : objectKeys) {
                 if(objQueryString == null){
                     objQueryString = objectKey + '(Id,Phone,Name)';
@@ -57,14 +49,10 @@ global class SoftphoneContactSearchController {
                 }
             }      
             soslQueryString = soslQueryString + objQueryString;
-            system.debug('soslQueryString :::: ------------>  ' +soslQueryString);
             List<List<SObject>> searchList = search.query(soslQueryString);
-            system.debug('searchList ------------>  ' +JSON.serialize(searchList));
             return JSON.serialize(searchList); 
-        } catch (Exception ex) {
-             
+        } catch (Exception ex) {             
             return JSON.serialize(new Map<String, String>{'error' => ex.getMessage()});
         }
-         
     }
 }

@@ -87,9 +87,7 @@
                         }
                     }
                     component.set('v.internaloptions', opts);
-                } else {
-                    // console.log('transferGroupList api errorwith ' + data);
-                }
+                } 
             });
     },
 
@@ -120,9 +118,7 @@
                         }
                     }
                     component.set('v.agentoptions', opts);
-                } else {
-                    // console.log('transferAgentList api errorwith ' + data);
-                }
+                } 
             });
     },
 

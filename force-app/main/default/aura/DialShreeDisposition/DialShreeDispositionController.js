@@ -1,3 +1,5 @@
+
+/* global $A */
 ({
     onInit : function(component, event, helper){        
         helper.dispoListJquey(component, event, helper);
@@ -5,9 +7,7 @@
     
     handleDblClick : function(component, event, helper){
         var eventVaule = event.currentTarget.dataset.id;
-        console.log('BEFORE IF eventVaule_1 '+ eventVaule);
-        if(eventVaule != 'CALLBK'){     
-            console.log('inside ELSE eventVaule_2 '+ eventVaule);          
+        if(eventVaule != 'CALLBK'){          
             helper.dispoCodeJquey(component, eventVaule, event, helper);             
         } else {
           
@@ -49,13 +49,8 @@
             var selDate = component.get("v.dateTimeValue");
             var formattedDate = $A.localizationService.formatDate(selDate, "yyyy-MM-ddTHH:mm:ss");            
             component.set("v.dateTimeValue", formattedDate);
-            formattedDate = formattedDate.replace("T", "+");
-            
-            var commentArea = component.get("v.commTextArea"); 
-            
+            formattedDate = formattedDate.replace("T", "+");        
             var passParam = "CALLBK&callback_datetime=" + formattedDate + "&callback_type="+callBackBool+"&callback_comments="+cbComment;
-            var callbackValue = component.get("v.callbackValue");
-            console.log('passParam line 58 cntlr -  '+ passParam);
             helper.dispoCodeJquey(component, passParam );  
         }
         else{

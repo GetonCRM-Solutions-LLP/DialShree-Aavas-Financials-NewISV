@@ -21,13 +21,11 @@
     },
 
     dispoCodeJquey : function(component, passParam ,event, helper ) {  
-        console.log('PassParam - ' + passParam );    
         component.set('v.spinner', true);   
         component.set("v.isDateTimePicker",false);
 		component.set("v.hideDateTime",true); 
        
         var dispoCodeUrl = component.get("v.baseUrl")+component.get("v.wapperApiObj").disposition+'&value='+passParam+'&agent_user='+component.get("v.dialUser");
-        console.log("callback", dispoCodeUrl);
         fetch(dispoCodeUrl)
             .then(response => {
                 if (response.ok) return response.json()
