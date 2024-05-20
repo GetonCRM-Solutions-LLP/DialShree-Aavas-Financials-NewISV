@@ -34,6 +34,12 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     width: 20px !important;
 }
 
+.THIS .Available {
+    --slds-c-icon-color-foreground-default:green !important;
+   --slds-c-icon-color-foreground: green;
+   --slds-c-icon-color-background: green; 
+}
+
 .THIS .Pause > lightning-primitive-icon > svg{
     background-color: white !important;
     fill: red !important;
@@ -41,6 +47,11 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     width: 20px !important;
  }
 
+ .THIS .Pause {
+    --slds-c-icon-color-foreground-default:red !important;
+   --slds-c-icon-color-foreground: red;
+   --slds-c-icon-color-background: red; 
+}
  .THIS lightning-icon {
     background-color: white !important;
  }
