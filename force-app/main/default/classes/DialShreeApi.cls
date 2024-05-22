@@ -80,6 +80,22 @@ public with sharing class DialShreeApi {
         }
         return  dialCs;
     }
+    
+    /**
+     * @param 
+     * @return String
+	 * @description :  Creates an method that will call the interface class and will pass configured map of communication details
+	*/
+
+    @AuraEnabled
+    public static void InternalClassCall(String dataMap){
+
+        try {
+            DialShreeInterface.callinterfaceMethod(dataMap);
+        } catch (Exception ex) {
+            System.debug('Received Error at InternalClassCall --- ' + ex.getMessage());
+        }
+    }
 
     /**
      * @param 

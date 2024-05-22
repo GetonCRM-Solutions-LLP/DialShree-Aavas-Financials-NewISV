@@ -151,6 +151,14 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             callback: function(result) {
                 console.log('152 - result :---------------------- ' ,result);
                 var softPhoneLayoutJSON = JSON.stringify(result);
+
+                console.log('softPhoneLayoutJSON --- ' +softPhoneLayoutJSON);
+                var softPhoneLayoutJSONParsed = JSON.parse(softPhoneLayoutJSON);
+                var NoMatchObject = softPhoneLayoutJSONParsed.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
+                console.log('NoMatchObject --- ' +NoMatchObject);
+                cmp.set("v.NoMatchObject" , NoMatchObject);
+                console.log(cmp.get("v.NoMatchObject"));
+
                 if (inputValue != undefined) {
                     if (inputValue.length < 2) {
                         cmp.set('v.message', 'Enter at least two characters');
@@ -251,6 +259,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
         attributes.state = cmp.get("v.callType");
         attributes.countryCode = cmp.get("v.countryCode");
         attributes.presence = cmp.get('v.presence'); 
+        attributes.NoMatchObject = cmp.get("v.NoMatchObject");
         if(attributes.countryCode == '' || attributes.countryCode == undefined){
             attributes.countryCode = cmp.get("v.countryCodeMeta");
         }

@@ -21,6 +21,9 @@
     <aura:attribute name="dialUser" type="String"/>
     <aura:attribute name="wapperApiObj" type="Object" />
     <aura:attribute name="pauseCheck" type="boolean" default="false" />
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="statusMap" type="Object"/>
+    <aura:attribute name="NoMatchObject" type="String"/>
 
     <div class="slds-grid slds-wrap slds-p-around_small">
         <aura:if isTrue="{!v.spinner}">

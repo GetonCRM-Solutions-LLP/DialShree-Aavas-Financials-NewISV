@@ -14,6 +14,14 @@
                     component.set('v.spinner', false);
                     component.set('v.isError', false);
                     component.set("v.dispJson", resJson.data);
+
+                    var statusMap = {};
+                    resJson.data.forEach(function(item) {
+                        statusMap[item.status] = item.status_name;
+                    });
+                    console.log('statusMap --- ' ,JSON.stringify(statusMap));
+                    component.set("v.statusMap" ,statusMap);
+                    
                 } else {
                     component.set('v.spinner', false);
                 }
@@ -35,6 +43,18 @@
             })
             .then(data => {
                     if (data.status) {
+
+                        let mapOfData= new Map();
+                        for (let key in data.data) {
+                            if (data.data.hasOwnProperty(key)) {
+                                mapOfData.set(key, data.data[key]);
+                            }
+                        }
+                        console.log('mapOfData --- ', mapOfData);
+                        const dataMap = Object.fromEntries(mapOfData);
+                        console.log('dataMap ---' ,JSON.stringify(dataMap));
+                        helper.handleMapppings(component, event, dataMap);
+
                         if(!component.get("v.pauseCheck")){
                             
                             component.set('v.spinner', false); 
@@ -85,5 +105,44 @@
                     component.set('v.spinner', false); 
                 }
             });
+    },
+
+    handleMapppings : function(component, event, dataMap){
+        console.log ('inside handleMappings --- ', JSON.stringify(dataMap));
+        console.log('record Id --- ' ,component.get("v.recordId"));
+        var statusMap = JSON.parse(JSON.stringify(component.get("v.statusMap")));
+
+        console.log(component.get("v.NoMatchObject"));
+
+        var CommunicationTreckingMap = {
+            'recordId': component.get("v.recordId"),
+            'dispositionData': dataMap,
+            'statusMap' : statusMap,
+            'NoMatchObject' : component.get("v.NoMatchObject")
+        };
+
+        console.log('CommunicationTreckingMap --- ' ,JSON.stringify(CommunicationTreckingMap));
+        let Stringdata = JSON.stringify(CommunicationTreckingMap);
+        var action = component.get("c.InternalClassCall");
+        action.setParams({
+            dataMap:Stringdata
+        });
+        action.setCallback(this, (response) => {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                console.log('inside success');
+            } else {
+                var errors = response.getError();
+                console.log('found errors' , errors);
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        console.error("Error message: " + errors[0].message);
+                    }
+                } else {
+                    console.error("Unknown error");
+                }
+            }
+        });
+        $A.enqueueAction(action);
     }
 })
