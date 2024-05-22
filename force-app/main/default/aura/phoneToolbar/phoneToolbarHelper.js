@@ -13,7 +13,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // optionally run a callback function on completion
     search : function(cmp, number, onCompletion) {
         var args = {
-            apexClass : 'SoftphoneContactSearchController',
+            apexClass : 'SoftphoneContactSoftphoneContactSearchController',
             methodName : 'getContacts',
             methodParams : 'name=' + number,
             callback : function(result) {

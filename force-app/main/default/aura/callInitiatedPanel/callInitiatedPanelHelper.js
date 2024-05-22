@@ -40,7 +40,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                                 if (result.success) {
                                             } else {
                                                 // Handle errors if necessary
-                                                        console.log('error');
                                             } }
                                         });
                                     }
@@ -129,13 +128,9 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
          
          fetch(parkGrabHangUrl)
              .then(response => {
-                console.log('hangup:::',response);
-                console.log(JSON.stringify(response));
                 return response.json();
              })
              .then(data => {
-                console.log('hangup::', data);
-                console.log(JSON.stringify(data));
                  if (data.status) {
                      if (param == '&value=PARK_CUSTOMER') {
                          cmp.set("v.isPark", false);

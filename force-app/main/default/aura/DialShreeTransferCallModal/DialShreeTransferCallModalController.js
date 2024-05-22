@@ -122,7 +122,6 @@
     handleInternal: function (component, event, helper) {
         var val = "LOCAL_CLOSER";
         var val2 = "";
-        //console.log('internal',component.get("v.internalGroup"));
         if ((component.get("v.internalGroup") != "") && (component.get("v.internalGroup") != '--- None ---')) {
             val2 = "&ingroup_choices=" + component.get("v.internalGroup");
         }

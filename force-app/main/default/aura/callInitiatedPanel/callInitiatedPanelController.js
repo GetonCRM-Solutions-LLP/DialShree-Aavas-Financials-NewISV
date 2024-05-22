@@ -46,7 +46,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             toast : {'type': 'warning', 'message': customLabel},
             attributes : { presence : cmp.get('v.presence') }
         }).fire();
-        console.log('Decline:::' , 'Decline_Call');
     },
 
     // On dialing calls, this is a handler for the End button
