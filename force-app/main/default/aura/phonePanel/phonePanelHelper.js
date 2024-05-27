@@ -69,9 +69,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     
     // returns true if phone number is a valid integer, i.e. at least 3 digits
     isValidPhoneNumber : function(cmp) {
-        console.log ('72 - calling isValidPhoneNumber helper method ----');
         var inputValue = cmp.get('v.inputValue');
-        console.log('74 - inputValue-----' , inputValue);
         if(inputValue != undefined){
             return (inputValue.length >= 3 && !isNaN(parseFloat(inputValue)) && isFinite(inputValue));
         }else{
@@ -82,8 +80,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // find a matching record for a number
     // if there's a match - initiate call panel with record details
     // if not, initiate call panel with only number and state
-    callNumber : function(cmp, number,stateId) {      
-        console.log('86 - calling callNumber helper method --------');  
+    callNumber : function(cmp, number,stateId) {    
         var attributes = {
             'state' : 'Dialing',
             'recordName' : number,
@@ -108,7 +105,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
         }
         cmp.set('v.searchResults', []);  
         this.initiateCallPanel(cmp, attributes);
-        console.log('111 -- calling initiateCallPanel ---------- ');
     },
     
     // strip alphabetic characters from numbers and returns true if numbers are matching
@@ -140,17 +136,19 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // find a matching record using Open CTI runApex()
     // optionally run a callback function onCompletion
     search: function(cmp, inputValue, onCompletion) {
-        console.log('143 -- calling search helper method ------------');
         cmp.set('v.searchResults', []);
-        console.log('in helper calling search 145' );
         let _self = this;
-        console.log('in helper calling search 147');
-        console.log('sforce ----------- ' ,sforce);
-        console.log('openCTI -------------------  ' ,sforce.hasOwnProperty('opencti'));
         sforce.opencti.getSoftphoneLayout({
             callback: function(result) {
-                console.log('152 - result :---------------------- ' ,result);
                 var softPhoneLayoutJSON = JSON.stringify(result);
+
+                console.log('softPhoneLayoutJSON --- ' +softPhoneLayoutJSON);
+                var softPhoneLayoutJSONParsed = JSON.parse(softPhoneLayoutJSON);
+                var NoMatchObject = softPhoneLayoutJSONParsed.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
+                console.log('NoMatchObject --- ' +NoMatchObject);
+                cmp.set("v.NoMatchObject" , NoMatchObject);
+                console.log(cmp.get("v.NoMatchObject"));
+
                 if (inputValue != undefined) {
                     if (inputValue.length < 2) {
                         cmp.set('v.message', 'Enter at least two characters');
@@ -160,17 +158,14 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                         'searchvalue': inputValue,
                         'softPhoneLayoutJSON': softPhoneLayoutJSON
                     };
-                    console.log('163 -- calling apex SoftphoneContactSearchController apex class------------');
                     var args = {
                         apexClass: 'DialShreeCTI2.SoftphoneContactSearchController',
                         methodName: 'getContacts',
                         methodParams: 'softPhoneParams=' + encodeURIComponent(JSON.stringify(softPhoneJSON)),
                         //methodParams: 'name=' + mapString,
                         callback: function(result) {
-                            console.log('170 - calling apex SoftphoneContactSearchController');
                             if (result.success) {
                                 var searchResults;
-                                console.log('173 --- searchResults ----' +searchResults);
                                 if (result.returnValue != null || result.returnValue != undefined) {
                                     searchResults = JSON.parse(result.returnValue.runApex);
                                     let obj = JSON.parse(softPhoneLayoutJSON);
@@ -251,6 +246,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
         attributes.state = cmp.get("v.callType");
         attributes.countryCode = cmp.get("v.countryCode");
         attributes.presence = cmp.get('v.presence'); 
+        attributes.NoMatchObject = cmp.get("v.NoMatchObject");
         if(attributes.countryCode == '' || attributes.countryCode == undefined){
             attributes.countryCode = cmp.get("v.countryCodeMeta");
         }
@@ -273,7 +269,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                         return response.json();
                     })
                     .then(data => {
-                        console.log(JSON.stringify(data));
                         if (data.status) {           
                             cmp.set('v.spinner', false);         
                             cmp.getEvent('renderPanel').setParams({
@@ -305,8 +300,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 return response.json();
             })
             .then(data => {
-                if (data.status) {   
-                    console.log(JSON.stringify(data))                  
+                if (data.status) {              
                 }
             })
             .catch(error => {

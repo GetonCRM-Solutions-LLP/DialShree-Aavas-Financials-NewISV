@@ -223,21 +223,6 @@
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
-        <field>Dialshree_API__mdt.Base_Url__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Dialshree_API__mdt.Country_Code__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Dialshree_API__mdt.Login__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
         <editable>true</editable>
         <field>Lead.CurrentGenerators__c</field>
         <readable>true</readable>
@@ -499,9 +484,6 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>Dialshree_API_1__mdt-Dialshree API_1 Layout</layout>
-    </layoutAssignments>
-    <layoutAssignments>
-        <layout>Dialshree_API__mdt-Dialshree API Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
         <layout>DigitalWallet-Digital Wallet Layout</layout>

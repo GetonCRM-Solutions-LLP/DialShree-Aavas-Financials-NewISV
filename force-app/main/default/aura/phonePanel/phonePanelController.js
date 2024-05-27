@@ -10,7 +10,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 ({
     // on initialization, get the Call Center Settings and enable click to dial
     init: function(cmp, event, helper) { 
-        console.log('IN phonepanelcontroller');
         cmp.set('v.searchResults', []);
         helper.handleOutgoingCalls(cmp); 
     },
@@ -64,19 +63,14 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
         }
     },
     handleCall: function(cmp,event,helper){
-        console.log('67 - calling handleCall method -------');
          cmp.set('v.showDialPad', false);
          if(cmp.get('v.inputValue') == undefined){
                 cmp.set('v.inputValue','');
          }
-        var inputValue = cmp.get('v.inputValue');  
-         console.log('73 - inputValue ----------' +inputValue);   
+        var inputValue = cmp.get('v.inputValue');    
          if (helper.isValidPhoneNumber(cmp)) {
-            console.log('75 - calling isValidPhoneNumber helper ------------');
                 helper.search(cmp, inputValue, function(cmp, inputValue){
-                    console.log(' 77 - calling helper search --------');
                     helper.callNumber(cmp, inputValue);
-                    console.log ('79 - calling callNumber helper method ---------');
                 });
          } else {
                 helper.search(cmp, inputValue);
