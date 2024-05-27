@@ -36,6 +36,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:handler name="renderPanel" action="{!c.renderPanel}" />
     <aura:handler name="editPanel" action="{!c.editPanel}" />
     <aura:handler name="getSettings" action="{!c.getSettings}" />
+    <aura:registerEvent name="agentInputTransmit" type="c:agentInputTransmit"/>
+    <aura:attribute name="agentLeadId" type="String"/> 
 
     <div class="slds-panel__section slds-grid slds-theme--shade slds-p-around--xx-small">
         <div class="status-wrapper" style="width: 100%;">

@@ -105,7 +105,7 @@
             });
     },
 
-    handleMapppings : function(component, event, dataMap){
+    handleMapppings : function(component, event, dataMap, helper){
         console.log ('inside handleMappings --- ', JSON.stringify(dataMap));
         console.log('record Id --- ' ,component.get("v.recordId"));
         var statusMap = JSON.parse(JSON.stringify(component.get("v.statusMap")));
@@ -142,5 +142,26 @@
             }
         });
         $A.enqueueAction(action);
+        this.transmitAgentData(component, event, helper);
+    },
+
+    transmitAgentData : function (component, event, helper){
+        var encodedInputText = encodeURIComponent(component.get("v.inputText"));
+
+        var updateLeadURL = component.get("v.baseUrl")+'elision-api/main.php?source=test'+'&action=update_lead'+'&lead_id='+component.get("v.agentLeadId")+'&address2='+encodedInputText;
+        fetch(updateLeadURL)
+            .then(response => {
+                if (response.ok) return response.json()
+            })
+            .then(data => {
+                if(data.status){
+                    console.log('data received at transmitAgentData --- ' , data);
+                }else{
+                    console.error("Error received at transmitAgentData, verify updateLeadURL parameters");
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            })
     }
 })

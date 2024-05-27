@@ -58,5 +58,12 @@
                 toast : {'type': 'warning', 'message': 'Please select valid Date time.'}                
             }).fire(); 
         }
-    }    
+    },
+    
+    onAgentInputTransmit : function(component, event, helper){
+        var agentInputTransmit = event.getParam('agentLeadId');
+        if(agentInputTransmit != null && agentInputTransmit != 'undefined'){
+            component.set("v.agentLeadId" , agentInputTransmit);
+        } 
+    }
 })

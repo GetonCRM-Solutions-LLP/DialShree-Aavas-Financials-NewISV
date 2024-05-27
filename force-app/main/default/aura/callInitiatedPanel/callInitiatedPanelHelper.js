@@ -125,6 +125,9 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 
     parkGrabHangJquery : function(cmp, methodUrl, param) { 
          var parkGrabHangUrl = cmp.get("v.baseUrl") + methodUrl + param + '&agent_user=' + cmp.get("v.dialUser");
+         if(cmp.get('v.inputText') !=  null && cmp.get('v.inputText') != 'undefined'){
+            var inputText = cmp.get('v.inputText');
+         }
          
          fetch(parkGrabHangUrl)
              .then(response => {
@@ -151,7 +154,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                  'dialUser': cmp.get("v.dialUser"),
                                  'campaignId': sessionStorage.getItem('campaignId'),
                                  'recordId' : cmp.get("v.recordId"),
-                                 'NoMatchObject' : cmp.get("v.NoMatchObject")
+                                 'NoMatchObject' : cmp.get("v.NoMatchObject"),
+                                 'inputText' : inputText
                              },
 
                          }).fire();

@@ -39,6 +39,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:attribute name="accountId" type="String" default="false" />
     <aura:attribute name="opportunityId" type="String" default="false" />
     <aura:attribute name="NoMatchObject" type="String"/>
+    <aura:attribute name="inputText" type="String"/>
  
     <aura:handler event="c:StatusCheckEvent" action="{!c.handleApplicationEvent}"/>
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
@@ -64,10 +65,11 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
                 <c:ticker tickerTime="{!v.tickerTime}"/>
             </div>
+            <lightning:input aura:id="inputText" value="{!v.inputText}" placeholder="Enter the case number/reference number"/>
         </div>
 
         <!--  Bottom section: End button on Dialing; Decline and Accept buttons on Incoming or Transferring -->
-        <div class="bottom-panel slds-panel__section slds-align-bottom slds-grid">
+        <div class="bottom-panel slds-panel__section slds-align-bottom slds-grid" style="margin: 0%;">
             <button class="slds-size--1-of-3 slds-button slds-button--destructive"
                 onclick="{!c.end}">{!$Label.c.Label_Hangup}</button>
             <button class="slds-size--1-of-3 slds-button slds-button--brand"
