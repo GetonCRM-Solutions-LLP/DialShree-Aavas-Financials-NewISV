@@ -135,9 +135,16 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
         var status = liveStatusObj.data.status;
         var state = liveStatusObj.data.call_type;
         var callTypeInbound = liveStatusObj.data.call_type +' - '+liveStatusObj.data.ingroup;
-        if(cmp.set('v.state') != state && cmp.set('v.state') != callTypeInbound){
-            cmp.set('v.state', state);
-        }        
+
+        // if(cmp.set('v.state') != state && cmp.set('v.state') != callTypeInbound){
+        //     cmp.set('v.state', state);
+        // }        
+
+        if(liveStatusObj.data.ingroup == ''){
+            cmp.set("v.state",state);
+        }else{
+            cmp.set("v.state",callTypeInbound);
+        } 
 
         if((status == 'INCALL' && rtrStatus == '') || (status == '3-WAY') || (rtrStatus == '3-WAY') ){
             cmp.set('v.isTransferParkActive', false);
