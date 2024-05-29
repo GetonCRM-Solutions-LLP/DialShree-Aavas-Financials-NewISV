@@ -80,7 +80,18 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 return response.json();
             })
             .then($A.getCallback(data => {
-                if (data.status) {                             
+                if (data.status) {        
+
+                    var agentleadId = data.data.lead_id;
+                    console.log('agentleadId --- ' , agentleadId);
+                    if(agentleadId != 'Undefined' && agentleadId != null && agentleadId != 0) {
+                        var agentInputTransmitEvent = $A.get("e.c:agentInputTransmit");
+                        agentInputTransmitEvent.setParams({
+                            'agentLeadId' : agentleadId
+                        })
+                        agentInputTransmitEvent.fire();
+                    }
+
                     sessionStorage.setItem("campaignId", data.data.campaign_id);
                     cmp.set("v.campaignId",data.data.campaign_id);
 
@@ -173,7 +184,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 'dialUser' : cmp.get("v.dialUser"),
                 'presence' : cmp.get("v.presence"),
                 'countryCodeMeta' : cmp.get("v.countryCodeMeta"),
-                'pauseLabel' : cmp.get("v.pauseLabel")
+                'pauseLabel' : cmp.get("v.pauseLabel"),
+                'agentLeadId' : cmp.get("v.agentLeadId")
             },           
         }).fire();
     },

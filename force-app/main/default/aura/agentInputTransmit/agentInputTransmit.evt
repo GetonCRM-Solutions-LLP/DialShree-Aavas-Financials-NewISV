@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION">
+    <aura:attribute name="agentLeadId" type="String"/>
+    <aura:attribute name="inputText" type="String"/>
+</aura:event>
