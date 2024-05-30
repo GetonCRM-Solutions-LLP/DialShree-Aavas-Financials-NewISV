@@ -26,7 +26,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                             'title' : '',
                             'account' : '',
                             'presence' : cmp.get('v.presence'),
-                            'campaignId' : cmp.get('v.campaignId')
+                            'campaignId' : cmp.get('v.campaignId'),
+                            'recordId' : payload.recordId
                         };
                         var phoneNo = attributes.phone;
                         phoneNo = phoneNo.replace(/\D/g, "");
