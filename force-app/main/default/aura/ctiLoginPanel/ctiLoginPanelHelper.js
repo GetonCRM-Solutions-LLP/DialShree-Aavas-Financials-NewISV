@@ -10,12 +10,18 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 ({
     // enable click to dial, and bring up the phone panel.
     handleLogin : function(cmp) {
-        sforce.opencti.enableClickToDial({callback: function() {
-            cmp.getEvent('renderPanel').setParams({
-                type : 'c:phonePanel',
-                attributes: { presence : 'Available'}
-            }).fire();
+        try{
+            sforce.opencti.enableClickToDial({callback: function() {
+                cmp.getEvent('renderPanel').setParams({
+                    type : 'c:phonePanel',
+                    attributes: { presence : 'Available'}
+                }).fire();
+            }
+          });
         }
-      });
+        catch (error) {
+            console.log('error at handleLogin method of ctiLoginPanelHelper --- ' , JSON.stringify(error));
+            console.log('error message at handleLogin method of ctiLoginPanelHelper --- ' , JSON.stringify(error.message));
+        }  
     }
 })

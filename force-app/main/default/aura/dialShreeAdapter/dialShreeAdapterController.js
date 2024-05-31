@@ -11,43 +11,81 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 ({
     // store call center settings, so they're easily accessible ny all panels. Bring up the CTI login panel.
     init: function(cmp, event, helper) {
-      //  var vfOrigin = "https://" + cmp.get("v.vfHost");
-        window.addEventListener("message", function(event) {
-            var eventResponse = JSON.parse(JSON.stringify(event.data));
-            if(eventResponse.logged_in === true){
-                cmp.set('v.logStatus', eventResponse.logged_in)
-            }
-        }, false);
-        helper.apiData(cmp, event, helper); 
+        try{
+            //  var vfOrigin = "https://" + cmp.get("v.vfHost");
+            window.addEventListener("message", function(event) {
+                var eventResponse = JSON.parse(JSON.stringify(event.data));
+                if(eventResponse.logged_in === true){
+                    cmp.set('v.logStatus', eventResponse.logged_in)
+                }
+            }, false);
+            helper.apiData(cmp, event, helper); 
+        }
+        catch (error) {
+            console.log('error at init method of dialShreeAdapterController --- ' , JSON.stringify(error));
+            console.log('error message at init method of dialShreeAdapterController --- ' , JSON.stringify(error.message));
+        } 
+      
     },
 
     // renderPanel event handler. Used to replace the current view with a given panel.
     renderPanel: function(cmp, event, helper) {
-        var params = event.getParams();
-        helper.renderPanel(cmp, params);
+        try{
+            var params = event.getParams();
+            helper.renderPanel(cmp, params);
+        }
+        catch (error) {
+            console.log('error at renderPanel method of dialShreeAdapterController --- ' , JSON.stringify(error));
+            console.log('error message at renderPanel method of dialShreeAdapterController --- ' , JSON.stringify(error.message));
+        } 
     },
 
     // getSettings event handler. Returns the stored call center settings.
     getSettings: function(cmp, event, helper) {
-        var callback = event.getParams().callback;
-        helper.getCallCenterSettings(cmp, callback);
+        try{
+            var callback = event.getParams().callback;
+            helper.getCallCenterSettings(cmp, callback);
+        }
+        catch (error) {
+            console.log('error at getSettings method of dialShreeAdapterController --- ' , JSON.stringify(error));
+            console.log('error message at getSettings method of dialShreeAdapterController --- ' , JSON.stringify(error.message));
+        } 
     },
 
     // editPanel event handler. Updates the softphone panel label.
     editPanel: function(cmp, event, helper) {
-      //  var params = event.getParams();
-       // if (params.label) {
-            sforce.opencti.setSoftphonePanelLabel({
-                label: $A.get("$Label.c.SoftPhone_Header")
-            });
-        //}
+        try{
+            //  var params = event.getParams();
+            // if (params.label) {
+                sforce.opencti.setSoftphonePanelLabel({
+                    label: $A.get("$Label.c.SoftPhone_Header")
+                });
+            //}
+        }
+        catch (error) {
+            console.log('error at editPanel method of dialShreeAdapterController --- ' , JSON.stringify(error));
+            console.log('error message at editPanel method of dialShreeAdapterController --- ' , JSON.stringify(error.message));
+        } 
+      
     },
     renderFieldEventHandler: function(cmp, event, helper){
-      cmp.set('v.logStatus', false);
+        try{
+            cmp.set('v.logStatus', false);
+        }
+        catch (error) {
+            console.log('error at renderFieldEventHandler method of dialShreeAdapterController --- ' , JSON.stringify(error));
+            console.log('error message at renderFieldEventHandler method of dialShreeAdapterController --- ' , JSON.stringify(error.message));
+        } 
     },
 
     regenerateSession: function(cmp, event, helper){
-        helper.regenerateSessionSet(cmp, event, helper); 
+        try{
+            helper.regenerateSessionSet(cmp, event, helper); 
+        }
+        catch (error) {
+            console.log('error at regenerateSession method of dialShreeAdapterController --- ' , JSON.stringify(error));
+            console.log('error message at regenerateSession method of dialShreeAdapterController --- ' , JSON.stringify(error.message));
+        } 
     }
 
 })
