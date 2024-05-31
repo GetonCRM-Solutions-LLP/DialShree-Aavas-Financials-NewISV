@@ -9,15 +9,27 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 ({
     // initialize the keys (digits, letters, and signs) on the dialpad
     init: function(cmp, event, helper) {
-        cmp.set('v._keys', helper.getKeyList());
+        try{   
+            cmp.set('v._keys', helper.getKeyList());
+        }
+        catch (error) {
+            console.log('error at init method of dialPadController --- ' , JSON.stringify(error));
+            console.log('error message at init method of dialPadController --- ' , JSON.stringify(error.message));
+        }  
     },
 
     // click handler
     handleClick: function(cmp, event) {
-        var sourceElem = event && event.currentTarget;
-        var value = sourceElem && sourceElem.getAttribute('data-value');
-        if (value) {
-            cmp.get('e.keyClick').setParams({value: value}).fire();
+        try{
+            var sourceElem = event && event.currentTarget;
+            var value = sourceElem && sourceElem.getAttribute('data-value');
+            if (value) {
+                cmp.get('e.keyClick').setParams({value: value}).fire();
+            }
         }
+        catch (error) {
+            console.log('error at handleClick method of dialPadController --- ' , JSON.stringify(error));
+            console.log('error message at handleClick method of dialPadController --- ' , JSON.stringify(error.message));
+        }  
     }
 })

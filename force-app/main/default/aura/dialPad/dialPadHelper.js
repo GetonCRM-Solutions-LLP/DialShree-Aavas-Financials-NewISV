@@ -8,7 +8,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 
 ({
     getKeyList: function() {
-        var keys = [];
+        try{
+            var keys = [];
 
         // create 1-9 buttons (first three rows)
         var text = { 1: ' ', 2:'ABC', 3:'DEF', 4:'GHI', 5:'JKL', 6:'MNO', 7:'PQRS', 8:'TUV', 9:'WXYZ' };
@@ -35,5 +36,10 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
         });
 
         return keys;
+        }
+        catch (error) {
+            console.log('error at getKeyList method of dialPadController --- ' , JSON.stringify(error));
+            console.log('error message at getKeyList method of dialPadController --- ' , JSON.stringify(error.message));
+        } 
     }
 })

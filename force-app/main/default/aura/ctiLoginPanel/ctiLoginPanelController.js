@@ -9,6 +9,12 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 ({
     // on login
     handleLogin: function(cmp, event, helper) {
-        helper.handleLogin(cmp);
+        try{ 
+            helper.handleLogin(cmp);
+        }
+        catch (error) {
+            console.log('error at handleLogin method of ctiLoginPanelController --- ' , JSON.stringify(error));
+            console.log('error message at handleLogin method of ctiLoginPanelController --- ' , JSON.stringify(error.message));
+        }  
     }
 })

@@ -10,29 +10,35 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 ({
   // log a task for the call
   logCall : function(cmp, callback) {
-    var component = cmp;
-    if (cmp.get('v.recordId').length == 0 || cmp.get('v.showDialPad')){
-      callback();
-    } else {
-      cmp.find("ticker").getDurationInSeconds(function(duration) {
-        sforce.opencti.saveLog({
-          value : {
-            entityApiName : 'Task',
-            WhoId : cmp.get('v.recordId'),
-            CallDisposition : 'Internal',
-            CallObject : 'DemoCall',
-            Description : component.find('note').get('v.value'),
-            Subject : 'Demo Call Log',
-            Priority : 'Normal',
-            Status : 'Completed',
-            CallDurationInSeconds : duration,
-            CallType : cmp.get('v.callType'),
-            Type : 'Call',
-            WhatId : cmp.get('v.account').Id
-          },
-          callback : callback
-        });
-      })
+    try{
+      var component = cmp;
+      if (cmp.get('v.recordId').length == 0 || cmp.get('v.showDialPad')){
+        callback();
+      } else {
+        cmp.find("ticker").getDurationInSeconds(function(duration) {
+          sforce.opencti.saveLog({
+            value : {
+              entityApiName : 'Task',
+              WhoId : cmp.get('v.recordId'),
+              CallDisposition : 'Internal',
+              CallObject : 'DemoCall',
+              Description : component.find('note').get('v.value'),
+              Subject : 'Demo Call Log',
+              Priority : 'Normal',
+              Status : 'Completed',
+              CallDurationInSeconds : duration,
+              CallType : cmp.get('v.callType'),
+              Type : 'Call',
+              WhatId : cmp.get('v.account').Id
+            },
+            callback : callback
+          });
+        })
+      }
     }
+    catch (error) {
+      console.log('error at logCall method of connectedPanelHelper --- ' , JSON.stringify(error));
+      console.log('error message at logCall method of connectedPanelHelper --- ' , JSON.stringify(error.message));
+    }  
   },
 })

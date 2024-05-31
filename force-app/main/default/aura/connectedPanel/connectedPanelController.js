@@ -9,37 +9,67 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 ({
     // set the panel label to Open CTI: Connected
     init: function(cmp, event, helper) {
-        cmp.getEvent('editPanel').setParams({
-            label : 'Open CTI Softphone: Connected'
-        }).fire();
+        try{
+            cmp.getEvent('editPanel').setParams({
+                label : 'Open CTI Softphone: Connected'
+            }).fire();
+        }
+        catch (error) {
+            console.log('error at Init method of connectedPanelController --- ' , JSON.stringify(error));
+            console.log('error message at Init method of connectedPanelController --- ' , JSON.stringify(error.message));
+        }  
     },
 
     // a handler for the dial pad icon, showing or hiding the dial pad
     toggleDialPad: function(cmp, event, helper) {
-        cmp.set('v.showDialPad', !cmp.get('v.showDialPad'));
-        cmp.set('v.inputValue', '');
+        try{
+            cmp.set('v.showDialPad', !cmp.get('v.showDialPad'));
+            cmp.set('v.inputValue', '');
+        }
+        catch (error) {
+            console.log('error at toggleDialPad method of connectedPanelController --- ' , JSON.stringify(error));
+            console.log('error message at toggleDialPad method of connectedPanelController --- ' , JSON.stringify(error.message));
+        }  
     },
 
     // log a task, unless the record is unrecognized, and return to phone panel when ending a call
     endCall: function(cmp, event, helper) {
-        helper.logCall(cmp, function(response) {
-            cmp.getEvent('renderPanel').setParams({
-                type : 'c:phonePanel',
-                toast : {'type': 'normal', 'message': 'Call was ended.'},
-                attributes : { presence : cmp.get('v.presence')}
-            }).fire();
-        })
+        try{
+            helper.logCall(cmp, function(response) {
+                cmp.getEvent('renderPanel').setParams({
+                    type : 'c:phonePanel',
+                    toast : {'type': 'normal', 'message': 'Call was ended.'},
+                    attributes : { presence : cmp.get('v.presence')}
+                }).fire();
+            })
+        }
+        catch (error) {
+            console.log('error at endCall method of connectedPanelController --- ' , JSON.stringify(error));
+            console.log('error message at endCall method of connectedPanelController --- ' , JSON.stringify(error.message));
+        }  
     },
 
     // update search bar with every key click, and update the status of the Call button
     handleKeyClick: function(cmp, event, helper) {
-        cmp.set('v.inputValue', cmp.get('v.inputValue') + event.getParam('value'));
-        cmp.set('v.transfercallDisabled', false);
+        try{
+            cmp.set('v.inputValue', cmp.get('v.inputValue') + event.getParam('value'));
+            cmp.set('v.transfercallDisabled', false);
+        }
+        catch (error) {
+            console.log('error at handleKeyClick method of connectedPanelController --- ' , JSON.stringify(error));
+            console.log('error message at handleKeyClick method of connectedPanelController --- ' , JSON.stringify(error.message));
+        }  
     },
 
     transferCall: function(cmp, event, helper) {
-        cmp.getEvent('renderPanel').setParams({
-              toast : {'type': 'normal', 'message': 'Call was transferred to '+ cmp.get('v.inputValue') +'.'},
-        }).fire();
+        try{
+            cmp.getEvent('renderPanel').setParams({
+                toast : {'type': 'normal', 'message': 'Call was transferred to '+ cmp.get('v.inputValue') +'.'},
+          }).fire();
+        }
+        catch (error) {
+            console.log('error at transferCall method of connectedPanelController --- ' , JSON.stringify(error));
+            console.log('error message at transferCall method of connectedPanelController --- ' , JSON.stringify(error.message));
+        }  
     },
 })
