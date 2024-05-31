@@ -1,13 +1,13 @@
 ({
     transferJqery: function (component, val, val2) {
-        var transferUrl = component.get("v.baseUrl") + component.get("v.wapperApiObj").transfer +
+        try {
+            var transferUrl = component.get("v.baseUrl") + component.get("v.wapperApiObj").transfer +
             '&user=' + component.get("v.dialUser") +
             '&pass=' + component.get("v.dialPwd") +
             '&agent_user=' + component.get("v.dialUser") +
             '&value=' + val +
             val2;
       
-    
         fetch(transferUrl)
             .then(response => {
                 if (response.ok) return response.json()
@@ -57,85 +57,103 @@
                     component.set('v.spinner', false);
                 }
             });
+        } catch (error) {
+            console.log('error at transferJqery method of DialShreeTransferCallModalHelper --- ' , JSON.stringify(error));
+            console.log('error message at transferJqery method of DialShreeTransferCallModalHelper --- ' , JSON.stringify(error.message));
+        } 
     },
 
     transferGroupListJqery: function (component) {
-        var opts = [];
-        var transferGroupListUrl = component.get("v.baseUrl") + component.get("v.wapperApiObj").transferGroupList +
-            '&campaign_id=' + component.get("v.campaignId");
-            
-        fetch(transferGroupListUrl)
-            .then(response => {
-                if (response.ok) return response.json()
-                throw new Error('Network response was not ok.')
-            }).then(data => {                
-                if (data.status) {
-
-                    opts.push({
-                        class: "optionClass",
-                        label: "--- None ---",
-                        value: ""
-                    });
-                    
-                    if (data.data != undefined) {
-                        for (var i = 0; i < data.data.length; i++) {
-                            opts.push({
-                                "class": "optionClass",
-                                label: data.data[i],
-                                value: data.data[i]
-                            });
+        try {
+            var opts = [];
+            var transferGroupListUrl = component.get("v.baseUrl") + component.get("v.wapperApiObj").transferGroupList +
+                '&campaign_id=' + component.get("v.campaignId");
+                
+            fetch(transferGroupListUrl)
+                .then(response => {
+                    if (response.ok) return response.json()
+                    throw new Error('Network response was not ok.')
+                }).then(data => {                
+                    if (data.status) {
+    
+                        opts.push({
+                            class: "optionClass",
+                            label: "--- None ---",
+                            value: ""
+                        });
+                        
+                        if (data.data != undefined) {
+                            for (var i = 0; i < data.data.length; i++) {
+                                opts.push({
+                                    "class": "optionClass",
+                                    label: data.data[i],
+                                    value: data.data[i]
+                                });
+                            }
                         }
-                    }
-                    component.set('v.internaloptions', opts);
-                } 
-            });
+                        component.set('v.internaloptions', opts);
+                    } 
+                });
+        } catch (error) {
+            console.log('error at transferGroupListJqery method of DialShreeTransferCallModalHelper --- ' , JSON.stringify(error));
+            console.log('error message at transferGroupListJqery method of DialShreeTransferCallModalHelper --- ' , JSON.stringify(error.message));
+        } 
     },
 
     transferAgentListJqery: function (component) {
-        var opts = [];
-        var transferAgentListUrl = component.get("v.baseUrl") + component.get("v.wapperApiObj").transferAgentList +
-            '&campaign_id=' + component.get("v.campaignId")+'&agent_id='+component.get("v.dialUser");
-
-        fetch(transferAgentListUrl)
-            .then(response => {
-                if (response.ok) return response.json()
-                throw new Error('Network response was not ok.')
-            }).then(data => {
-                if (data.status) {
-                    opts.push({
-                        class: "optionClass",
-                        label: "--- None ---",
-                        value: ""
-                    });
-                    var objJSON = data;                    
-                    if (objJSON.data != undefined) {
-                        for (var i = 0; i < objJSON.data.length; i++) {
-                            opts.push({
-                                "class": "optionClass",
-                                label: objJSON.data[i].name + ' - ' + objJSON.data[i].id,
-                                value: objJSON.data[i].id
-                            });
+        try {
+            var opts = [];
+            var transferAgentListUrl = component.get("v.baseUrl") + component.get("v.wapperApiObj").transferAgentList +
+                '&campaign_id=' + component.get("v.campaignId")+'&agent_id='+component.get("v.dialUser");
+    
+            fetch(transferAgentListUrl)
+                .then(response => {
+                    if (response.ok) return response.json()
+                    throw new Error('Network response was not ok.')
+                }).then(data => {
+                    if (data.status) {
+                        opts.push({
+                            class: "optionClass",
+                            label: "--- None ---",
+                            value: ""
+                        });
+                        var objJSON = data;                    
+                        if (objJSON.data != undefined) {
+                            for (var i = 0; i < objJSON.data.length; i++) {
+                                opts.push({
+                                    "class": "optionClass",
+                                    label: objJSON.data[i].name + ' - ' + objJSON.data[i].id,
+                                    value: objJSON.data[i].id
+                                });
+                            }
                         }
-                    }
-                    component.set('v.agentoptions', opts);
-                } 
-            });
+                        component.set('v.agentoptions', opts);
+                    } 
+                });
+        } catch (error) {
+            console.log('error at transferAgentListJqery method of DialShreeTransferCallModalHelper --- ' , JSON.stringify(error));
+            console.log('error message at transferAgentListJqery method of DialShreeTransferCallModalHelper --- ' , JSON.stringify(error.message));
+        } 
     },
 
     grabJquery : function(component,val) { 
-        var grabUrl = component.get("v.baseUrl")+component.get("v.wapperApiObj").park+val+'&agent_user='+component.get("v.dialUser");
-        
-        fetch(grabUrl)
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            if (data.status) {             
-                component.set("v.isPark",true);
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        })        
+        try {
+            var grabUrl = component.get("v.baseUrl")+component.get("v.wapperApiObj").park+val+'&agent_user='+component.get("v.dialUser");
+            fetch(grabUrl)
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                if (data.status) {             
+                    component.set("v.isPark",true);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            })        
+        } catch (error) {
+            console.log('error at grabJquery method of DialShreeTransferCallModalHelper --- ' , JSON.stringify(error));
+            console.log('error message at grabJquery method of DialShreeTransferCallModalHelper --- ' , JSON.stringify(error.message));
+        } 
     }
 })

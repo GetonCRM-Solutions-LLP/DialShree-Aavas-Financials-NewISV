@@ -9,41 +9,52 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 ({
   // sets the initial attributes and updates the duration every second
   init: function(cmp, event, helper){    
-    cmp.set('v.duration', '0:00');
-    cmp.set('v.seconds', 0);
-    cmp._intervalID=null;
-    var start=null;
-
-    function tick(){
-      if (!cmp.isValid()){
-        return;
-      }
-      var now=new Date();
-      var diff=now.getTime()-start.getTime();      
-      diff=diff/1000;
-
-      var duration=cmp.get('v.duration');
-      var newDuration=helper.formatSecond(diff);
-      if (duration!=newDuration){
-        cmp.set('v.duration', newDuration);
-        cmp.set('v.seconds', diff);
-      }
-    }
-    var tickBack=$A.getCallback(tick);
-    if(cmp.get('v.tickerTime') == null){
-      start=new Date();
-    }else{
-      start=cmp.get('v.tickerTime');
-    }
+    try {
+        cmp.set('v.duration', '0:00');
+        cmp.set('v.seconds', 0);
+        cmp._intervalID=null;
+        var start=null;
     
-    cmp._intervalID= window.setInterval(tickBack, 1000);
+        function tick(){
+          if (!cmp.isValid()){
+            return;
+          }
+          var now=new Date();
+          var diff=now.getTime()-start.getTime();      
+          diff=diff/1000;
+    
+          var duration=cmp.get('v.duration');
+          var newDuration=helper.formatSecond(diff);
+          if (duration!=newDuration){
+            cmp.set('v.duration', newDuration);
+            cmp.set('v.seconds', diff);
+          }
+        }
+        var tickBack=$A.getCallback(tick);
+        if(cmp.get('v.tickerTime') == null){
+          start=new Date();
+        }else{
+          start=cmp.get('v.tickerTime');
+        }
+        
+        cmp._intervalID= window.setInterval(tickBack, 1000);
+
+    } catch (error) {
+        console.log('error at init method of tickerController --- ' , JSON.stringify(error));
+        console.log('error message at init method of tickerController --- ' , JSON.stringify(error.message));
+    }
   },
 
   // return duration in seconds (for example, when duration is 10:06, it will return 606)
   getDurationInSeconds: function(cmp, event) {
-    var params = event.getParam('arguments');
-    if (params) {
-        params.callback(cmp.get('v.seconds'));
+    try {
+      var params = event.getParam('arguments');
+      if (params) {
+          params.callback(cmp.get('v.seconds'));
+      }
+    } catch (error) {
+        console.log('error at getDurationInSeconds method of tickerController --- ' , JSON.stringify(error));
+        console.log('error message at getDurationInSeconds method of tickerController --- ' , JSON.stringify(error.message));
     }
   }
 })

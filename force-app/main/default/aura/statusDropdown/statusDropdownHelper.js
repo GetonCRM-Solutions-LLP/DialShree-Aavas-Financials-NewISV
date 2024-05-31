@@ -12,21 +12,32 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 ({
     // expand the status dropdown on click
     toggleStatus: function(cmp) {
-        var dropdown = cmp.find('dropdownContainer');
-        $A.util.toggleClass(dropdown, 'slds-is-open');
+        try {
+            var dropdown = cmp.find('dropdownContainer');
+            $A.util.toggleClass(dropdown, 'slds-is-open');
+        } catch (error) {
+            console.log('error at toggleStatus method of statusDropdownHelper --- ' , JSON.stringify(error));
+            console.log('error message at toggleStatus method of statusDropdownHelper --- ' , JSON.stringify(error.message));
+        } 
     },
 
     // update the status dropdown (presence and icon)
     setStatusName: function(cmp, selectOption) {
-        var newStatus = selectOption.getAttribute('data-value-name');
-        var iconType = selectOption.getAttribute('data-value-iconType');
-        cmp.set('v.presence', newStatus);
-        this.renderIcon(cmp, iconType);
+        try {
+            var newStatus = selectOption.getAttribute('data-value-name');
+            var iconType = selectOption.getAttribute('data-value-iconType');
+            cmp.set('v.presence', newStatus);
+            this.renderIcon(cmp, iconType);
+        } catch (error) {
+            console.log('error at setStatusName method of statusDropdownHelper --- ' , JSON.stringify(error));
+            console.log('error message at setStatusName method of statusDropdownHelper --- ' , JSON.stringify(error.message));
+        } 
     },
 
     // update the status icon on the first row of the status dropdown
     renderIcon : function(cmp, iconType) {
-        $A.createComponent("c:svg",
+        try {
+            $A.createComponent("c:svg",
             {"class": 'slds-icon slds-icon--x-small slds-icon-text-'+iconType,
             "aura:id": "statusIcon",
             "xlinkHref": "/resource/slds/assets/icons/utility-sprite/svg/symbols.svg#record"},
@@ -35,116 +46,144 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                     cmp.set('v.icon', [ newIcon ]);
                 }
             });
+        } catch (error) {
+            console.log('error at renderIcon method of statusDropdownHelper --- ' , JSON.stringify(error));
+            console.log('error message at renderIcon method of statusDropdownHelper --- ' , JSON.stringify(error.message));
+        } 
     },
 
     // on logout, disable click to dial and bring up the cti login panel
-    handleLogout: function(cmp,event) {        
-        this.logoutApiJQuey(cmp,event);
+    handleLogout: function(cmp,event) {  
+        try {
+            this.logoutApiJQuey(cmp,event);
+        } catch (error) {
+            console.log('error at handleLogout method of statusDropdownHelper --- ' , JSON.stringify(error));
+            console.log('error message at handleLogout method of statusDropdownHelper --- ' , JSON.stringify(error.message));
+        }       
     },
 
     // set the panel label by firing the editPanel event
     setLabel: function (cmp, label) {
-        cmp.getEvent('editPanel').setParams({
+        try {
+            cmp.getEvent('editPanel').setParams({
                 label: label
         }).fire();
+        } catch (error) {
+            console.log('error at setLabel method of statusDropdownHelper --- ' , JSON.stringify(error));
+            console.log('error message at setLabel method of statusDropdownHelper --- ' , JSON.stringify(error.message));
+        } 
     },
 
     // notify the phone panel that the presence has changed
     notifyPhonePanel: function(cmp, helper, newStatus) {
-        
-        cmp.getEvent('onlinePresenceChanged').setParams({
-            newStatus: newStatus
-        }).fire();
+        try {
+            cmp.getEvent('onlinePresenceChanged').setParams({
+                newStatus: newStatus
+            }).fire();
+        } catch (error) {
+            console.log('error at notifyPhonePanel method of statusDropdownHelper --- ' , JSON.stringify(error));
+            console.log('error message at notifyPhonePanel method of statusDropdownHelper --- ' , JSON.stringify(error.message));
+        } 
     },    
 
     apiData : function(cmp, event, helper) {        
-        var action = cmp.get("c.getServiceSettings");
-        action.setCallback(this,function(response){
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                cmp.set("v.baseUrl",response.getReturnValue().DialShreeCTI2__Base_Url__c);
-            }
-        });
-        
-        var action2 = cmp.get("c.dialUserInfoCs");
-        action2.setCallback(this,function(response){
-            var state = response.getState();
-            if (state === "SUCCESS") {                
-                cmp.set("v.dialUser",response.getReturnValue().DialShreeCTI2__Dialshree_User__c);
-            }
-        });
-
-        var action3 = cmp.get("c.apiWrapperList");
-        action3.setCallback(this,function(response){
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                cmp.set("v.wapperApiObj",response.getReturnValue());
-            }
-        });
-        
-        $A.enqueueAction(action);
-        $A.enqueueAction(action2);
-        $A.enqueueAction(action3);
+        try {
+            var action = cmp.get("c.getServiceSettings");
+            action.setCallback(this,function(response){
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    cmp.set("v.baseUrl",response.getReturnValue().DialShreeCTI2__Base_Url__c);
+                }
+            });
+            
+            var action2 = cmp.get("c.dialUserInfoCs");
+            action2.setCallback(this,function(response){
+                var state = response.getState();
+                if (state === "SUCCESS") {                
+                    cmp.set("v.dialUser",response.getReturnValue().DialShreeCTI2__Dialshree_User__c);
+                }
+            });
+    
+            var action3 = cmp.get("c.apiWrapperList");
+            action3.setCallback(this,function(response){
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    cmp.set("v.wapperApiObj",response.getReturnValue());
+                }
+            });
+            
+            $A.enqueueAction(action);
+            $A.enqueueAction(action2);
+            $A.enqueueAction(action3);
+        } catch (error) {
+            console.log('error at apiData method of statusDropdownHelper --- ' , JSON.stringify(error));
+            console.log('error message at apiData method of statusDropdownHelper --- ' , JSON.stringify(error.message));
+        } 
     },
 
     logoutApiJQuey: function (cmp, event) {
-        cmp.set('v.showSpinner', true);
-        var logoutUrl;
-        var manualWrapperObj = cmp.get("v.wapperApiObj");
-        
-        logoutUrl = cmp.get("v.baseUrl") + manualWrapperObj.logout + '&agent_user=' + cmp.get("v.dialUser");
-        // var defaultSelectedOption;
-        // defaultSelectedOption = document.createElement("option");
-        // defaultSelectedOption.setAttribute('data-value-name','Pause');
-        // defaultSelectedOption.setAttribute('data-value-iconType','');
-        let self = this;
-        self.renderIcon(cmp,'error');
-        fetch(logoutUrl)
-            .then(response => {
-                return response.json();
-            })
-            .then(data => {
-                var logStatus = data.data.value;
-                var dropdownTarget = cmp.find('dropdownContainer');
-                $A.util.removeClass(dropdownTarget, 'slds-is-open');
-                cmp.set('v.userLoggedStatus', logStatus);
-                cmp.set('v.presence', 'Pause');
-               
-
-                //this.renderIcon(cmp, 'error');
-                var vx = cmp.get("v.method");
-                //fire event from child and capture in parent
-                $A.enqueueAction(vx);
-                if (data.status) {
-                    var callback = function (result) {
-                        if (result.success) {
-                            // var compEvent = $A.get("event.cmp.renderFieldEvent");
-                            //console.log('-------compEvent-------', compEvent);
-                            // compEvent.setParams("userLogged", "LOGOUT");
-                            // compEvent.fire();
-                            // sforce.opencti.disableClickToDial({
-                            //     params : {logStatus : logStatus},
-                            //     callback: callback
-                            // });
-                        } else {
-                            throw new Error('Click to dial cannot be disabled.');
-                        }
-                    };
-                    sforce.opencti.disableClickToDial({
-                        params : {logStatus : logStatus},
-                        callback: callback
-                    });
-                    setTimeout(() => {
+        try {
+            cmp.set('v.showSpinner', true);
+            var logoutUrl;
+            var manualWrapperObj = cmp.get("v.wapperApiObj");
+            
+            logoutUrl = cmp.get("v.baseUrl") + manualWrapperObj.logout + '&agent_user=' + cmp.get("v.dialUser");
+            // var defaultSelectedOption;
+            // defaultSelectedOption = document.createElement("option");
+            // defaultSelectedOption.setAttribute('data-value-name','Pause');
+            // defaultSelectedOption.setAttribute('data-value-iconType','');
+            let self = this;
+            self.renderIcon(cmp,'error');
+            fetch(logoutUrl)
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    var logStatus = data.data.value;
+                    var dropdownTarget = cmp.find('dropdownContainer');
+                    $A.util.removeClass(dropdownTarget, 'slds-is-open');
+                    cmp.set('v.userLoggedStatus', logStatus);
+                    cmp.set('v.presence', 'Pause');
+                   
+    
+                    //this.renderIcon(cmp, 'error');
+                    var vx = cmp.get("v.method");
+                    //fire event from child and capture in parent
+                    $A.enqueueAction(vx);
+                    if (data.status) {
+                        var callback = function (result) {
+                            if (result.success) {
+                                // var compEvent = $A.get("event.cmp.renderFieldEvent");
+                                //console.log('-------compEvent-------', compEvent);
+                                // compEvent.setParams("userLogged", "LOGOUT");
+                                // compEvent.fire();
+                                // sforce.opencti.disableClickToDial({
+                                //     params : {logStatus : logStatus},
+                                //     callback: callback
+                                // });
+                            } else {
+                                throw new Error('Click to dial cannot be disabled.');
+                            }
+                        };
+                        sforce.opencti.disableClickToDial({
+                            params : {logStatus : logStatus},
+                            callback: callback
+                        });
+                        setTimeout(() => {
+                            cmp.set('v.showSpinner', false);
+                        }, 5000)
+    
+                    } else {
                         cmp.set('v.showSpinner', false);
-                    }, 5000)
-
-                } else {
+                    }
+                })
+                .catch(error => {
                     cmp.set('v.showSpinner', false);
-                }
-            })
-            .catch(error => {
-                cmp.set('v.showSpinner', false);
-                console.error(error);
-            })
-        }
-    })
+                    console.error(error);
+                })
+        } catch (error) {
+            console.log('error at logoutApiJQuey method of statusDropdownHelper --- ' , JSON.stringify(error));
+            console.log('error message at logoutApiJQuey method of statusDropdownHelper --- ' , JSON.stringify(error.message));
+        } 
+    }
+})
