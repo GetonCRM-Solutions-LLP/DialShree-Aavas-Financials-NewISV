@@ -12,20 +12,25 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // perform search using Open CTI runApex()
     // optionally run a callback function on completion
     search : function(cmp, number, onCompletion) {
-        var args = {
-            apexClass : 'SoftphoneContactSoftphoneContactSearchController',
-            methodName : 'getContacts',
-            methodParams : 'name=' + number,
-            callback : function(result) {
-                if (result.success) {
-                    var searchResults = JSON.parse(result.returnValue.runApex);
-                    onCompletion && onCompletion(cmp, searchResults[0]);
-                } else {
-                    throw new Error(
-                            'Unable to perform a search using Open CTI. Contact your admin.');
+        try {
+            var args = {
+                apexClass : 'SoftphoneContactSoftphoneContactSearchController',
+                methodName : 'getContacts',
+                methodParams : 'name=' + number,
+                callback : function(result) {
+                    if (result.success) {
+                        var searchResults = JSON.parse(result.returnValue.runApex);
+                        onCompletion && onCompletion(cmp, searchResults[0]);
+                    } else {
+                        throw new Error(
+                                'Unable to perform a search using Open CTI. Contact your admin.');
+                    }
                 }
-            }
-        };
-        sforce.opencti.runApex(args);
+            };
+            sforce.opencti.runApex(args);
+        } catch (error) {
+            console.log('error at search method of phoneToolbarHelper --- ' , JSON.stringify(error));
+            console.log('error message at search method of phoneToolbarHelper --- ' , JSON.stringify(error.message));
+        } 
     },
 })

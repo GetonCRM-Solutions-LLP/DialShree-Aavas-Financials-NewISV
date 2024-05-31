@@ -10,54 +10,80 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 ({
     // bring up the help window
     showModal : function(cmp, event, helper) {
-        // TODO: Try not to reference `document`.
-        document.getElementById('backGroundSectionId').style.display = 'block';
+        try {
+            // TODO: Try not to reference `document`.
+            document.getElementById('backGroundSectionId').style.display = 'block';
+        } catch (error) {
+            console.log('error at showModal method of phoneToolbarController --- ' , JSON.stringify(error));
+            console.log('error message at showModal method of phoneToolbarController --- ' , JSON.stringify(error.message));
+        } 
     },
+
     parentAction: function(cmp,event,handler){
-        var objChild = cmp.find('childAttr');
-        cmp.set('v.userLoggedStatus', objChild.get('v.userLoggedStatus'));
-        var renderObj = $A.get("e.c:renderFieldEvent");                    
-        renderObj.setParams({
-            "userLogged" :  cmp.get('v.userLoggedStatus')});
-        renderObj.fire();
+        try {
+            var objChild = cmp.find('childAttr');
+            cmp.set('v.userLoggedStatus', objChild.get('v.userLoggedStatus'));
+            var renderObj = $A.get("e.c:renderFieldEvent");                    
+            renderObj.setParams({
+                "userLogged" :  cmp.get('v.userLoggedStatus')});
+            renderObj.fire();
+        } catch (error) {
+            console.log('error at parentAction method of phoneToolbarController --- ' , JSON.stringify(error));
+            console.log('error message at parentAction method of phoneToolbarController --- ' , JSON.stringify(error.message));
+        } 
     },
     // close the help window
     showHelp : function(cmp, event, helper) {
-        // TODO: Try not to reference `document`.
-        document.getElementById('backGroundSectionId').style.display = 'none';
+        try {
+            // TODO: Try not to reference `document`.
+            document.getElementById('backGroundSectionId').style.display = 'none';
+        } catch (error) {
+            console.log('error at showHelp method of phoneToolbarController --- ' , JSON.stringify(error));
+            console.log('error message at showHelp method of phoneToolbarController --- ' , JSON.stringify(error.message));
+        } 
     },
 
     // get the incoming phone number from call center settings, then if there's a matching record
     // bring up a call panel with the record details.
     simulateIncomingCall : function(cmp, event, helper) {
-        cmp.getEvent('getSettings').setParams({
-            callback: function(settings) {
-                var number = settings['/reqPhoneDemoSettings/reqIncomingNumber'];
-                helper.search(cmp, number, function(cmp, result) {
-                    var record = result ? result : {
-                        Name : number
-                    };
-                    cmp.getEvent('renderPanel').setParams({
-                        type : 'c:callInitiatedPanel',
-                        attributes : {
-                            'state' : 'Incoming',
-                            'recordName' : record.Name,
-                            'phone' : record.Phone,
-                            'title' : record.Title,
-                            'account' : record.Account,
-                            'recordId' : record.Id,
-                            'presence' : cmp.get('v.presence')
-                        }
-                    }).fire();
-                })
-            }
-        }).fire();
-
+        try {
+            cmp.getEvent('getSettings').setParams({
+                callback: function(settings) {
+                    var number = settings['/reqPhoneDemoSettings/reqIncomingNumber'];
+                    helper.search(cmp, number, function(cmp, result) {
+                        var record = result ? result : {
+                            Name : number
+                        };
+                        cmp.getEvent('renderPanel').setParams({
+                            type : 'c:callInitiatedPanel',
+                            attributes : {
+                                'state' : 'Incoming',
+                                'recordName' : record.Name,
+                                'phone' : record.Phone,
+                                'title' : record.Title,
+                                'account' : record.Account,
+                                'recordId' : record.Id,
+                                'presence' : cmp.get('v.presence')
+                            }
+                        }).fire();
+                    })
+                }
+            }).fire();
+        } catch (error) {
+            console.log('error at simulateIncomingCall method of phoneToolbarController --- ' , JSON.stringify(error));
+            console.log('error message at simulateIncomingCall method of phoneToolbarController --- ' , JSON.stringify(error.message));
+        } 
     },
+
     renderPanel: function(cmp, event, helper) {
-        var params = event.getParams();
+        try {
+            var params = event.getParams();
         
-        //helper.renderPanel(cmp, params);
-        cmp.get('v.presence',params.attributes.presence);
+            //helper.renderPanel(cmp, params);
+            cmp.get('v.presence',params.attributes.presence);
+        } catch (error) {
+            console.log('error at renderPanel method of phoneToolbarController --- ' , JSON.stringify(error));
+            console.log('error message at renderPanel method of phoneToolbarController --- ' , JSON.stringify(error.message));
+        } 
     },
 })

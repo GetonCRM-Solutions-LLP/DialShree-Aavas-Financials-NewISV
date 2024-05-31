@@ -8,39 +8,59 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 /* global $A */
 ({
     autoHide : function(component) {
-        var self = this;
-        if (component.get('v.typeClass') != 'slds-theme--error') {
-            setTimeout($A.getCallback(self.toggleToastClassHide), component
-                    .get('v.timeout'), component);
+        try {
+            var self = this;
+            if (component.get('v.typeClass') != 'slds-theme--error') {
+                setTimeout($A.getCallback(self.toggleToastClassHide), component
+                        .get('v.timeout'), component);
+            }
+        } catch (error) {
+            console.log('error at autoHide method of toastHelper --- ' , JSON.stringify(error));
+            console.log('error message at autoHide method of toastHelper --- ' , JSON.stringify(error.message));
         }
     },
 
     toggleToastClassHide : function(component) {
-        $A.util.addClass(component, 'slds-fall-into-ground');
-        $A.util.removeClass(component, 'slds-rise-from-ground');
+        try {
+            $A.util.addClass(component, 'slds-fall-into-ground');
+            $A.util.removeClass(component, 'slds-rise-from-ground');
+        } catch (error) {
+            console.log('error at toggleToastClassHide method of toastHelper --- ' , JSON.stringify(error));
+            console.log('error message at toggleToastClassHide method of toastHelper --- ' , JSON.stringify(error.message));
+        }
     },
 
     toggleToastClassShow : function(component) {
-        $A.util.removeClass(component, 'slds-fall-into-ground');
-        $A.util.addClass(component, 'slds-rise-from-ground');
+        try {
+            $A.util.removeClass(component, 'slds-fall-into-ground');
+            $A.util.addClass(component, 'slds-rise-from-ground');
+        } catch (error) {
+            console.log('error at toggleToastClassShow method of toastHelper --- ' , JSON.stringify(error));
+            console.log('error message at toggleToastClassShow method of toastHelper --- ' , JSON.stringify(error.message));
+        }
     },
 
     setToastType : function(component, event) {
-        var type = event.getParams().value.type.toLowerCase();
-        switch (type) {
-        case 'normal':
-            component.set('v.typeClass', '');
-            return true;
-        case 'success':
-            component.set('v.typeClass', 'slds-theme--success');
-            return true;
-        case 'warning':
-            component.set('v.typeClass', 'slds-theme--warning');
-            return true;
-        case 'error':
-            component.set('v.typeClass', 'slds-theme--error');
-            return true;
+        try {
+            var type = event.getParams().value.type.toLowerCase();
+            switch (type) {
+            case 'normal':
+                component.set('v.typeClass', '');
+                return true;
+            case 'success':
+                component.set('v.typeClass', 'slds-theme--success');
+                return true;
+            case 'warning':
+                component.set('v.typeClass', 'slds-theme--warning');
+                return true;
+            case 'error':
+                component.set('v.typeClass', 'slds-theme--error');
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log('error at setToastType method of toastHelper --- ' , JSON.stringify(error));
+            console.log('error message at setToastType method of toastHelper --- ' , JSON.stringify(error.message));
         }
-        return false;
     }
 })

@@ -8,13 +8,23 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 
 ({
     closebuttonOnclicked : function(component, event, helper) {
-        helper.toggleToastClassHide(component);
+        try {
+            helper.toggleToastClassHide(component);
+        } catch (error) {
+            console.log('error at closebuttonOnclicked method of toastController --- ' , JSON.stringify(error));
+            console.log('error message at closebuttonOnclicked method of toastController --- ' , JSON.stringify(error.message));
+        }
     },
 
     messageUpdated : function(component, event, helper) {
-        if (!helper.setToastType(component, event))
-            return;
-        helper.toggleToastClassShow(component);
-        helper.autoHide(component);
+        try {
+            if (!helper.setToastType(component, event))
+                return;
+            helper.toggleToastClassShow(component);
+            helper.autoHide(component);
+        } catch (error) {
+            console.log('error at messageUpdated method of toastController --- ' , JSON.stringify(error));
+            console.log('error message at messageUpdated method of toastController --- ' , JSON.stringify(error.message));
+        }
     },
 })
