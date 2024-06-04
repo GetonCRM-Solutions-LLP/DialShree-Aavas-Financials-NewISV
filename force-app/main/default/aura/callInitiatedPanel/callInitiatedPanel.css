@@ -36,3 +36,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 .THIS .companyDetails {
     font-size: 0.85rem;
 }
+
+.THIS .center-align {
+    text-align: center;
+}

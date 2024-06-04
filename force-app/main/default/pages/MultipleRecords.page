@@ -1,0 +1,45 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 06-04-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<apex:page controller="MultipleRecordsController1">
+
+    
+    
+    <apex:form >
+        <apex:pageBlock title="Select Record">
+            <apex:pageMessages />
+            <apex:outputText value="Records with Phone Number: {!phone}" />
+            <apex:selectRadio value="{!selectedRecordId}">
+                <apex:selectOptions value="{!recordOptions}"/>
+            </apex:selectRadio>
+            <!--<apex:commandButton value="Select" action="{!selectRecord}" rerender="selectedRecordPanel, messages"/>-->
+            
+        <apex:commandButton value="Get Selected Record Id" onclick="getSelectedRec(); return false;"  action="{!getSelectedRecordId}" rerender="result"/>
+
+        </apex:pageBlock>
+    </apex:form>
+    <apex:outputPanel id="selectedRecordPanel">
+        <apex:outputText rendered="{!selectedRecord != null}" value="Selected Record: {!selectedRecord.Name}" />
+        <br/>
+        <apex:outputText rendered="{!selectedRecord != null}" value="Phone: {!selectedRecord.phone}" />
+    </apex:outputPanel>
+    <apex:outputPanel id="result">
+        Selected Record Id: {!selectedRecordId}
+    </apex:outputPanel>
+
+    <script>
+        function getSelectedRec() {
+            
+            var recordId = '{!selectedRecordId}';
+            console.log('recordId::',recordId);
+            // Send message to the parent window and close the VF page
+            //parent.postMessage({ selectedOption: selectedOption }, '*');
+            parent.postMessage({ returnValue: recordId, success: true }, window.location.origin);
+            window.close();
+        }
+    </script>
+</apex:page>

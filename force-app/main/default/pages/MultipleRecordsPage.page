@@ -1,0 +1,5 @@
+<apex:page controller="MultipleRecordsController">
+    <h1>Hello World</h1>
+    <br/>
+     <apex:outputText value="Phone Number: {!phone}" />
+</apex:page>
