@@ -24,8 +24,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                 'state' : cmp.get("v.callType"),
                                 'recordName' : payload.recordName,
                                 'phone' : payload.number,
-                                'title' : '',
-                                'account' : '',
+                                // 'title' : '',
+                                // 'account' : '',
                                 'presence' : cmp.get('v.presence'),
                                 'campaignId' : cmp.get('v.campaignId'),
                                 'recordId' : payload.recordId
@@ -110,11 +110,11 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 for (var reclength = 0; reclength < cmp.get('v.searchResults').length; reclength++) {
                    var record = cmp.get('v.searchResults')
                                 && cmp.get('v.searchResults')[reclength]; 
-                   if (record && this.matchingNumbers(number, record.Phone)) {            
+                   if (record) {            
                        attributes.recordName = record.Name;
-                       attributes.phone = record.Phone;            
-                       attributes.title = record.Title;
-                       attributes.account = record.Account;
+                       attributes.phone = number;            
+                    //    attributes.title = record.Title;
+                    //    attributes.account = record.Account;
                        attributes.recordId = record.Id;
                        break;
                    }
@@ -128,20 +128,20 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
         }  
     },
     
-    // strip alphabetic characters from numbers and returns true if numbers are matching
-    matchingNumbers : function(number1, number2){
-        try {
-            var target = number2.replace(/\D/g,'');
-            return number1.replace(/\D/g,'') == target && target.length > 0;
-            /*var numA = number1.replace(/^0+/, '');
-            var numB = number2.replace(/^0+/, '');
-            var target = numB.replace(/\D/g,'');
-            return numA.replace(/\D/g,'') == target && target.length > 0;*/
-        } catch (error) {
-            console.log('error at matchingNumbers method of phonePanelHelper --- ' , JSON.stringify(error));
-            console.log('error message at matchingNumbers method of phonePanelHelper --- ' , JSON.stringify(error.message));
-        }
-    },
+    // // strip alphabetic characters from numbers and returns true if numbers are matching
+    // matchingNumbers : function(number1, number2){
+    //     try {
+    //         var target = number2.replace(/\D/g,'');
+    //         return number1.replace(/\D/g,'') == target && target.length > 0;
+    //         /*var numA = number1.replace(/^0+/, '');
+    //         var numB = number2.replace(/^0+/, '');
+    //         var target = numB.replace(/\D/g,'');
+    //         return numA.replace(/\D/g,'') == target && target.length > 0;*/
+    //     } catch (error) {
+    //         console.log('error at matchingNumbers method of phonePanelHelper --- ' , JSON.stringify(error));
+    //         console.log('error message at matchingNumbers method of phonePanelHelper --- ' , JSON.stringify(error.message));
+    //     }
+    // },
     
     // when clicking on a contact card, initiate call panel with contact card details
     callContact : function(cmp, record) {
@@ -152,7 +152,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             var attributes = {
                 'state' : 'Dialing',
                 'recordName' : record.Name,
-                'phone' : record.Phone,
+                'phone' : cmp.get("v.inputValue"),
                 'title' : record.Title,
                 'account' : record.Account,
                 'recordId' : record.Id

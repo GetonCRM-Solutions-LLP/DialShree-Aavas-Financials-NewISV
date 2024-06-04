@@ -55,10 +55,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             </div>
             <div class="name slds-text-heading--large slds-text-color--weak slds-text-align--center">{!v.recordName}
             </div>
-            <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center companyDetails">
-                {!v.account.Name}</div>
-            <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center companyDetails">
-                {!v.title}</div>
             <div class="incoming slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
                 {!v.state}&nbsp;
                 <ui:outputphone value="{!v.phone}" />...</div>
