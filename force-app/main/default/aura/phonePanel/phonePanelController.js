@@ -146,7 +146,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
         try {
             var index = event.currentTarget.getAttribute('data-value');
             var selectedRecord = cmp.get('v.searchResults')[index];
-            if (!selectedRecord.Phone) {
+            if (!selectedRecord) {
                 cmp.set('v.searchResults', []);
                 cmp.set('v.message', "This contact doesn't have a phone number");
             } else {

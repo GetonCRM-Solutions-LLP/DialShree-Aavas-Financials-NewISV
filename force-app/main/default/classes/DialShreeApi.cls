@@ -93,7 +93,6 @@ public with sharing class DialShreeApi {
         try {
             DialShreeInterface.callinterfaceMethod(dataMap);
         } catch (Exception ex) {
-            System.debug('Received Error at InternalClassCall --- ' + ex.getMessage());
         }
     }
 

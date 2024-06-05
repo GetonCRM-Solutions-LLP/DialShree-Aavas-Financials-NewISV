@@ -15,49 +15,36 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // then use open CTI to screen pop to the record, and runApex() to make a call
     screenPopAndCall: function(cmp) {
         try {
-            console.log('screenPopAndCall method called');
             cmp.getEvent('getSettings').setParams({
                 callback: function(settings) {
-                    console.log('getSettings callback executed');
                     let records = JSON.parse(cmp.get('v.searchResults'));
                     let recordId = cmp.get('v.recordId');
-                    console.log('Records found: ------------- ',typeof records);
-                    console.log('Total Records found: ------------- ',records);
-                    console.log('Record ID: ------------------ ', recordId);
     
                     sforce.opencti.getSoftphoneLayout({
                         callback: function(result) {
                             let softPhoneLayout = JSON.parse(JSON.stringify(result));
-                            console.log('softPhoneLayout ----------> ' , JSON.stringify(softPhoneLayout));
                             let screenPopType = softPhoneLayout.returnValue.Inbound.screenPopSettings.MultipleMatches.screenPopType;
-                            console.log('Screen Pop Type: ------------ ', screenPopType);
                             let screenPopData = softPhoneLayout.returnValue.Inbound.screenPopSettings.MultipleMatches.screenPopData;
     
                             var phoneNumber = cmp.get('v.phone');
-                            console.log('phoneNumber -------------->' + phoneNumber);
-    
+                            
                             if (cmp.get("v.listViewCall") == true){
-                                console.log('record id for calls from list view --- ' , recordId);
-                                sforce.opencti.screenPop({
+                                  sforce.opencti.screenPop({
                                     type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
                                     params: { recordId: recordId },
                                     callback: function(response) {
-                                        console.log('SObject screenPop callback executed');
-                                        cmp.getEvent('editPanel').setParams({
+                                           cmp.getEvent('editPanel').setParams({
                                             label: 'Open CTI Softphone: ' + cmp.get('v.state')
                                         }).fire();
                                     }
                                 });
                             }
                             else if (records && records.length > 1) {
-                                console.log('Multiple records found -----------' + records.length);
-                                if (screenPopType === 'PopToVisualforce') {
-                                    console.log('Redirecting to VF page.');
+                                   if (screenPopType === 'PopToVisualforce') {
                                     sforce.opencti.setSoftphonePanelVisibility({
                                         visible: true,
                                         callback: function() {}
                                     });
-                                    console.log('screenPop Closed -------');
                                     sforce.opencti.screenPop({
                                         type: sforce.opencti.SCREENPOP_TYPE.URL,
                                         params: {
@@ -65,7 +52,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                         },
                                     });
                                 } else if (screenPopType === 'PopToFlow') {
-                                    console.log('Redirecting to Flow.');
                                     sforce.opencti.screenPop({
                                         type: sforce.opencti.SCREENPOP_TYPE.FLOW,
                                         params: {
@@ -79,32 +65,27 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                 }
                             } else if (records && records.length === 1) {
                                 recordId = records[0].Id;
-                                console.log('Single record found. Opening record with ID:', recordId);
                                 sforce.opencti.screenPop({
                                     type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
                                     params: { recordId: recordId },
                                     callback: function(response) {
-                                        console.log('SObject screenPop callback executed');
                                         cmp.getEvent('editPanel').setParams({
                                             label: 'Open CTI Softphone: ' + cmp.get('v.state')
                                         }).fire();
                                     }
                                 });
                             } else {
-                                console.log('No records found.');
                                 sforce.opencti.getSoftphoneLayout({
                                     callback: function(result) {
                                         let softPhoneLayout = JSON.parse(JSON.stringify(result));
                                         let noMatchObj = softPhoneLayout.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
     
                                         if (noMatchObj) {
-                                            console.log('No match found. Opening new record modal for:', noMatchObj);
                                             sforce.opencti.screenPop({
                                                 type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
                                                 params: { entityName: noMatchObj, defaultFieldValues: { Phone: phoneNumber } },
                                                 callback: function(result) {
                                                     if (result.success) {
-                                                        console.log('New record modal opened successfully');
                                                     } else {
                                                         console.error('Error opening new record modal:', result.errors);
                                                     }

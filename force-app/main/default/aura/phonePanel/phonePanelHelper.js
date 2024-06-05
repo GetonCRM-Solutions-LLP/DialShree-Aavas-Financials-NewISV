@@ -13,7 +13,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // and renders the callInitiatedPanel panel with the event payload
     handleOutgoingCalls : function(cmp) {
         try {
-            console.log('in handleOutgoingCalls method');
             var listener = function(payload) {
                 sforce.opencti.setSoftphonePanelVisibility({
                     visible : true,
@@ -32,7 +31,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                 'recordId' : payload.recordId,
                                 'listViewCall' : true
                             };
-                            console.log('recordId ----------' +attributes.recordId);
                             var phoneNo = attributes.phone;
                             phoneNo = phoneNo.replace(/\D/g, "");
                             var manaulDialUrl = cmp.get('v.baseUrl')+cmp.get('v.manualDialApi')+'&phone_code='+cmp.get('v.countryCodeMeta')+'&value='+phoneNo+'&agent_user='+cmp.get('v.dialUser');
@@ -100,7 +98,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // if there's a match - initiate call panel with record details
     // if not, initiate call panel with only number and state
     callNumber : function(cmp, number,stateId) { 
-        console.log('in callNumber method -----------'); 
         try {
             var attributes = {
                 'state' : 'Dialing',
@@ -112,7 +109,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             && cmp.get('v.searchResults')[0];*/  
     
             if(cmp.get('v.searchResults')){
-                console.log('searchResults -----------' +cmp.get('v.searchResults'));
                 for (var reclength = 0; reclength < cmp.get('v.searchResults').length; reclength++) {
                    var record = cmp.get('v.searchResults')
                                 && cmp.get('v.searchResults')[reclength]; 
@@ -183,14 +179,10 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             sforce.opencti.getSoftphoneLayout({
                 callback: function(result) {
                     var softPhoneLayoutJSON = JSON.stringify(result);
-    
-                    console.log('softPhoneLayoutJSON --- ' +softPhoneLayoutJSON);
                     var softPhoneLayoutJSONParsed = JSON.parse(softPhoneLayoutJSON);
                     var NoMatchObject = softPhoneLayoutJSONParsed.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
-                    console.log('NoMatchObject --- ' +NoMatchObject);
                     cmp.set("v.NoMatchObject" , NoMatchObject);
-                    console.log(cmp.get("v.NoMatchObject"));
-    
+                   
                     if (inputValue != undefined) {
                         if (inputValue.length < 2) {
                             cmp.set('v.message', 'Enter at least two characters');
@@ -214,9 +206,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                         let inboundObjects = Object.keys(obj.returnValue.Inbound.objects);
                                         let records = _self.getRecordWithPriority(searchResults, inboundObjects);
                                         let record; 
-                                        console.log('record --------------------' +records);
                                         let multirecords = cmp.set('v.searchResults', records);
-                                        console.log('multirecords ----------' +JSON.stringify(cmp.get('v.searchResults')));
                                         cmp.set('v.searchResults', records);
                                         if (!record || records.length == 0) {
                                             cmp.set('v.message', 'No results found');
@@ -308,7 +298,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             attributes.presence = cmp.get('v.presence'); 
             attributes.NoMatchObject = cmp.get("v.NoMatchObject");
             attributes.searchResults = JSON.stringify(cmp.get("v.searchResults"));
-            console.log('search ---------' +attributes.searchResults);
             if(attributes.countryCode == '' || attributes.countryCode == undefined){
                 attributes.countryCode = cmp.get("v.countryCodeMeta");
             }
