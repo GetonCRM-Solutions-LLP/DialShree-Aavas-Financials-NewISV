@@ -20,7 +20,6 @@
                         resJson.data.forEach(function(item) {
                             statusMap[item.status] = item.status_name;
                         });
-                        console.log('statusMap --- ' ,JSON.stringify(statusMap));
                         component.set("v.statusMap" ,statusMap);
                         
                     } else {
@@ -165,7 +164,7 @@
                 })
                 .then(data => {
                     if(data.status){
-                        
+
                     }else{
                         console.error("Error received at transmitAgentData, verify updateLeadURL parameters");
                     }

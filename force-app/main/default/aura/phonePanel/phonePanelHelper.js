@@ -289,8 +289,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // renders the callInitiatedPanel panel
     initiateCallPanel : function(cmp, attributes) {    
         try { 
-            console.log('phoneNumber --- ' , attributes.phone);
-            console.log('calling initiateCallPanel method', JSON.parse(JSON.stringify(cmp.get("v.searchResults"))));  
             cmp.set('v.spinner', true); 
             var attributes = attributes;
             attributes.state = cmp.get("v.callType");
