@@ -13,6 +13,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // and renders the callInitiatedPanel panel with the event payload
     handleOutgoingCalls : function(cmp) {
         try {
+            console.log('in handleOutgoingCalls method');
             var listener = function(payload) {
                 sforce.opencti.setSoftphonePanelVisibility({
                     visible : true,
@@ -28,8 +29,10 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                 // 'account' : '',
                                 'presence' : cmp.get('v.presence'),
                                 'campaignId' : cmp.get('v.campaignId'),
-                                'recordId' : payload.recordId
+                                'recordId' : payload.recordId,
+                                'listViewCall' : true
                             };
+                            console.log('recordId ----------' +attributes.recordId);
                             var phoneNo = attributes.phone;
                             phoneNo = phoneNo.replace(/\D/g, "");
                             var manaulDialUrl = cmp.get('v.baseUrl')+cmp.get('v.manualDialApi')+'&phone_code='+cmp.get('v.countryCodeMeta')+'&value='+phoneNo+'&agent_user='+cmp.get('v.dialUser');
@@ -96,23 +99,26 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // find a matching record for a number
     // if there's a match - initiate call panel with record details
     // if not, initiate call panel with only number and state
-    callNumber : function(cmp, number,stateId) {  
+    callNumber : function(cmp, number,stateId) { 
+        console.log('in callNumber method -----------'); 
         try {
             var attributes = {
                 'state' : 'Dialing',
                 'recordName' : number,
-                'stateId' : stateId
+                'stateId' : stateId,
+                'phone' : number
             };
             /*var record = cmp.get('v.searchResults')
             && cmp.get('v.searchResults')[0];*/  
     
             if(cmp.get('v.searchResults')){
+                console.log('searchResults -----------' +cmp.get('v.searchResults'));
                 for (var reclength = 0; reclength < cmp.get('v.searchResults').length; reclength++) {
                    var record = cmp.get('v.searchResults')
                                 && cmp.get('v.searchResults')[reclength]; 
                    if (record) {            
                        attributes.recordName = record.Name;
-                       attributes.phone = number;            
+                       attributes.phone = number;       
                     //    attributes.title = record.Title;
                     //    attributes.account = record.Account;
                        attributes.recordId = record.Id;
@@ -120,7 +126,11 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                    }
                }
             }
-            cmp.set('v.searchResults', []);  
+            // else{
+            //     attributes.phone = number;    
+            //     console.log('else phone -----' +attributes.phone);   
+            // }    
+            //cmp.set('v.searchResults', []);  
             this.initiateCallPanel(cmp, attributes);
         } catch (error) {
             console.log('error at callNumber method of phonePanelHelper --- ' , JSON.stringify(error));
@@ -203,7 +213,10 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                         let obj = JSON.parse(softPhoneLayoutJSON);
                                         let inboundObjects = Object.keys(obj.returnValue.Inbound.objects);
                                         let records = _self.getRecordWithPriority(searchResults, inboundObjects);
-                                        let record;
+                                        let record; 
+                                        console.log('record --------------------' +records);
+                                        let multirecords = cmp.set('v.searchResults', records);
+                                        console.log('multirecords ----------' +JSON.stringify(cmp.get('v.searchResults')));
                                         cmp.set('v.searchResults', records);
                                         if (!record || records.length == 0) {
                                             cmp.set('v.message', 'No results found');
@@ -285,13 +298,17 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     
     // renders the callInitiatedPanel panel
     initiateCallPanel : function(cmp, attributes) {    
-        try {
+        try { 
+            console.log('phoneNumber --- ' , attributes.phone);
+            console.log('calling initiateCallPanel method', JSON.parse(JSON.stringify(cmp.get("v.searchResults"))));  
             cmp.set('v.spinner', true); 
             var attributes = attributes;
             attributes.state = cmp.get("v.callType");
             attributes.countryCode = cmp.get("v.countryCode");
             attributes.presence = cmp.get('v.presence'); 
             attributes.NoMatchObject = cmp.get("v.NoMatchObject");
+            attributes.searchResults = JSON.stringify(cmp.get("v.searchResults"));
+            console.log('search ---------' +attributes.searchResults);
             if(attributes.countryCode == '' || attributes.countryCode == undefined){
                 attributes.countryCode = cmp.get("v.countryCodeMeta");
             }
