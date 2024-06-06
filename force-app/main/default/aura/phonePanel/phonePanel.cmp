@@ -41,7 +41,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:attribute name="manualDialApi" type="String" />
     <aura:attribute name="pauseLabel" type="String" default="" />
     <aura:attribute name="NoMatchObject" type="String"/>
-    
+    <aura:attribute name="listViewCall" type="Boolean" default="false"/>
     <div class="slds-panel">
         <aura:if isTrue="{!v.spinner}">
             <div class="slds-spinner_container">

@@ -44,13 +44,15 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:handler event="c:StatusCheckEvent" action="{!c.handleApplicationEvent}"/>
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
     <!-- <aura:registerEvent name="dialogShow" type="c:dialogDisplayEvent"/> -->
+    <aura:attribute name="searchResults" type="Object" description="List of contact records"/>
+    <aura:attribute name="listViewCall" type="Boolean" default="false"/>
 
     <div class="slds-panel">
         <!--  Top section: Information about the contact, including an avatar -->
         <div class="slds-panel__section">
             <div class="avatar slds-align--absolute-center">
                 <div class="slds-avatar slds-avatar--circle slds-avatar--large">
-                    <img src="{!$Resource.DialShreeCTI2__Avater + '/assets/images/avatar1.jpg'}" alt="Contact" />
+                    <img src="{!$Resource.Avater + '/assets/images/avatar1.jpg'}" alt="Contact" />
                 </div>
             </div>
             <div class="name slds-text-heading--large slds-text-color--weak slds-text-align--center">{!v.recordName}

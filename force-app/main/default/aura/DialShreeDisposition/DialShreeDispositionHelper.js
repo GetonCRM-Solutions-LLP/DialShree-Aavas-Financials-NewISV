@@ -169,7 +169,7 @@
         try {
             var encodedInputText = encodeURIComponent(component.get("v.inputText"));
 
-            var updateLeadURL = component.get("v.baseUrl")+'elision-api/main.php?source=test'+'&action=update_lead'+'&lead_id='+component.get("v.agentLeadId")+'&address2='+encodedInputText;
+            var updateLeadURL = component.get("v.baseUrl")+'/elision-api/main.php?source=test'+'&action=update_lead'+'&lead_id='+component.get("v.agentLeadId")+'&address2='+encodedInputText;
             fetch(updateLeadURL)
                 .then(response => {
                     if (response.ok) return response.json()
