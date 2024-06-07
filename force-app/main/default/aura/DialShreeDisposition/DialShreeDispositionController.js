@@ -78,17 +78,5 @@
             console.log('error at callBackSet method of DialShreeDispositionController --- ' , JSON.stringify(error));
             console.log('error message at callBackSet method of DialShreeDispositionController --- ' , JSON.stringify(error.message));
         }   
-    },
-    
-    onAgentInputTransmit : function(component, event, helper){
-        try {
-            var agentInputTransmit = event.getParam('agentLeadId');
-            if(agentInputTransmit != null && agentInputTransmit != 'undefined'){
-                component.set("v.agentLeadId" , agentInputTransmit);
-            } 
-        } catch (error) {
-            console.log('error at onAgentInputTransmit method of DialShreeDispositionController --- ' , JSON.stringify(error));
-            console.log('error message at onAgentInputTransmit method of DialShreeDispositionController --- ' , JSON.stringify(error.message));
-        }   
     }
 })
