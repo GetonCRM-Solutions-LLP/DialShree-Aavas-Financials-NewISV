@@ -1,0 +1,27 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 06-07-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<apex:page controller="MultipleRecordsController">
+    <apex:form >
+        <apex:pageBlock title="Records with Phone Number: {!MobileNumber}">
+            <apex:pageMessages />
+            <apex:pageBlockTable value="{!records}" var="record">
+                <apex:column headerValue="Name">
+                    <apex:outputLink value="/{!record.Id}">
+                        {!record.Name}
+                    </apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Phone">
+                    <apex:outputField value="{!record.Phone}" />
+                </apex:column>
+                <apex:column headerValue="Record ID">
+                    <apex:outputField value="{!record.Id}" />
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
