@@ -122,7 +122,7 @@
 
     handleMapppings : function(component, event, dataMap, helper){
         try {
-            console.log ('inside handleMappings --- ', JSON.stringify(dataMap));
+            //console.log ('inside handleMappings --- ', JSON.stringify(dataMap));
             //console.log('record Id --- ' ,component.get("v.recordId"));
             var statusMap = JSON.parse(JSON.stringify(component.get("v.statusMap")));
     
