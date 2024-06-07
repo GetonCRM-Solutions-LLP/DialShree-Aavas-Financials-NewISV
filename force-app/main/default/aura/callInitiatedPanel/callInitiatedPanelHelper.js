@@ -237,10 +237,38 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 .catch(error => {
                     console.error(error);
                 })
+                this.transmitAgentData(cmp);
         }
         catch (error) {
             console.log('error at parkGrabHangJquery method of callInitiatedPanelHelper --- ' , JSON.stringify(error));
             console.log('error message at parkGrabHangJquery method of callInitiatedPanelHelper --- ' , JSON.stringify(error.message));
+        }  
+    }, 
+
+    transmitAgentData : function (cmp){
+        try {
+            if(cmp.get("v.inputText") != null || cmp.get("v.inputText") != undefined){
+                var encodedInputText = encodeURIComponent(cmp.get("v.inputText"));
+                var updateLeadURL = cmp.get("v.baseUrl")+'/elision-api/main.php?source=test'+'&action=update_lead'+'&lead_id='+cmp.get("v.agentLeadId")+'&address2='+encodedInputText;
+
+                fetch(updateLeadURL)
+                    .then(response => {
+                        if (response.ok) return response.json()
+                    })
+                    .then(data => {
+                        if(data.status){
+                            console.log('data received at transmitAgentData --- ' , data);
+                        }else{
+                            console.error("Error received at transmitAgentData, verify updateLeadURL parameters");
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    })
+            }
+        } catch (error) {
+            console.log('error at transmitAgentData method of callInitiatedPanelHelper --- ' , JSON.stringify(error));
+            console.log('error message at transmitAgentData method of callInitiatedPanelHelper --- ' , JSON.stringify(error.message));
         }  
     }
 })

@@ -158,35 +158,9 @@
                 }
             });
             $A.enqueueAction(action);
-            this.transmitAgentData(component, event, helper);
         } catch (error) {
             console.log('error at handleMapppings method of DialShreeDispositionHelper --- ' , JSON.stringify(error));
             console.log('error message at handleMapppings method of DialShreeDispositionHelper --- ' , JSON.stringify(error.message));
-        }  
-    },
-
-    transmitAgentData : function (component, event, helper){
-        try {
-            var encodedInputText = encodeURIComponent(component.get("v.inputText"));
-
-            var updateLeadURL = component.get("v.baseUrl")+'/elision-api/main.php?source=test'+'&action=update_lead'+'&lead_id='+component.get("v.agentLeadId")+'&address2='+encodedInputText;
-            fetch(updateLeadURL)
-                .then(response => {
-                    if (response.ok) return response.json()
-                })
-                .then(data => {
-                    if(data.status){
-                        console.log('data received at transmitAgentData --- ' , data);
-                    }else{
-                        console.error("Error received at transmitAgentData, verify updateLeadURL parameters");
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                })
-        } catch (error) {
-            console.log('error at transmitAgentData method of DialShreeDispositionHelper --- ' , JSON.stringify(error));
-            console.log('error message at transmitAgentData method of DialShreeDispositionHelper --- ' , JSON.stringify(error.message));
         }  
     }
 })
