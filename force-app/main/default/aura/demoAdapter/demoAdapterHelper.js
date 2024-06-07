@@ -80,19 +80,19 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             .then($A.getCallback(data => {
                 if (data.status) {  
 
-                    console.log('statuscheck:',data.status);
+                    //console.log('statuscheck:',data.status);
                            
                     sessionStorage.setItem("campaignId", data.data.campaign_id);
                     cmp.set("v.campaignId",data.data.campaign_id);
 
                     if(data.data.phone_number == ''){
-                        console.log('inside phone number',data.data.phone_number);
+                        //console.log('inside phone number',data.data.phone_number);
                         cmp.set('v.phoneNo',data.data.phone_number); 
                     }
                    
                     if((data.data.phone_number != '') && (data.data.phone_number != cmp.get('v.phoneNo'))){                                     
                         var statusObj2 = $A.get("e.c:StatusChangeEvent");     
-                        console.log('status bject 2:',statusObj2);
+                        //console.log('status bject 2:',statusObj2);
                         if(statusObj2){
                             statusObj2.setParams({
                                 "liveStatusObj" : data});
