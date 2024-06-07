@@ -190,5 +190,17 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             console.log('error at handleStatusEvent method of phonePanelController --- ' , JSON.stringify(error));
             console.log('error message at handleStatusEvent method of phonePanelController --- ' , JSON.stringify(error.message));
         } 
+    },
+
+    handleStatusDropdownEvent : function(component, event, helper) {
+        try {
+            var actionType = event.getParam('actionType');
+            if (actionType == "Logout" || actionType == "Session Activated" ) {
+                component.set("v.showTicker" , false);
+            }
+        } catch (error) {
+            console.log('error at handleStatusDropdownEvent method of phonePanelController --- ' , JSON.stringify(error));
+            console.log('error message at handleStatusDropdownEvent method of phonePanelController --- ' , JSON.stringify(error.message));
+        }
     }
 })

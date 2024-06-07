@@ -80,6 +80,11 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 
     regenerateSession: function(cmp, event, helper){
         try{
+            var sessionDisconnectEvent = $A.get("e.c:StatusDropdownEvent");
+            sessionDisconnectEvent.setParams({ 
+                "actionType": "Session Activated" 
+            })
+            sessionDisconnectEvent.fire();
             helper.regenerateSessionSet(cmp, event, helper); 
         }
         catch (error) {

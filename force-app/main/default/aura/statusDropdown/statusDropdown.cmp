@@ -22,6 +22,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:attribute name="wapperApiObj" type="Object" />
     <aura:attribute name="baseUrl" type="String"/>
     <aura:attribute name="dialUser" type="String"/>
+    <aura:registerEvent name="StatusDropdownEvent" type="c:StatusDropdownEvent"/>
     
     <div aura:id="dropdownContainer" class="slds-picklist slds-dropdown-trigger slds-dropdown-trigger--click"
         aria-haspopup="true">
