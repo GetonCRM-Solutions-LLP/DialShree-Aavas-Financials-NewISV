@@ -126,6 +126,12 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             cmp.set('v.showSpinner', true);
             var logoutUrl;
             var manualWrapperObj = cmp.get("v.wapperApiObj");
+
+            var logoutEvent = $A.get("e.c:StatusDropdownEvent");
+            logoutEvent.setParams({ 
+                "actionType": "Logout" 
+            })
+            logoutEvent.fire();
             
             logoutUrl = cmp.get("v.baseUrl") + manualWrapperObj.logout + '&agent_user=' + cmp.get("v.dialUser");
             // var defaultSelectedOption;
