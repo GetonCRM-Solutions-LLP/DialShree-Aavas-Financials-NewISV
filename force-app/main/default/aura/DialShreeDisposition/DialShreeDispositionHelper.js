@@ -20,7 +20,7 @@
                         resJson.data.forEach(function(item) {
                             statusMap[item.status] = item.status_name;
                         });
-                        console.log('statusMap --- ' ,JSON.stringify(statusMap));
+                        //console.log('statusMap --- ' ,JSON.stringify(statusMap));
                         component.set("v.statusMap" ,statusMap);
                         
                     } else {
@@ -54,9 +54,9 @@
                                     mapOfData.set(key, data.data[key]);
                                 }
                             }
-                            console.log('mapOfData --- ', mapOfData);
+                            //console.log('mapOfData --- ', mapOfData);
                             const dataMap = Object.fromEntries(mapOfData);
-                            console.log('dataMap ---' ,JSON.stringify(dataMap));
+                            //console.log('dataMap ---' ,JSON.stringify(dataMap));
                             this.handleMapppings(component, event, dataMap);
     
                             if(!component.get("v.pauseCheck")){
@@ -123,10 +123,10 @@
     handleMapppings : function(component, event, dataMap, helper){
         try {
             console.log ('inside handleMappings --- ', JSON.stringify(dataMap));
-            console.log('record Id --- ' ,component.get("v.recordId"));
+            //console.log('record Id --- ' ,component.get("v.recordId"));
             var statusMap = JSON.parse(JSON.stringify(component.get("v.statusMap")));
     
-            console.log(component.get("v.NoMatchObject"));
+            //console.log(component.get("v.NoMatchObject"));
     
             var CommunicationTreckingMap = {
                 'recordId': component.get("v.recordId"),
@@ -135,7 +135,7 @@
                 'NoMatchObject' : component.get("v.NoMatchObject")
             };
     
-            console.log('CommunicationTreckingMap --- ' ,JSON.stringify(CommunicationTreckingMap));
+            //console.log('CommunicationTreckingMap --- ' ,JSON.stringify(CommunicationTreckingMap));
             let Stringdata = JSON.stringify(CommunicationTreckingMap);
             var action = component.get("c.InternalClassCall");
             action.setParams({
@@ -144,10 +144,10 @@
             action.setCallback(this, (response) => {
                 var state = response.getState();
                 if (state === "SUCCESS") {
-                    console.log('inside success');
+                    //console.log('inside success');
                 } else {
                     var errors = response.getError();
-                    console.log('found errors' , errors);
+                    //console.log('found errors' , errors);
                     if (errors) {
                         if (errors[0] && errors[0].message) {
                             console.error("Error message: " + errors[0].message);
