@@ -104,12 +104,12 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             .then($A.getCallback(data => {
                 if (data.status) {        
 
-                    var agentleadId = data.data.lead_id;
-                    console.log('agentleadId --- ' , agentleadId);
-                    if(agentleadId != 'Undefined' && agentleadId != null && agentleadId != 0) {
+                    var agentLeadId = data.data.lead_id;
+                    console.log('agentLeadId --- ' , agentLeadId);
+                    if(agentLeadId != 'Undefined' && agentLeadId != null && agentLeadId != 0) {
                         var agentInputTransmitEvent = $A.get("e.c:agentInputTransmit");
                         agentInputTransmitEvent.setParams({
-                            'agentLeadId' : agentleadId
+                            'agentLeadId' : agentLeadId
                         })
                         agentInputTransmitEvent.fire();
                     }

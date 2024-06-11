@@ -205,17 +205,5 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             console.log('error at handleApplicationEvent method of callInitiatedPanelController --- ' , JSON.stringify(error));
             console.log('error message at handleApplicationEvent method of callInitiatedPanelController --- ' , JSON.stringify(error.message));
         }   
-    }, 
-
-    onAgentInputTransmit : function(cmp, event, helper){
-        try {
-            var agentInputTransmit = event.getParam('agentLeadId');
-            if(agentInputTransmit != null && agentInputTransmit != 'undefined'){
-                cmp.set("v.agentLeadId" , agentInputTransmit);
-            } 
-        } catch (error) {
-            console.log('error at onAgentInputTransmit method of DialShreeDispositionController --- ' , JSON.stringify(error));
-            console.log('error message at onAgentInputTransmit method of DialShreeDispositionController --- ' , JSON.stringify(error.message));
-        }   
     }
 })
