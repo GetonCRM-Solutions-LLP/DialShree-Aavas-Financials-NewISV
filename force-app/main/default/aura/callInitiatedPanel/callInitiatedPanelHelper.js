@@ -92,27 +92,50 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                     }
                                 });
                             } else {
-                                //console.log('No records found.');
+                               // console.log('No records found.');
                                 let noMatchObj = softPhoneLayout.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
+                               // console.log('noMatchObj ------->  ', noMatchObj);
     
                                 if (noMatchObj) {
-                                    //console.log('No match found. Opening new record modal for:', noMatchObj);
-                                    sforce.opencti.screenPop({
-                                        type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
-                                        params: {
-                                            entityName: noMatchObj,
-                                            defaultFieldValues: { Phone: phoneNumber }
-                                        },
-                                        callback: function(result) {
-                                            if (result.success) {
-                                                console.log('New record modal opened successfully');
-                                            } else {
-                                                console.error('Error opening new record modal:', result.errors);
+                                    //console.log('No match found. Opening new record modal for:', entityName);
+                                    if (noMatchObj.includes('_')) {
+                                        let customObjectName = noMatchObj +  '__c';
+                                       // console.log('customObjectName ----'  , customObjectName);
+                                       // console.log(cmp.getConcreteComponent().getDef().getDescriptor().getNamespace());
+                                        let orgNameSpace = cmp.getConcreteComponent().getDef().getDescriptor().getNamespace();
+                                        let entityName = orgNameSpace + '__' + customObjectName;
+                                        sforce.opencti.screenPop({
+                                            type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
+                                            params: {
+                                                entityName: entityName
+                                            },
+                                            callback: function(result) {
+                                                if (result.success) {
+                                                  //  console.log('New record modal opened successfully');
+                                                } else {
+                                                    console.error('Error opening new record modal:', result.errors);
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+
+                                    }else{
+                                        sforce.opencti.screenPop({
+                                            type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
+                                            params: {
+                                                entityName: noMatchObj
+                                            },
+                                            callback: function(result) {
+                                                if (result.success) {
+                                                 //   console.log('New record modal opened successfully');
+                                                } else {
+                                                    console.error('Error opening new record modal:', result.errors);
+                                                }
+                                            }
+                                        });
+                                    }
                                 }
                             }
+    
     
                             if (cmp.get('v.recordId') != undefined) {
                                 sforce.opencti.screenPop({

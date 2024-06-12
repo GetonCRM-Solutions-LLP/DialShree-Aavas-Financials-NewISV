@@ -105,7 +105,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 if (data.status) {        
 
                     var agentLeadId = data.data.lead_id;
-                    console.log('agentLeadId --- ' , agentLeadId);
+                    console.log('Lead Id --- ' , agentLeadId);
                     if(agentLeadId != 'Undefined' && agentLeadId != null && agentLeadId != 0) {
                         var agentInputTransmitEvent = $A.get("e.c:agentInputTransmit");
                         agentInputTransmitEvent.setParams({
