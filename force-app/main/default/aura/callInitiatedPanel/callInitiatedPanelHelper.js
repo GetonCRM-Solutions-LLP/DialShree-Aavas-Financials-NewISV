@@ -97,17 +97,11 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                // console.log('noMatchObj ------->  ', noMatchObj);
     
                                 if (noMatchObj) {
-                                    // Check if the object is a custom object or standard object
-                                    // let isCustomObject = noMatchObj.endsWith('__c');
-                                    // let entityName = isCustomObject ? 'DialshreeCTI2__' + noMatchObj : noMatchObj;
-                                    // console.log('Entity name to be used: ', entityName);
-    
                                     //console.log('No match found. Opening new record modal for:', entityName);
                                     if (noMatchObj.includes('_')) {
                                         let customObjectName = noMatchObj +  '__c';
                                        // console.log('customObjectName ----'  , customObjectName);
-
-                                      //  console.log(cmp.getConcreteComponent().getDef().getDescriptor().getNamespace());
+                                       // console.log(cmp.getConcreteComponent().getDef().getDescriptor().getNamespace());
                                         let orgNameSpace = cmp.getConcreteComponent().getDef().getDescriptor().getNamespace();
                                         let entityName = orgNameSpace + '__' + customObjectName;
                                         sforce.opencti.screenPop({
