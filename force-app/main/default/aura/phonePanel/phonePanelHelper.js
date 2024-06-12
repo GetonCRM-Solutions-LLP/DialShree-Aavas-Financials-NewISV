@@ -207,6 +207,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                         let obj = JSON.parse(softPhoneLayoutJSON);
                                         let inboundObjects = Object.keys(obj.returnValue.Inbound.objects);
                                         let records = _self.getRecordWithPriority(searchResults, inboundObjects);
+                                        //console.log('210 searchResults -----------' +JSON.stringify(searchResults));
+                                        //console.log('211 inboundObjects -----------------' +JSON.stringify(inboundObjects));
                                         let record; 
                                         let multirecords = cmp.set('v.searchResults', records);
                                         //console.log('multirecords ----------' +JSON.stringify(cmp.get('v.searchResults')));
@@ -233,6 +235,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 
     getRecordWithPriority : function(records , priorityList){
         try {
+            //console.log('239 records -----------' +JSON.stringify(records));
+            //console.log('240 priorityList -----------------' +JSON.stringify(priorityList));  
             for (let priorityType of priorityList) {
                 for (let record of records) {
                     if (record && record.length > 0 && record[0] && record[0].attributes) {

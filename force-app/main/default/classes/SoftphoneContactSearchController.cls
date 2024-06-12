@@ -43,9 +43,9 @@ global class SoftphoneContactSearchController {
             
             for (String objectKey : objectKeys) {
                 if(objQueryString == null){
-                    objQueryString = objectKey + '(Id,Phone,Name)';
+                    objQueryString = objectKey + '(Id,Name)';
                 }else{
-                    objQueryString =  objQueryString +','+ objectKey + '(Id,Phone,Name)';
+                    objQueryString =  objQueryString +','+ objectKey + '(Id,Name)';
                 }
             }      
             soslQueryString = soslQueryString + objQueryString;

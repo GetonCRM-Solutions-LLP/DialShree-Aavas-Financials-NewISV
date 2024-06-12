@@ -92,27 +92,56 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                     }
                                 });
                             } else {
-                                //console.log('No records found.');
+                               // console.log('No records found.');
                                 let noMatchObj = softPhoneLayout.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
+                               // console.log('noMatchObj ------->  ', noMatchObj);
     
                                 if (noMatchObj) {
-                                    //console.log('No match found. Opening new record modal for:', noMatchObj);
-                                    sforce.opencti.screenPop({
-                                        type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
-                                        params: {
-                                            entityName: noMatchObj,
-                                            defaultFieldValues: { Phone: phoneNumber }
-                                        },
-                                        callback: function(result) {
-                                            if (result.success) {
-                                                console.log('New record modal opened successfully');
-                                            } else {
-                                                console.error('Error opening new record modal:', result.errors);
+                                    // Check if the object is a custom object or standard object
+                                    // let isCustomObject = noMatchObj.endsWith('__c');
+                                    // let entityName = isCustomObject ? 'DialshreeCTI2__' + noMatchObj : noMatchObj;
+                                    // console.log('Entity name to be used: ', entityName);
+    
+                                    //console.log('No match found. Opening new record modal for:', entityName);
+                                    if (noMatchObj.includes('_')) {
+                                        let customObjectName = noMatchObj +  '__c';
+                                       // console.log('customObjectName ----'  , customObjectName);
+
+                                      //  console.log(cmp.getConcreteComponent().getDef().getDescriptor().getNamespace());
+                                        let orgNameSpace = cmp.getConcreteComponent().getDef().getDescriptor().getNamespace();
+                                        let entityName = orgNameSpace + '__' + customObjectName;
+                                        sforce.opencti.screenPop({
+                                            type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
+                                            params: {
+                                                entityName: entityName
+                                            },
+                                            callback: function(result) {
+                                                if (result.success) {
+                                                  //  console.log('New record modal opened successfully');
+                                                } else {
+                                                    console.error('Error opening new record modal:', result.errors);
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+
+                                    }else{
+                                        sforce.opencti.screenPop({
+                                            type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
+                                            params: {
+                                                entityName: noMatchObj
+                                            },
+                                            callback: function(result) {
+                                                if (result.success) {
+                                                 //   console.log('New record modal opened successfully');
+                                                } else {
+                                                    console.error('Error opening new record modal:', result.errors);
+                                                }
+                                            }
+                                        });
+                                    }
                                 }
                             }
+    
     
                             if (cmp.get('v.recordId') != undefined) {
                                 sforce.opencti.screenPop({
@@ -237,38 +266,10 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 .catch(error => {
                     console.error(error);
                 })
-                this.transmitAgentData(cmp);
         }
         catch (error) {
             console.log('error at parkGrabHangJquery method of callInitiatedPanelHelper --- ' , JSON.stringify(error));
             console.log('error message at parkGrabHangJquery method of callInitiatedPanelHelper --- ' , JSON.stringify(error.message));
-        }  
-    }, 
-
-    transmitAgentData : function (cmp){
-        try {
-            if(cmp.get("v.inputText") != null || cmp.get("v.inputText") != undefined){
-                var encodedInputText = encodeURIComponent(cmp.get("v.inputText"));
-                var updateLeadURL = cmp.get("v.baseUrl")+'/elision-api/main.php?source=test'+'&action=update_lead'+'&lead_id='+cmp.get("v.agentLeadId")+'&address2='+encodedInputText;
-
-                fetch(updateLeadURL)
-                    .then(response => {
-                        if (response.ok) return response.json()
-                    })
-                    .then(data => {
-                        if(data.status){
-                            console.log('data received at transmitAgentData --- ' , data);
-                        }else{
-                            console.error("Error received at transmitAgentData, verify updateLeadURL parameters");
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    })
-            }
-        } catch (error) {
-            console.log('error at transmitAgentData method of callInitiatedPanelHelper --- ' , JSON.stringify(error));
-            console.log('error message at transmitAgentData method of callInitiatedPanelHelper --- ' , JSON.stringify(error.message));
         }  
     }
 })
