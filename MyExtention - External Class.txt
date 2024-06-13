@@ -1,0 +1,143 @@
+// This external class will be used to listen to the output shared by Interface class of DialShree CTI 
+global with sharing class MyExtention implements DialShreeCTI2.DialShreeInterface.Extention{
+    global static String output(String outputMap){
+        String OutputString;    
+        
+        try {
+            Map<String,Object> CommunicationData = (Map<String,Object>) JSON.deserializeUntyped(outputMap);
+            System.debug('CommunicationData --- ' + CommunicationData);
+            Map<String,Object> CommunicationDataMap = (Map<String,Object>)CommunicationData.get('dispositionData');
+            System.debug('CommunicationDataMap --- ' + CommunicationDataMap);
+            Map<String,Object> statusMap = (Map<String,Object>)CommunicationData.get('statusMap');
+            System.debug('statusMap --- ' + statusMap);
+            Id ParentRecordID = (String)CommunicationData.get('recordId');
+            System.debug('ParentRecordID --- ' + ParentRecordID);
+            String NoMatchObject = (String)CommunicationData.get('NoMatchObject');
+            System.debug('NoMatchObject --- ' + NoMatchObject);
+            DateTime startDateInput;
+            DateTime endDateInput;
+            DialShreeCTI2__Call_Log_Configurations__mdt mapppingMeta=[SELECT MasterLabel,
+                                                                Label,
+                                                                DeveloperName,
+                                                                DialShreeCTI2__Agent_details__c,
+                                                                DialShreeCTI2__Apex_Class_Name__c,
+                                                                DialShreeCTI2__Disposition_status__c,
+                                                                DialShreeCTI2__Duration_of_the_call__c,
+                                                                DialShreeCTI2__End_date_time_of_call__c,
+                                                                DialShreeCTI2__IsActive__c,
+                                                                DialShreeCTI2__Mobile_number_customer_is_calling_from__c,
+                                                                DialShreeCTI2__Registered_mobile_number__c,
+                                                                DialShreeCTI2__Object_Name__c,
+                                                                DialShreeCTI2__Start_date_time_of_call__c,
+                                                                DialShreeCTI2__Lead_Id__c,
+                                                                DialShreeCTI2__Link_of_recording__c,
+                                                                DialShreeCTI2__Parent_Object_Names__c,
+                                                                DialShreeCTI2__Parent_object_relationship_fields__c
+                                                            FROM DialShreeCTI2__Call_Log_Configurations__mdt 
+                                                            WHERE DeveloperName = 'Communication_Mappings' WITH SECURITY_ENFORCED limit 1 ];
+            String objectName = mapppingMeta.DialShreeCTI2__Object_Name__c;
+            Type objecttype = Type.forName(objectName);
+            List<String> parentObjectNames = mapppingMeta.DialShreeCTI2__Parent_Object_Names__c.split(',');
+            List<String> parentObjectRelationshipFields = mapppingMeta.DialShreeCTI2__Parent_object_relationship_fields__c.split(',');
+            String sObjName;
+            Map <String,String>  objectFieldMap = new Map <String,String>();
+            String query;
+            SObject parentRecord;
+            if(objectName != null && mapppingMeta.DialShreeCTI2__IsActive__c == true){
+                SObject newRecord = (SObject)objectType.newInstance();
+                String dispositionStatus;
+                String RecordName;
+                if(statusMap != null && statusMap.containsKey(String.valueOf(CommunicationDataMap.get('value')))){
+                    dispositionStatus = (String)statusMap.get(String.valueOf(CommunicationDataMap.get('value')));
+                }else if(String.valueOf(CommunicationDataMap.get('value')).contains('CALLBK')){
+                    dispositionStatus = 'Call Back';
+                }
+ 
+                if(CommunicationDataMap.get('start_date_time_of_call') != null){
+                    String StartdateTimeValue = String.valueOf(CommunicationDataMap.get('start_date_time_of_call'));
+                    List<String> filterLogicSplittedbySpaceStart = StartdateTimeValue.split(' ');
+                    String updatedDateTimeStart = filterLogicSplittedbySpaceStart[0]+'T'+filterLogicSplittedbySpaceStart[1];
+                    startDateInput = (DateTime)Json.deserialize('"'+updatedDateTimeStart+'"', DateTime.class);
+                }
+                if(CommunicationDataMap.get('end_date_time_of_call') != null){
+                    String EnddateTimeValue = String.valueOf(CommunicationDataMap.get('end_date_time_of_call'));
+                    List<String> filterLogicSplittedbySpaceEnd = EnddateTimeValue.split(' ');
+                    String updatedDateTimeEnd = filterLogicSplittedbySpaceEnd[0]+'T'+filterLogicSplittedbySpaceEnd[1];
+                    endDateInput = (DateTime)Json.deserialize('"'+updatedDateTimeEnd+'"', DateTime.class);
+                }
+                if(mapppingMeta.DialShreeCTI2__Agent_details__c != null){
+                    String agentDetails = CommunicationDataMap.get('name') + ' , ' + CommunicationDataMap.get('employee_id');
+                    newRecord.put(mapppingMeta.DialShreeCTI2__Agent_details__c , agentDetails);
+                }
+                if(mapppingMeta.DialShreeCTI2__Duration_of_the_call__c != null){
+                    newRecord.put(mapppingMeta.DialShreeCTI2__Duration_of_the_call__c , CommunicationDataMap.get('duration'));
+                }
+                if(mapppingMeta.DialShreeCTI2__Start_date_time_of_call__c != null){
+                    newRecord.put(mapppingMeta.DialShreeCTI2__Start_date_time_of_call__c , startDateInput);
+                }
+                if(mapppingMeta.DialShreeCTI2__End_date_time_of_call__c != null){
+                    newRecord.put(mapppingMeta.DialShreeCTI2__End_date_time_of_call__c , endDateInput);
+                }
+                if(mapppingMeta.DialShreeCTI2__Mobile_number_customer_is_calling_from__c != null){
+                    newRecord.put(mapppingMeta.DialShreeCTI2__Mobile_number_customer_is_calling_from__c , CommunicationDataMap.get('mobile_number'));
+                }
+                if(mapppingMeta.DialShreeCTI2__Registered_mobile_number__c != null){
+                    newRecord.put(mapppingMeta.DialShreeCTI2__Registered_mobile_number__c , CommunicationDataMap.get('address3'));
+                }  
+                if(mapppingMeta.DialShreeCTI2__Lead_Id__c != null){
+                    newRecord.put(mapppingMeta.DialShreeCTI2__Lead_Id__c , CommunicationDataMap.get('lead_id'));
+                }
+                if(mapppingMeta.DialShreeCTI2__Link_of_recording__c != null){
+                    newRecord.put(mapppingMeta.DialShreeCTI2__Link_of_recording__c , CommunicationDataMap.get('recording_url'));
+                }
+                if(mapppingMeta.DialShreeCTI2__Disposition_status__c != null){
+                    newRecord.put(mapppingMeta.DialShreeCTI2__Disposition_status__c , dispositionStatus);
+                }
+                if(ParentRecordID != null && mapppingMeta.DialShreeCTI2__Parent_Object_Names__c != null && mapppingMeta.DialShreeCTI2__Parent_object_relationship_fields__c!= null){
+                        sObjName = ParentRecordID.getSObjectType().getDescribe().getName();
+                        System.debug('sObjName in if --- ' + sObjName);
+        
+                        for (Integer i=0; i<parentObjectNames.size(); i++){
+                            objectFieldMap.put(parentObjectNames[i], parentObjectRelationshipFields[i]);
+                        }
+                        query = 'SELECT Id,Name FROM ' + sObjName + ' WHERE Id =:ParentRecordID';
+                        parentRecord = Database.query(query);
+                        newRecord.put(objectFieldMap.get(sObjName) , ParentRecordID);
+                    
+                        TimeZone userTimeZone = UserInfo.getTimeZone();
+                        Datetime datetimeUTC = System.now();
+                        String currentTime = datetimeUTC.format('yyyy-MM-dd HH:mm:ss',String.valueOf(userTimeZone));
+                        RecordName = parentRecord.get('Name') + ' - Call log - ' + currentTime;
+                        //RecordName = parentRecord.get('Name') + ' - Call log - ' + System.now();
+                }else {
+                        String phoneNumber = String.valueOf(CommunicationDataMap.get('mobile_number'));
+                        System.debug('phoneNumber --- ' + phoneNumber);
+                        query = 'SELECT Id,Name FROM ' + NoMatchObject + ' WHERE Phone =:phoneNumber';
+                        parentRecord = Database.query(query);
+                        sObjName = parentRecord.Id.getSObjectType().getDescribe().getName();
+                        System.debug('sObjName in else--- ' + sObjName);
+                        for (Integer i=0; i<parentObjectNames.size(); i++){
+                            objectFieldMap.put(parentObjectNames[i], parentObjectRelationshipFields[i]);
+                        }
+                        newRecord.put(objectFieldMap.get(sObjName) , parentRecord.Id);
+                    
+                        TimeZone userTimeZone = UserInfo.getTimeZone();
+                        Datetime datetimeUTC = System.now();
+                        String currentTime = datetimeUTC.format('yyyy-MM-dd HH:mm:ss',String.valueOf(userTimeZone));
+                        RecordName = parentRecord.get('Name') + ' - Call log - ' + currentTime;
+                        //RecordName = parentRecord.get('Name') + ' - Call log - ' + System.now();
+                }
+                if (objectName == 'Task') {
+                    newRecord.put('Subject' , RecordName);
+                } else {
+                    newRecord.put('Name', RecordName);
+                }
+                
+                Insert newRecord;
+            }
+        }catch(Exception ex){
+            System.debug('Received Error --' + ex.getMessage());
+        }
+        return OutputString;   
+    }
+}
