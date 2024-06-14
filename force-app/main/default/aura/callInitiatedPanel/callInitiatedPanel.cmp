@@ -40,7 +40,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:attribute name="opportunityId" type="String" default="false" />
     <aura:attribute name="NoMatchObject" type="String"/>
     <aura:attribute name="inputText" type="String"/>
- 
+    <aura:attribute name="isChecked" type="Boolean" default="false" />
     <aura:handler event="c:StatusCheckEvent" action="{!c.handleApplicationEvent}"/>
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
     <!-- <aura:registerEvent name="dialogShow" type="c:dialogDisplayEvent"/> -->
