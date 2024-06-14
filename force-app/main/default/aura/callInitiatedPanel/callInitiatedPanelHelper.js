@@ -16,144 +16,257 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     screenPopAndCall: function(cmp) {
         try {
             // console.log('screenPopAndCall method called');
-            cmp.getEvent('getSettings').setParams({
-                callback: function(settings) {
-                    // console.log('getSettings callback executed');
-                    let records = JSON.parse(cmp.get('v.searchResults'));
-                    let recordId = cmp.get('v.recordId');
-                    // console.log('Records found: ------------- ', records);
-                    if (records != null) {
-                        // console.log('Total Records found: ------------- ', records.length);
+            let IsCustomObject = false;
+            let objName;
+            let orgNameSpace = null;
+
+            var getOrgNameSpace = cmp.get("c.getOrgNameSpace");
+            getOrgNameSpace.setCallback(this,function(response){
+                var state = response.getState();
+
+                if (state === "SUCCESS") {
+                    console.log('response from getOrgNameSpace --- ' , response.getReturnValue());
+                    if(response.getReturnValue() != null && response.getReturnValue() != 'undefined'){
+                            orgNameSpace = response.getReturnValue();
                     }
-                    // console.log('Record ID: ------------------ ', recordId);
-    
-                    sforce.opencti.getSoftphoneLayout({
-                        callback: function(result) {
-                            let softPhoneLayout = JSON.parse(JSON.stringify(result));
-                            //console.log('softPhoneLayout ----------> ', JSON.stringify(softPhoneLayout));
-                            let screenPopType = softPhoneLayout.returnValue.Inbound.screenPopSettings.MultipleMatches.screenPopType;
-                            //console.log('Screen Pop Type: ------------ ', screenPopType);
-                            let screenPopData = softPhoneLayout.returnValue.Inbound.screenPopSettings.MultipleMatches.screenPopData;
-    
-                            var phoneNumber = cmp.get('v.phone');
-                            //console.log('phoneNumber -------------->' + encodeURIComponent(phoneNumber));
-    
-                            if (cmp.get("v.listViewCall") == true) {
-                                //console.log('record id for calls from list view --- ', recordId);
-                                sforce.opencti.screenPop({
-                                    type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
-                                    params: { recordId: recordId },
-                                    callback: function(response) {
-                                       //console.log('SObject screenPop callback executed');
-                                        cmp.getEvent('editPanel').setParams({
-                                            label: 'Open CTI Softphone: ' + cmp.get('v.state')
-                                        }).fire();
-                                    }
-                                });
-                            } else if (records && records.length > 1) {
-                                //console.log('Multiple records found -----------' + records.length);
-                                if (screenPopType === 'PopToVisualforce') {
-                                    //console.log('Redirecting to VF page.');
-                                    sforce.opencti.setSoftphonePanelVisibility({
-                                        visible: true,
-                                        callback: function() {}
-                                    });
-                                    //console.log('screenPop Closed -------');
-                                    sforce.opencti.screenPop({
-                                        type: sforce.opencti.SCREENPOP_TYPE.URL,
-                                        params: {
-                                            url: '/apex/' + screenPopData + '?MobileNumber=' + encodeURIComponent(phoneNumber)
-                                        },
-                                    });
-                                } else if (screenPopType === 'PopToFlow') {
-                                    //console.log('Redirecting to Flow.');
-                                    sforce.opencti.screenPop({
-                                        type: sforce.opencti.SCREENPOP_TYPE.FLOW,
-                                        params: {
-                                            flowDevName: screenPopData,
-                                            flowArgs: [{ name: 'phoneNumber', type: 'String', value: phoneNumber }]
-                                        },
-                                        callback: function(response) {
-                                            // Additional logic can be added here if needed
-                                        }
-                                    });
-                                }
-                            } else if (records && records.length === 1) {
-                                recordId = records[0].Id;
-                                //console.log('Single record found. Opening record with ID:', recordId);
-                                sforce.opencti.screenPop({
-                                    type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
-                                    params: { recordId: recordId },
-                                    callback: function(response) {
-                                        //console.log('SObject screenPop callback executed');
-                                        cmp.getEvent('editPanel').setParams({
-                                            label: 'Open CTI Softphone: ' + cmp.get('v.state')
-                                        }).fire();
-                                    }
-                                });
-                            } else {
-                               // console.log('No records found.');
-                                let noMatchObj = softPhoneLayout.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
-                               // console.log('noMatchObj ------->  ', noMatchObj);
-    
-                                if (noMatchObj) {
-                                    //console.log('No match found. Opening new record modal for:', entityName);
-                                    if (noMatchObj.includes('_')) {
-                                        let customObjectName = noMatchObj +  '__c';
-                                       // console.log('customObjectName ----'  , customObjectName);
-                                       // console.log(cmp.getConcreteComponent().getDef().getDescriptor().getNamespace());
-                                        let orgNameSpace = cmp.getConcreteComponent().getDef().getDescriptor().getNamespace();
-                                        let entityName = orgNameSpace + '__' + customObjectName;
+
+                    cmp.getEvent('getSettings').setParams({
+                        callback: function(settings) {
+                            // console.log('getSettings callback executed');
+                            let records = JSON.parse(cmp.get('v.searchResults'));
+                            let recordId = cmp.get('v.recordId');
+                            // console.log('Records found: ------------- ', records);
+                            if (records != null) {
+                                // console.log('Total Records found: ------------- ', records.length);
+                            }
+                            // console.log('Record ID: ------------------ ', recordId);
+                            sforce.opencti.getSoftphoneLayout({
+                                callback: function(result) {
+                                    let softPhoneLayout = JSON.parse(JSON.stringify(result));
+                                    //console.log('softPhoneLayout ----------> ', JSON.stringify(softPhoneLayout));
+                                    let screenPopType = softPhoneLayout.returnValue.Inbound.screenPopSettings.MultipleMatches.screenPopType;
+                                    //console.log('Screen Pop Type: ------------ ', screenPopType);
+                                    let screenPopData = softPhoneLayout.returnValue.Inbound.screenPopSettings.MultipleMatches.screenPopData;
+            
+                                    var phoneNumber = cmp.get('v.phone');
+                                    //console.log('phoneNumber -------------->' + encodeURIComponent(phoneNumber));
+            
+                                    if (cmp.get("v.listViewCall") == true) {
+                                        //console.log('record id for calls from list view --- ', recordId);
                                         sforce.opencti.screenPop({
-                                            type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
-                                            params: {
-                                                entityName: entityName
-                                            },
-                                            callback: function(result) {
-                                                if (result.success) {
-                                                  //  console.log('New record modal opened successfully');
-                                                } else {
-                                                    console.error('Error opening new record modal:', result.errors);
-                                                }
+                                            type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
+                                            params: { recordId: recordId },
+                                            callback: function(response) {
+                                               //console.log('SObject screenPop callback executed');
+                                                cmp.getEvent('editPanel').setParams({
+                                                    label: 'Open CTI Softphone: ' + cmp.get('v.state')
+                                                }).fire();
                                             }
                                         });
 
-                                    }else{
-                                        sforce.opencti.screenPop({
-                                            type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
-                                            params: {
-                                                entityName: noMatchObj
-                                            },
-                                            callback: function(result) {
-                                                if (result.success) {
-                                                 //   console.log('New record modal opened successfully');
-                                                } else {
-                                                    console.error('Error opening new record modal:', result.errors);
+                                    } else if (records && records.length > 1) {
+                                        //console.log('Multiple records found -----------' + records.length);
+                                        if (screenPopType === 'PopToVisualforce') {
+                                            //console.log('Redirecting to VF page.');
+                                            sforce.opencti.setSoftphonePanelVisibility({
+                                                visible: true,
+                                                callback: function() {}
+                                            });
+                                            //console.log('screenPop Closed -------');
+                                            sforce.opencti.screenPop({
+                                                type: sforce.opencti.SCREENPOP_TYPE.URL,
+                                                params: {
+                                                    url: '/apex/' + screenPopData + '?MobileNumber=' + encodeURIComponent(phoneNumber)
+                                                },
+                                            });
+
+                                        } else if (screenPopType === 'PopToFlow') {
+                                            //console.log('Redirecting to Flow.');
+                                            sforce.opencti.screenPop({
+                                                type: sforce.opencti.SCREENPOP_TYPE.FLOW,
+                                                params: {
+                                                    flowDevName: screenPopData,
+                                                    flowArgs: [{ name: 'phoneNumber', type: 'String', value: phoneNumber }]
+                                                },
+                                                callback: function(response) {
+                                                    // Additional logic can be added here if needed
                                                 }
+                                            });
+                                        }
+
+                                    } else if (records && records.length === 1) {
+                                        recordId = records[0].Id;
+                                        //console.log('Single record found. Opening record with ID:', recordId);
+                                        sforce.opencti.screenPop({
+                                            type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
+                                            params: { recordId: recordId },
+                                            callback: function(response) {
+                                                //console.log('SObject screenPop callback executed');
+                                                cmp.getEvent('editPanel').setParams({
+                                                    label: 'Open CTI Softphone: ' + cmp.get('v.state')
+                                                }).fire();
                                             }
+                                        });
+
+                                    } else {
+
+                                        console.log('No records found.');
+                                        let noMatchObj = softPhoneLayout.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
+                                        console.log('noMatchObj --- ' , noMatchObj);
+        
+                                        if (orgNameSpace != null && orgNameSpace != 'undefined'){
+                                            objName = orgNameSpace + '__'+ noMatchObj;
+                                            console.log('objectName With NameSpace --- ' , objName);
+        
+                                            var getObjectType = cmp.get("c.getObjectType");
+                                            getObjectType.setParams({
+                                                objectName : objName
+                                            });
+        
+                                            getObjectType.setCallback(this, (response) => {
+                                                var state = response.getState();
+                                                if (state === "SUCCESS") {
+                                                    console.log('returned result --- ' , response.getReturnValue());
+        
+                                                    if (response.getReturnValue() == 'True') {
+                                                        IsCustomObject = true;
+                                                    }
+                                                    console.log('IsCustomObject --- ' , IsCustomObject);
+        
+                                                    if (noMatchObj != null && noMatchObj != undefined) {
+                                                        if (IsCustomObject == true) {
+                                                            let customObjectName = noMatchObj +  '__c';
+                                                            console.log('customObjectName ----'  , customObjectName);
+                                                        
+                                                            let entityName = orgNameSpace + '__' + customObjectName;
+                                                            console.log('entityName ---- ',entityName );
+        
+                                                            sforce.opencti.screenPop({
+                                                                type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
+                                                                params: {
+                                                                    entityName: entityName
+                                                                },
+                                                                callback: function(result) {
+                                                                    if (result.success) {
+                                                                        //console.log('New record modal opened successfully');
+                                                                    } else {
+                                                                        console.error('Error opening new record modal:', result.errors);
+                                                                    }
+                                                                }
+                                                            });
+        
+                                                        }else{
+
+                                                            sforce.opencti.screenPop({
+                                                                type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
+                                                                params: {
+                                                                    entityName: noMatchObj
+                                                                },
+                                                                callback: function(result) {
+                                                                    if (result.success) {
+                                                                        //console.log('New record modal opened successfully');
+                                                                    } else {
+                                                                        console.error('Error opening new record modal:', result.errors);
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                } else {
+
+                                                    var errors = response.getError();
+                                                    console.log('found errors' , errors);
+                                                }
+                                            });
+                                            $A.enqueueAction(getObjectType);
+        
+                                        } else {
+        
+                                            objName = noMatchObj;
+                                            console.log('objectName Without NameSpace --- ' , objName);
+        
+                                            var getObjectType = cmp.get("c.getObjectType");
+                                            getObjectType.setParams({
+                                                objectName : objName
+                                            });
+        
+                                            getObjectType.setCallback(this, (response) => {
+                                                var state = response.getState();
+                                                if (state === "SUCCESS") {
+                                                    console.log('returned result --- ' , response.getReturnValue());
+        
+                                                    if (response.getReturnValue() == 'True') {
+                                                        IsCustomObject = true;
+                                                    }
+                                                    console.log('IsCustomObject --- ' , IsCustomObject);
+        
+                                                    if (noMatchObj != null && noMatchObj != undefined) {
+                                                        if (IsCustomObject == true) {
+                                                            let customObjectName = noMatchObj +  '__c';
+                                                            console.log('customObjectName ----'  , customObjectName);
+                                                        
+                                                            let entityName = customObjectName;
+                                                            console.log('entityName ---- ',entityName );
+        
+                                                            sforce.opencti.screenPop({
+                                                                type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
+                                                                params: {
+                                                                    entityName: entityName
+                                                                },
+                                                                callback: function(result) {
+                                                                    if (result.success) {
+                                                                        //console.log('New record modal opened successfully');
+                                                                    } else {
+                                                                        console.error('Error opening new record modal:', result.errors);
+                                                                    }
+                                                                }
+                                                            });
+        
+                                                        }else{
+                                                            sforce.opencti.screenPop({
+                                                                type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
+                                                                params: {
+                                                                    entityName: noMatchObj
+                                                                },
+                                                                callback: function(result) {
+                                                                    if (result.success) {
+                                                                        //console.log('New record modal opened successfully');
+                                                                    } else {
+                                                                        console.error('Error opening new record modal:', result.errors);
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                    
+                                                } else {
+                                                    var errors = response.getError();
+                                                    console.log('found errors' , errors);
+                                                }
+                                            });
+                                            $A.enqueueAction(getObjectType);
+                                        }
+                                    }
+                                    if (cmp.get('v.recordId') != undefined) {
+                                        sforce.opencti.screenPop({
+                                            type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
+                                            params: { recordId: cmp.get('v.recordId') },
                                         });
                                     }
                                 }
-                            }
-    
-    
-                            if (cmp.get('v.recordId') != undefined) {
-                                sforce.opencti.screenPop({
-                                    type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
-                                    params: { recordId: cmp.get('v.recordId') },
-                                });
-                            }
+                            });
                         }
-                    });
+                    }).fire();
+                    cmp.set("v.showCallPanel", false);
                 }
-            }).fire();
-            cmp.set("v.showCallPanel", false);
+            });
+            $A.enqueueAction(getOrgNameSpace);
+            
         } catch (error) {
             console.log('error at screenPopAndCall method of callInitiatedPanelHelper --- ', JSON.stringify(error));
             console.log('error message at screenPopAndCall method of callInitiatedPanelHelper --- ', JSON.stringify(error.message));
         }
     },
-    
     // on Accept, accept the call by bringing up the Connected Panel
     renderConnectedPanel : function(cmp){
         try{
@@ -205,7 +318,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                     this.screenPopAndCall(cmp);
                 }
             });
-            
             $A.enqueueAction(action);
             $A.enqueueAction(action2);
             $A.enqueueAction(action3);
