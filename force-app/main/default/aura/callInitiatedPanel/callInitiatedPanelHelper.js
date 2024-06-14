@@ -15,31 +15,29 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // then use open CTI to screen pop to the record, and runApex() to make a call
     screenPopAndCall: function(cmp) {
         try {
+            if(cmp.get ('v.isChecked') == false){
             // console.log('screenPopAndCall method called');
             let IsCustomObject = false;
             let objName;
             let orgNameSpace = null;
+            //console.log('orgNameSpace --- '  , orgNameSpace);
 
             var getOrgNameSpace = cmp.get("c.getOrgNameSpace");
             getOrgNameSpace.setCallback(this,function(response){
                 var state = response.getState();
-
                 if (state === "SUCCESS") {
-                    console.log('response from getOrgNameSpace --- ' , response.getReturnValue());
-                    if(response.getReturnValue() != null && response.getReturnValue() != 'undefined'){
-                            orgNameSpace = response.getReturnValue();
-                    }
-
+                    console.log('28' , response.getReturnValue());
                     cmp.getEvent('getSettings').setParams({
                         callback: function(settings) {
-                            // console.log('getSettings callback executed');
+                            console.log('getSettings callback executed');
                             let records = JSON.parse(cmp.get('v.searchResults'));
                             let recordId = cmp.get('v.recordId');
-                            // console.log('Records found: ------------- ', records);
+                             console.log('Records found: ------------- ', JSON.stringify(records));
                             if (records != null) {
                                 // console.log('Total Records found: ------------- ', records.length);
                             }
                             // console.log('Record ID: ------------------ ', recordId);
+            
                             sforce.opencti.getSoftphoneLayout({
                                 callback: function(result) {
                                     let softPhoneLayout = JSON.parse(JSON.stringify(result));
@@ -63,7 +61,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                                 }).fire();
                                             }
                                         });
-
                                     } else if (records && records.length > 1) {
                                         //console.log('Multiple records found -----------' + records.length);
                                         if (screenPopType === 'PopToVisualforce') {
@@ -79,7 +76,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                                     url: '/apex/' + screenPopData + '?MobileNumber=' + encodeURIComponent(phoneNumber)
                                                 },
                                             });
-
                                         } else if (screenPopType === 'PopToFlow') {
                                             //console.log('Redirecting to Flow.');
                                             sforce.opencti.screenPop({
@@ -93,7 +89,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                                 }
                                             });
                                         }
-
                                     } else if (records && records.length === 1) {
                                         recordId = records[0].Id;
                                         //console.log('Single record found. Opening record with ID:', recordId);
@@ -107,9 +102,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                                 }).fire();
                                             }
                                         });
-
                                     } else {
-
                                         console.log('No records found.');
                                         let noMatchObj = softPhoneLayout.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
                                         console.log('noMatchObj --- ' , noMatchObj);
@@ -156,7 +149,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                                             });
         
                                                         }else{
-
                                                             sforce.opencti.screenPop({
                                                                 type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
                                                                 params: {
@@ -173,7 +165,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                                         }
                                                     }
                                                 } else {
-
                                                     var errors = response.getError();
                                                     console.log('found errors' , errors);
                                                 }
@@ -238,7 +229,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                                             });
                                                         }
                                                     }
-                                                    
                                                 } else {
                                                     var errors = response.getError();
                                                     console.log('found errors' , errors);
@@ -258,10 +248,15 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                         }
                     }).fire();
                     cmp.set("v.showCallPanel", false);
+
+                    // console.log('Got namespace ----' ,response.getReturnValue());
+                    // if(response.getReturnValue() != null && response.getReturnValue() != 'undefined'){
+                    //     orgNameSpace = response.getReturnValue();
+                    // }
                 }
             });
             $A.enqueueAction(getOrgNameSpace);
-            
+        } 
         } catch (error) {
             console.log('error at screenPopAndCall method of callInitiatedPanelHelper --- ', JSON.stringify(error));
             console.log('error message at screenPopAndCall method of callInitiatedPanelHelper --- ', JSON.stringify(error.message));

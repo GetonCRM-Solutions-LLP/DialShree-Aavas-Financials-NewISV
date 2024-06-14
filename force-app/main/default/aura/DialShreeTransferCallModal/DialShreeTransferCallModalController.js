@@ -322,6 +322,7 @@
                     'isPark' : component.get("v.callInitiatePark"),
                     'isTransferParkActive' : false,
                     'newLeadPage' : false,
+                    'isChecked': true,
                 },
             }).fire();
         } catch (error) {

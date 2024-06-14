@@ -1,3 +1,10 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 06-14-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
 <aura:component controller="DialShreeApi"
     implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,c:panel"
     access="global">
@@ -37,7 +44,7 @@
     <aura:attribute name="countryCode" type="String" description="Country code" />
     <aura:attribute name="tickerTime" type="Object" description="ticker start time"/>
     <aura:attribute name="callInitiatePark" type="boolean"/>
-
+    <aura:attribute name="isChecked" type="Boolean" default="false" />
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     
     <!-- <lightning:overlayLibrary aura:id="overlayLib" /> -->
