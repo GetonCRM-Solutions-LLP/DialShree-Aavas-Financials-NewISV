@@ -100,6 +100,61 @@ public with sharing class DialShreeApi {
     /**
      * @param 
      * @return String
+	 * @description :  Creates an method that will call the interface class and will pass configured map of communication details
+	*/
+
+    @AuraEnabled
+    public static String getObjectType(String objectName) {
+        String isCustomObject = null;
+    
+        try {
+            String fullName = objectName + '__c';
+            System.debug('fullName --- ' +fullName);
+            try {
+                Schema.sObjectType objectType = Schema.getGlobalDescribe().get(fullName);
+                System.debug('objectType --- ' +objectType);
+
+                if (objectType != null) {
+                    isCustomObject = 'True'; // Custom object
+                } else {
+                    isCustomObject = 'False'; // Standard object
+                }
+            } catch (Exception e) {
+                isCustomObject = 'False'; // Exception occurred, treating as standard object
+            }
+        } catch (Exception ex) {
+            System.debug('Received Error at getObjectType --- ' + ex.getMessage());
+        }
+    
+        return isCustomObject;
+    }
+
+    /**
+     * @param 
+     * @return String
+	 * @description :  Creates an method that will call the interface class and will pass configured map of communication details
+	*/
+
+    @AuraEnabled
+    public static String getOrgNameSpace() {
+        String OrgNameSpace = null;
+    
+        try {
+            string namespacePrefix = [SELECT NamespacePrefix FROM Organization].NamespacePrefix;
+            system.debug('namespacePrefix --- ' + namespacePrefix);
+            OrgNameSpace = namespacePrefix;
+            return OrgNameSpace;
+        } catch (Exception ex) {
+            System.debug('Received Error at getObjectType --- ' + ex.getMessage());
+        }
+    
+        return OrgNameSpace;
+    }
+    
+
+    /**
+     * @param 
+     * @return String
 	 * @description :  Creates an instance of WrapConstants class and populates it with constants 
      *                 related to API actions such as login, logout, pause, resume, etc.
 	*/
