@@ -38,6 +38,7 @@
             component.set('v.spinner', true);   
             component.set("v.isDateTimePicker",false);
             component.set("v.hideDateTime",true); 
+            this.transmitAgentData(component, event, helper);
            
             var dispoCodeUrl = component.get("v.baseUrl")+component.get("v.wapperApiObj").disposition+'&value='+passParam+'&agent_user='+component.get("v.dialUser");
             fetch(dispoCodeUrl)
@@ -57,8 +58,7 @@
                             //console.log('mapOfData --- ', mapOfData);
                             const dataMap = Object.fromEntries(mapOfData);
                             //console.log('dataMap ---' ,JSON.stringify(dataMap));
-                            this.handleMapppings(component, event, dataMap);
-    
+                            this.handleMapppings(component, dataMap);
                             if(!component.get("v.pauseCheck")){
                                 
                                 component.set('v.spinner', false); 
@@ -158,14 +158,18 @@
                 }
             });
             $A.enqueueAction(action);
+            // this.transmitAgentData(component, event, helper);
         } catch (error) {
             console.log('error at handleMapppings method of DialShreeDispositionHelper --- ' , JSON.stringify(error));
             console.log('error message at handleMapppings method of DialShreeDispositionHelper --- ' , JSON.stringify(error.message));
         }  
     },
 
-    transmitAgentData : function (component){
+    transmitAgentData : function (component, dataMap){
         try {
+            //console.log("at transmitAgentData");
+            //console.log("input text" , component.get("v.inputText"));
+            //console.log("lead Id" , component.get("v.agentLeadId"));
             if(component.get("v.inputText") != null || component.get("v.inputText") != undefined){
                 var encodedInputText = encodeURIComponent(component.get("v.inputText"));
                 var updateLeadURL = component.get("v.baseUrl")+'/elision-api/main.php?source=test'+'&action=update_lead'+'&lead_id='+component.get("v.agentLeadId")+'&address2='+encodedInputText;
@@ -176,7 +180,7 @@
                     })
                     .then(data => {
                         if(data.status){
-                            console.log('data received at transmitAgentData --- ' , data);
+                            console.log('data trabsmitted to elision --- ' , data);
                         }else{
                             console.error("Error received at transmitAgentData, verify updateLeadURL parameters");
                         }

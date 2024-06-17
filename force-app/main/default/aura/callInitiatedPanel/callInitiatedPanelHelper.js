@@ -16,23 +16,24 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     screenPopAndCall: function(cmp) {
         try {
             if(cmp.get ('v.isChecked') == false){
-            // console.log('screenPopAndCall method called');
+            //console.log('screenPopAndCall method called');
             let IsCustomObject = false;
             let objName;
             let orgNameSpace = null;
-            //console.log('orgNameSpace --- '  , orgNameSpace);
 
             var getOrgNameSpace = cmp.get("c.getOrgNameSpace");
             getOrgNameSpace.setCallback(this,function(response){
                 var state = response.getState();
                 if (state === "SUCCESS") {
-                    console.log('28' , response.getReturnValue());
+                    //console.log('org NameSpace --- ' , response.getReturnValue());
+                    orgNameSpace = response.getReturnValue();
+                    //console.log("Assigned org NameSpace ----- " , orgNameSpace);
                     cmp.getEvent('getSettings').setParams({
                         callback: function(settings) {
-                            console.log('getSettings callback executed');
+                            //console.log('getSettings callback executed');
                             let records = JSON.parse(cmp.get('v.searchResults'));
                             let recordId = cmp.get('v.recordId');
-                             console.log('Records found: ------------- ', JSON.stringify(records));
+                            //console.log('Records found: ------------- ', JSON.stringify(records));
                             if (records != null) {
                                 // console.log('Total Records found: ------------- ', records.length);
                             }
@@ -103,13 +104,13 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                             }
                                         });
                                     } else {
-                                        console.log('No records found.');
+                                        //console.log('No records found.');
                                         let noMatchObj = softPhoneLayout.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
-                                        console.log('noMatchObj --- ' , noMatchObj);
+                                        //console.log('noMatchObj --- ' , noMatchObj);
         
                                         if (orgNameSpace != null && orgNameSpace != 'undefined'){
                                             objName = orgNameSpace + '__'+ noMatchObj;
-                                            console.log('objectName With NameSpace --- ' , objName);
+                                            //console.log('objectName With NameSpace --- ' , objName);
         
                                             var getObjectType = cmp.get("c.getObjectType");
                                             getObjectType.setParams({
@@ -119,20 +120,20 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                             getObjectType.setCallback(this, (response) => {
                                                 var state = response.getState();
                                                 if (state === "SUCCESS") {
-                                                    console.log('returned result --- ' , response.getReturnValue());
+                                                    //console.log('returned result --- ' , response.getReturnValue());
         
                                                     if (response.getReturnValue() == 'True') {
                                                         IsCustomObject = true;
                                                     }
-                                                    console.log('IsCustomObject --- ' , IsCustomObject);
+                                                    //console.log('IsCustomObject --- ' , IsCustomObject);
         
                                                     if (noMatchObj != null && noMatchObj != undefined) {
                                                         if (IsCustomObject == true) {
                                                             let customObjectName = noMatchObj +  '__c';
-                                                            console.log('customObjectName ----'  , customObjectName);
+                                                            //console.log('customObjectName ----'  , customObjectName);
                                                         
                                                             let entityName = orgNameSpace + '__' + customObjectName;
-                                                            console.log('entityName ---- ',entityName );
+                                                            //console.log('entityName ---- ',entityName );
         
                                                             sforce.opencti.screenPop({
                                                                 type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,
@@ -174,7 +175,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                         } else {
         
                                             objName = noMatchObj;
-                                            console.log('objectName Without NameSpace --- ' , objName);
+                                            //console.log('objectName Without NameSpace --- ' , objName);
         
                                             var getObjectType = cmp.get("c.getObjectType");
                                             getObjectType.setParams({
@@ -184,20 +185,20 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                             getObjectType.setCallback(this, (response) => {
                                                 var state = response.getState();
                                                 if (state === "SUCCESS") {
-                                                    console.log('returned result --- ' , response.getReturnValue());
+                                                    //console.log('returned result --- ' , response.getReturnValue());
         
                                                     if (response.getReturnValue() == 'True') {
                                                         IsCustomObject = true;
                                                     }
-                                                    console.log('IsCustomObject --- ' , IsCustomObject);
+                                                    //console.log('IsCustomObject --- ' , IsCustomObject);
         
                                                     if (noMatchObj != null && noMatchObj != undefined) {
                                                         if (IsCustomObject == true) {
                                                             let customObjectName = noMatchObj +  '__c';
-                                                            console.log('customObjectName ----'  , customObjectName);
+                                                            //console.log('customObjectName ----'  , customObjectName);
                                                         
                                                             let entityName = customObjectName;
-                                                            console.log('entityName ---- ',entityName );
+                                                            //console.log('entityName ---- ',entityName );
         
                                                             sforce.opencti.screenPop({
                                                                 type: sforce.opencti.SCREENPOP_TYPE.NEW_RECORD_MODAL,

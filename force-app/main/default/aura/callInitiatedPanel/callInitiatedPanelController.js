@@ -91,6 +91,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     
     transfer : function(cmp, event, helper) {        
         try{
+            //console.log("input text at transfer of callinit panel ===  " , cmp.get('v.inputText'));
             let incomingCall = cmp.get('v.Isincoming');
             if(incomingCall === false){
                 cmp.set('v.Isincoming',true);
@@ -105,7 +106,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                     'dialUser' : cmp.get("v.dialUser"),
                     'dialPwd' : cmp.get("v.dialPwd"),
                     'campaignId' : cmp.get("v.campaignId"),
-
                     'state' : cmp.get("v.state"),
                     'recordName' : cmp.get("v.recordName"),
                     'phone' : cmp.get("v.phone"),
@@ -115,7 +115,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                     'recordId' : cmp.get('v.recordId'), 
                     'countryCode' : cmp.get('v.countryCode'),       
                     'tickerTime' : cmp.get('v.tickerTime'),
-                    'callInitiatePark' : cmp.get("v.isPark")
+                    'callInitiatePark' : cmp.get("v.isPark"),
+                    'inputText' : cmp.get('v.inputText')
                 },
             }).fire();  
         }

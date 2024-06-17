@@ -45,6 +45,7 @@
     <aura:attribute name="tickerTime" type="Object" description="ticker start time"/>
     <aura:attribute name="callInitiatePark" type="boolean"/>
     <aura:attribute name="isChecked" type="Boolean" default="false" />
+    <aura:attribute name="inputText" type="String"/>
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     
     <!-- <lightning:overlayLibrary aura:id="overlayLib" /> -->
