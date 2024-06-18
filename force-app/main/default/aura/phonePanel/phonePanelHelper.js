@@ -318,6 +318,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     
             var manaulDialUrl = cmp.get('v.baseUrl')+cmp.get('v.manualDialApi')+'&phone_code='+attributes.countryCode+'&value='+phoneNo+'&agent_user='+cmp.get('v.dialUser');
             
+            //console.log("manaulDialUrl --- " , manaulDialUrl);
             sforce.opencti.setSoftphonePanelVisibility({
                 visible : true,
                 callback : function() {

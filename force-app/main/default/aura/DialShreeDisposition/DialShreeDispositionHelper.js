@@ -58,7 +58,7 @@
                             //console.log('mapOfData --- ', mapOfData);
                             const dataMap = Object.fromEntries(mapOfData);
                             //console.log('dataMap ---' ,JSON.stringify(dataMap));
-                            this.handleMapppings(component, dataMap);
+                            this.handleMapppings(component, event, dataMap, helper);
                             if(!component.get("v.pauseCheck")){
                                 
                                 component.set('v.spinner', false); 
@@ -123,7 +123,7 @@
     handleMapppings : function(component, event, dataMap, helper){
         try {
             //console.log ('inside handleMappings --- ', JSON.stringify(dataMap));
-            //console.log('record Id --- ' ,component.get("v.recordId"));
+            //console.log ('record Id --- ' ,component.get("v.recordId"));
             var statusMap = JSON.parse(JSON.stringify(component.get("v.statusMap")));
     
             //console.log(component.get("v.NoMatchObject"));
@@ -165,7 +165,7 @@
         }  
     },
 
-    transmitAgentData : function (component, dataMap){
+    transmitAgentData : function (component, event, helper){
         try {
             //console.log("at transmitAgentData");
             //console.log("input text" , component.get("v.inputText"));
@@ -180,7 +180,7 @@
                     })
                     .then(data => {
                         if(data.status){
-                            console.log('data trabsmitted to elision --- ' , data);
+                            console.log('data transmitted to elision --- ' , data);
                         }else{
                             console.error("Error received at transmitAgentData, verify updateLeadURL parameters");
                         }
