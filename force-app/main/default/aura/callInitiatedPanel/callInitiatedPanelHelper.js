@@ -15,6 +15,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // then use open CTI to screen pop to the record, and runApex() to make a call
     screenPopAndCall: function(cmp) {
         try {
+            //console.log("data at screenpop ---- " , cmp.get('v.searchResults'));
             if(cmp.get ('v.isChecked') == false){
             //console.log('screenPopAndCall method called');
             let IsCustomObject = false;
@@ -237,12 +238,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                             });
                                             $A.enqueueAction(getObjectType);
                                         }
-                                    }
-                                    if (cmp.get('v.recordId') != undefined) {
-                                        sforce.opencti.screenPop({
-                                            type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
-                                            params: { recordId: cmp.get('v.recordId') },
-                                        });
                                     }
                                 }
                             });

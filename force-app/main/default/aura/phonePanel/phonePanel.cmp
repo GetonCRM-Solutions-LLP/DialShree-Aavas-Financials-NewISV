@@ -42,7 +42,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:attribute name="pauseLabel" type="String" default="" />
     <aura:attribute name="NoMatchObject" type="String"/>
     <aura:attribute name="listViewCall" type="Boolean" default="false"/>
-    <aura:handler event="c:StatusDropdownEvent" action="{!c.handleStatusDropdownEvent}"/>
+    <aura:handler event="c:statusDropdownEvent" action="{!c.handleStatusDropdownEvent}"/>
     <aura:attribute name="showTicker" type="Boolean" default="true"/>
 
     <div class="slds-panel">
