@@ -90,6 +90,13 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                                     // Additional logic can be added here if needed
                                                 }
                                             });
+                                        }  else if (screenPopType != 'PopToFlow' || screenPopType != 'PopToVisualforce'){
+                                            if (cmp.get('v.recordId') != undefined) {
+                                            sforce.opencti.screenPop({
+                                                type: sforce.opencti.SCREENPOP_TYPE.SOBJECT,
+                                                params: { recordId: cmp.get('v.recordId') },
+                                            });
+                                            }
                                         }
                                     } else if (records && records.length === 1) {
                                         recordId = records[0].Id;
