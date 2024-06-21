@@ -58,9 +58,12 @@
                             //console.log('mapOfData --- ', mapOfData);
                             const dataMap = Object.fromEntries(mapOfData);
                             //console.log('dataMap ---' ,JSON.stringify(dataMap));
-                            this.handleMapppings(component, event, dataMap, helper);
+                            var statusMap = component.get("v.statusMap");
+                            var recordId = component.get("v.recordId");
+                            var NoMatchObject = component.get("v.NoMatchObject");
+                            this.handleMapppings(component, event, dataMap, statusMap, recordId, NoMatchObject, helper);
+
                             if(!component.get("v.pauseCheck")){
-                                
                                 component.set('v.spinner', false); 
                                 component.getEvent('renderPanel').setParams({
                                     type : 'c:dialShreeAdapter',
@@ -120,27 +123,30 @@
         }  
     },
 
-    handleMapppings : function(component, event, dataMap, helper){
+    handleMapppings : function(component, event, dataMap, statusMap, recordId, NoMatchObject, helper){
         try {
-            //console.log ('inside handleMappings --- ', JSON.stringify(dataMap));
-            //console.log ('record Id --- ' ,component.get("v.recordId"));
-            var statusMap = JSON.parse(JSON.stringify(component.get("v.statusMap")));
-    
-            //console.log(component.get("v.NoMatchObject"));
+            // console.log ('inside handleMapppings');
+            // console.log ('dataMap at handleMapppings --- ', JSON.stringify(dataMap));
+            // console.log ('statusMap at handleMapppings --- ', JSON.stringify(statusMap));
+            // console.log ('recordId at handleMapppings --- ', recordId);
+            // console.log ('NoMatchObject at handleMapppings --- ', NoMatchObject);
     
             var CommunicationTreckingMap = {
-                'recordId': component.get("v.recordId"),
-                'dispositionData': dataMap,
-                'statusMap' : statusMap,
-                'NoMatchObject' : component.get("v.NoMatchObject")
+                'recordId': recordId,
+                'dispositionData': JSON.parse(JSON.stringify(dataMap)),
+                'statusMap' : JSON.parse(JSON.stringify(statusMap)),
+                'NoMatchObject' : NoMatchObject
             };
     
             //console.log('CommunicationTreckingMap --- ' ,JSON.stringify(CommunicationTreckingMap));
             let Stringdata = JSON.stringify(CommunicationTreckingMap);
+            //console.log('Stringdata --- ' , Stringdata);
+
             var action = component.get("c.InternalClassCall");
             action.setParams({
                 dataMap:Stringdata
             });
+
             action.setCallback(this, (response) => {
                 var state = response.getState();
                 if (state === "SUCCESS") {
