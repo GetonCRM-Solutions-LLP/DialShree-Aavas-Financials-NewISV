@@ -176,7 +176,7 @@
             //console.log("at transmitAgentData");
             //console.log("input text" , component.get("v.inputText"));
             //console.log("lead Id" , component.get("v.agentLeadId"));
-            if(component.get("v.inputText") != null || component.get("v.inputText") != undefined){
+            if(component.get("v.inputText") != null && component.get("v.inputText") != undefined){
                 var encodedInputText = encodeURIComponent(component.get("v.inputText"));
                 var updateLeadURL = component.get("v.baseUrl")+'/elision-api/main.php?source=test'+'&action=update_lead'+'&lead_id='+component.get("v.agentLeadId")+'&address2='+encodedInputText;
 

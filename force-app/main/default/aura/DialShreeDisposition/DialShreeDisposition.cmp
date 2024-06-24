@@ -29,6 +29,12 @@
     <aura:handler event="c:agentInputTransmit" action="{!c.onAgentInputTransmit}"/>
     <aura:attribute name="flag" type="boolean" default="false"/>
 
+    <div class="slds-panel">
+        <div class="slds-panel__section">
+            <lightning:input aura:id="inputText" value="{!v.inputText}" placeholder="Enter a Reference Id"/>
+        </div>
+    </div>
+    
     <div class="slds-grid slds-wrap slds-p-around_small">
         <aura:if isTrue="{!v.spinner}">
             <div class="loader-wrapper">

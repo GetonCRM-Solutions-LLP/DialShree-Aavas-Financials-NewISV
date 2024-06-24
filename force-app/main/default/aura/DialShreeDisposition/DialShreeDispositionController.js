@@ -20,6 +20,7 @@
     
     handleDblClick : function(component, event, helper){
         try {
+            // console.log('Input text from Agent' , component.get('v.inputText'));
             var eventVaule = event.currentTarget.dataset.id;
             if(eventVaule != 'CALLBK'){          
                 helper.dispoCodeJquey(component, eventVaule, event, helper);             
