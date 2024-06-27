@@ -43,12 +43,15 @@ global class SoftphoneContactSearchController {
             
             for (String objectKey : objectKeys) {
                 if(objQueryString == null){
-                    objQueryString = objectKey + '(Id,Name)';
+                    objQueryString = objectKey + '(Id,Name,CreatedDate ORDER BY CreatedDate DESC)';
+                    // objQueryString = objectKey + '(Id,Name)';
                 }else{
-                    objQueryString =  objQueryString +','+ objectKey + '(Id,Name)';
+                    objQueryString = objQueryString +','+ objectKey + '(Id,Name,CreatedDate ORDER BY CreatedDate DESC)';
+                    // objQueryString =  objQueryString +','+ objectKey + '(Id,Name)';
                 }
             }      
             soslQueryString = soslQueryString + objQueryString;
+            //System.debug('soslQueryString --- ' + soslQueryString);
             List<List<SObject>> searchList = search.query(soslQueryString);
             return JSON.serialize(searchList); 
         } catch (Exception ex) {             
