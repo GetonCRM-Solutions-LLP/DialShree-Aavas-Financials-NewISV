@@ -15,6 +15,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // then use open CTI to screen pop to the record, and runApex() to make a call
     screenPopAndCall: function(cmp) {
         try {
+            //console.log(JSON.stringify(cmp.get('v.searchResults')));
             //console.log("data at screenpop ---- " , cmp.get('v.searchResults'));
             if(cmp.get ('v.isChecked') == false){
             //console.log('screenPopAndCall method called');
@@ -32,13 +33,15 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                     cmp.getEvent('getSettings').setParams({
                         callback: function(settings) {
                             //console.log('getSettings callback executed');
+                            //console.log(JSON.stringify(cmp.get('v.searchResults')));
                             let records = JSON.parse(cmp.get('v.searchResults'));
+                            //let records = cmp.get('v.searchResults');
                             let recordId = cmp.get('v.recordId');
                             //console.log('Records found: ------------- ', JSON.stringify(records));
                             if (records != null) {
-                                // console.log('Total Records found: ------------- ', records.length);
+                                //console.log('Total Records found: ------------- ', records.length);
                             }
-                            // console.log('Record ID: ------------------ ', recordId);
+                            //console.log('Record ID: ------------------ ', recordId);
             
                             sforce.opencti.getSoftphoneLayout({
                                 callback: function(result) {

@@ -39,6 +39,48 @@ global with sharing class DialShreeInterface {
         return dataMap;
     }
 
+    global static String recordsfiltration(String recordsToFilter){
+        //System.debug('data at recordsfiltration --- ' + recordsToFilter);
+
+        if(recordsToFilter != null){
+            CTI_Records_Filtration__mdt filterMeta = [SELECT MasterLabel,
+                                                                   Label,
+                                                                   DeveloperName,
+                                                                   Dynamic_Record_Filtration__c,
+                                                                   Filtration_Apex_Class_Name__c
+                                                      FROM CTI_Records_Filtration__mdt 
+                                                      WHERE DeveloperName = 'Dynamic_Filtration' WITH SECURITY_ENFORCED limit 1 ];
+
+            if(filterMeta.Dynamic_Record_Filtration__c == true){
+                String apexClass;
+                if(Test.isRunningTest()){
+                    apexClass= 'DialShreeApi';	
+                }else{
+                    apexClass = filterMeta.Filtration_Apex_Class_Name__c;
+                }
+
+                if(apexClass != null) {
+
+                    Type externalClassInstance = Type.forName(null , apexClass);
+                    //System.debug('externalClassInstance --- ' + externalClassInstance);
+
+                    if(Test.isRunningTest()){
+                        return null;
+                    }else {
+                        Extention implementation = (Extention)externalClassInstance.newInstance();
+                        //System.debug('implementation --- ' + implementation);
+
+                        return implementation.output(recordsToFilter);
+                    }
+                    
+                }else{
+                    return null;
+                }
+            }
+        }
+        return recordsToFilter;
+    }
+
     // Inner interface
     global interface Extention {
         String output(String dataMap);

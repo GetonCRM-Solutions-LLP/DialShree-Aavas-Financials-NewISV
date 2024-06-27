@@ -100,36 +100,100 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // if not, initiate call panel with only number and state
     callNumber : function(cmp, number,stateId) { 
         try {
-            var attributes = {
-                'state' : 'Dialing',
-                'recordName' : number,
-                'stateId' : stateId,
-                'phone' : number
-            };
-            /*var record = cmp.get('v.searchResults')
-            && cmp.get('v.searchResults')[0];*/  
-    
-            if(cmp.get('v.searchResults')){                
-                //console.log('searchResults -----------' +cmp.get('v.searchResults'));
-                for (var reclength = 0; reclength < cmp.get('v.searchResults').length; reclength++) {
-                   var record = cmp.get('v.searchResults')
-                                && cmp.get('v.searchResults')[reclength]; 
-                   if (record) {            
-                       attributes.recordName = record.Name;
-                       attributes.phone = number;       
-                    //    attributes.title = record.Title;
-                    //    attributes.account = record.Account;
-                       attributes.recordId = record.Id;
-                       break;
-                   }
-               }
+            var attributes;
+            if(cmp.get('v.dynamicFiltration') == true){
+
+                //console.log('Calling the recordsfiltration method');
+                var recordsToFilter = JSON.stringify(cmp.get('v.searchResults'));
+        
+                var recordsfiltration = cmp.get("c.callrecordsfiltration");
+                recordsfiltration.setParams({
+                    recordsToFilter : recordsToFilter
+                });
+        
+                recordsfiltration.setCallback(this, (response) => {
+                    var state = response.getState();
+                    if (state === "SUCCESS") {
+                        var returnValue = response.getReturnValue();
+                        //console.log('returnValue from callrecordsfiltration --- ', JSON.stringify(JSON.parse((returnValue))));
+                        var filteredRecords = JSON.parse(returnValue);
+                        //console.log('returnValue length --- ', filteredRecords.length);
+                        if (filteredRecords.length > 1) {
+
+                            attributes = {
+                                'state' : 'Dialing',
+                                'recordName' : filteredRecords[0].Name,
+                                'stateId' : stateId,
+                                'phone' : number,
+                                'recordId' : filteredRecords[0].Id,
+                                'searchResults' : JSON.stringify(filteredRecords)
+                            };
+                            //console.log('attributes when multiple record returned after filtration --- ' , JSON.stringify(attributes));
+
+                        }else if(filteredRecords.length == 1) {
+
+                            attributes = {
+                                'state' : 'Dialing',
+                                'recordName' : filteredRecords[0].Name,
+                                'stateId' : stateId,
+                                'phone' : number,
+                                'recordId' : filteredRecords[0].Id,
+                                'searchResults' : JSON.stringify(filteredRecords)
+                            };
+                            //console.log('attributes when single record returned after filtration --- ' , JSON.stringify(attributes));
+
+                        }else{
+                            
+                            attributes = {
+                                'state' : 'Dialing',
+                                'recordName' : number,
+                                'stateId' : stateId,
+                                'phone' : number,
+                                'searchResults' : JSON.stringify(filteredRecords)
+                            };
+                            //console.log('attributes when no record returned after filtration --- ' , JSON.stringify(attributes));
+                        }
+                        this.initiateCallPanel(cmp, attributes);
+
+                    } else {
+                        var errors = response.getError();
+                        if (errors) {
+                            if (errors[0] && errors[0].message) {
+                                console.error("Error message: " + errors[0].message);
+                            }
+                        } else {
+                            console.error("Unknown error");
+                        }
+                    }
+                });
+                $A.enqueueAction(recordsfiltration);
             }
-            // else{
-            //     attributes.phone = number;    
-            //     console.log('else phone -----' +attributes.phone);   
-            // }    
-            // cmp.set('v.searchResults', []);  
-            this.initiateCallPanel(cmp, attributes);
+            else{
+
+                attributes = {
+                    'state' : 'Dialing',
+                    'recordName' : number,
+                    'stateId' : stateId,
+                    'phone' : number
+                };
+        
+                if(cmp.get('v.searchResults')){
+                    for (var reclength = 0; reclength < cmp.get('v.searchResults').length; reclength++) {
+                       var record = cmp.get('v.searchResults')
+                                    && cmp.get('v.searchResults')[reclength]; 
+                       if (record) {            
+                           attributes.recordName = record.Name;
+                           attributes.phone = number;       
+                           attributes.recordId = record.Id;
+                           attributes.searchResults = JSON.stringify(cmp.get("v.searchResults"));
+                           break;
+                       }
+                   }
+                }
+                //console.log('attributes if dynamic filration is turned off --- ' , JSON.stringify(attributes));
+                this.initiateCallPanel(cmp, attributes);
+            }
+
         } catch (error) {
             console.log('error at callNumber method of phonePanelHelper --- ' , JSON.stringify(error));
             console.log('error message at callNumber method of phonePanelHelper --- ' , JSON.stringify(error.message));
@@ -213,10 +277,12 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                         let multirecords = cmp.set('v.searchResults', records);
                                         //console.log('multirecords ----------' +JSON.stringify(cmp.get('v.searchResults')));
                                         cmp.set('v.searchResults', records);
+
                                         if (!record || records.length == 0) {
                                             cmp.set('v.message', 'No results found');
                                         }
                                         onCompletion && onCompletion(cmp, inputValue);
+
                                     }
                                 } else {
                                     throw new Error('Unable to perform a search using Open CTI. Contact your admin.');
@@ -304,7 +370,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             attributes.countryCode = cmp.get("v.countryCode");
             attributes.presence = cmp.get('v.presence'); 
             attributes.NoMatchObject = cmp.get("v.NoMatchObject");
-            attributes.searchResults = JSON.stringify(cmp.get("v.searchResults"));
+            //attributes.searchResults = JSON.stringify(cmp.get("v.searchResults"));
             //console.log('search ---------' +attributes.searchResults);
             if(attributes.countryCode == '' || attributes.countryCode == undefined){
                 attributes.countryCode = cmp.get("v.countryCodeMeta");

@@ -12,6 +12,17 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     init: function(cmp, event, helper) { 
         try {
             cmp.set('v.searchResults', []);
+
+            var recordsFiltration = cmp.get("c.getCTIRecordsFiltration");
+            recordsFiltration.setCallback(this,function(response){
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    //console.log('dynamic record filtration --- ' , response.getReturnValue().DialShreeCTI2__Dynamic_Record_Filtration__c);         
+                    cmp.set("v.dynamicFiltration", response.getReturnValue().DialShreeCTI2__Dynamic_Record_Filtration__c);
+                }
+            });
+            $A.enqueueAction(recordsFiltration);
+
             helper.handleOutgoingCalls(cmp); 
         } catch (error) {
             console.log('error at init method of phonePanelController --- ' , JSON.stringify(error));
