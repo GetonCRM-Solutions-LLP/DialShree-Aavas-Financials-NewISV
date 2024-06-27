@@ -91,9 +91,51 @@ public with sharing class DialShreeApi {
     public static void InternalClassCall(String dataMap){
 
         try {
+            //System.debug('calling InternalClassCall');
             DialShreeInterface.callinterfaceMethod(dataMap);
         } catch (Exception ex) {
             System.debug('Received Error at InternalClassCall --- ' + ex.getMessage());
+        }
+    }
+
+    /**
+     * @param 
+     * @return String
+	 * @description :  Retrieves CTIRecordsFiltration metadata details 
+	*/
+    @AuraEnabled(cacheable=true)
+    public static CTI_Records_Filtration__mdt getCTIRecordsFiltration(){
+        CTI_Records_Filtration__mdt filterMeta;
+        try {
+            filterMeta = [SELECT MasterLabel,
+                                       Label,
+                                       DeveloperName,
+                                       Dynamic_Record_Filtration__c,
+                                       Filtration_Apex_Class_Name__c
+                          FROM CTI_Records_Filtration__mdt 
+                          WHERE DeveloperName = 'Dynamic_Filtration' WITH SECURITY_ENFORCED limit 1 ];
+        } catch(Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+        return  filterMeta; 
+    }
+
+    /**
+     * @param 
+     * @return String
+	 * @description :  Creates an method that will call the interface class and will pass searched records for further filtration
+	*/
+
+    @AuraEnabled
+    public static String callrecordsfiltration(String recordsToFilter){
+        String returnString;
+        try {
+            //System.debug('calling recordsfiltration');
+            returnString = DialShreeInterface.recordsfiltration(recordsToFilter);
+            return returnString;
+        } catch (Exception ex) {
+            System.debug('Received Error at InternalClassCall --- ' + ex.getMessage());
+            return returnString ;
         }
     }
 
@@ -109,10 +151,10 @@ public with sharing class DialShreeApi {
     
         try {
             String fullName = objectName + '__c';
-            System.debug('fullName --- ' +fullName);
+            //System.debug('fullName --- ' +fullName);
             try {
                 Schema.sObjectType objectType = Schema.getGlobalDescribe().get(fullName);
-                System.debug('objectType --- ' +objectType);
+                //System.debug('objectType --- ' +objectType);
 
                 if (objectType != null) {
                     isCustomObject = 'True'; // Custom object
@@ -141,7 +183,7 @@ public with sharing class DialShreeApi {
     
         try {
             string namespacePrefix = [SELECT NamespacePrefix FROM Organization].NamespacePrefix;
-            system.debug('namespacePrefix --- ' + namespacePrefix);
+            //system.debug('namespacePrefix --- ' + namespacePrefix);
             OrgNameSpace = namespacePrefix;
             return OrgNameSpace;
         } catch (Exception ex) {
