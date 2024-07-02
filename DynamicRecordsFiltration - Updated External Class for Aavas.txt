@@ -1,0 +1,68 @@
+// This external class will be used to filter records recieved from the DialShree package 
+global with sharing class DynamicRecordsFiltration implements DialShreeCTI2.DialShreeInterface.Extention {
+    global static String output(String outputMap) {
+        String outputString = ''; // Initialize outputString
+
+        try {
+            System.debug('Records to be filtered --- ' + outputMap);
+            // We will only recieve records of a single object in this outputMap, as we had alredy filtered returned records based on priority in JS 
+
+            // Deserialize the JSON string into a list of generic objects
+            List<Object> searchedData = (List<Object>) JSON.deserializeUntyped(outputMap);
+            System.debug('Searched Data --- ' + searchedData);
+
+            if (searchedData.isEmpty()) {
+                return outputString;
+            }
+
+            Map<String, Object> firstElement = (Map<String, Object>) searchedData[0]; // Cast the first element to a map
+            System.debug('First Element --- ' + firstElement);
+
+            Map<String, Object> attributes = (Map<String, Object>) firstElement.get('attributes'); // Extract the attributes map
+            System.debug('Attributes --- ' + attributes);
+
+            String objectName = (String) attributes.get('type'); // Extract the type value
+            System.debug('Object Name --- ' + objectName);
+
+            List<String> ids = new List<String>();
+            for (Object obj : searchedData) {
+                Map<String, Object> element = (Map<String, Object>) obj;
+                String id = (String) element.get('Id');
+                ids.add(id);
+            }
+            System.debug('Ids --- ' + ids);
+
+            if (objectName == 'Lead') {
+
+                // Query the leads list sorted by CreatedDate in descending order
+                List<Lead> leadsList = [SELECT Id, Name, Lead_Status__c, CreatedDate FROM Lead WHERE Id IN :ids WITH SECURITY_ENFORCED ORDER BY CreatedDate DESC];
+                System.debug('leadsList --- ' + leadsList);
+
+                List<Lead> returnList = new List<Lead>();
+
+                for (Lead lead : leadsList) {
+                    if (lead.Lead_Status__c != 'Closed') {
+                        returnList.add(lead);
+                    }
+                }
+
+                System.debug('Filtered Leads --- ' + returnList);
+                outputString = JSON.serialize(returnList);
+                
+            }else if (objectName == 'DialShreeCTI2__Test_Dialshree__c'){  // replace this objectName from Test_DialShree__c to Loan_Application__c for Aavas and perform further operation as per needs
+                
+                outputString = outputMap;
+
+            }else if (objectName != 'Lead' || objectName != 'DialShreeCTI2__Test_Dialshree__c'){  // Return the recieved outputMap back to CTI
+                
+                outputString = outputMap;
+            }
+
+        } catch (Exception e) {
+            System.debug('Error --- ' + e.getMessage());
+            outputString = JSON.serialize(new Map<String, String>{'error' => e.getMessage()});
+        }
+
+        return outputString;
+    }
+}
