@@ -100,73 +100,132 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // if not, initiate call panel with only number and state
     callNumber : function(cmp, number,stateId) { 
         try {
+            //console.log('callNumber called');
             var attributes;
+            let _self = this;
             if(cmp.get('v.dynamicFiltration') == true){
 
                 //console.log('Calling the recordsfiltration method');
                 var recordsToFilter = JSON.stringify(cmp.get('v.searchResults'));
-        
-                var recordsfiltration = cmp.get("c.callrecordsfiltration");
-                recordsfiltration.setParams({
+                //console.log(JSON.parse(recordsToFilter).length);
+
+                if(JSON.parse(recordsToFilter).length != 0){
+
+                    var recordsfiltration = cmp.get("c.callrecordsfiltration");
+                    recordsfiltration.setParams({
                     recordsToFilter : recordsToFilter
-                });
+                    });
         
-                recordsfiltration.setCallback(this, (response) => {
-                    var state = response.getState();
-                    if (state === "SUCCESS") {
-                        var returnValue = response.getReturnValue();
-                        //console.log('returnValue from callrecordsfiltration --- ', JSON.stringify(JSON.parse((returnValue))));
-                        var filteredRecords = JSON.parse(returnValue);
-                        //console.log('returnValue length --- ', filteredRecords.length);
-                        if (filteredRecords.length > 1) {
+                    recordsfiltration.setCallback(this, (response) => {
+                        var state = response.getState();
+                        if (state === "SUCCESS") {
+                            var returnValue = response.getReturnValue();
+                            //console.log('returnValue from callrecordsfiltration --- ', JSON.stringify(JSON.parse((returnValue))));
+                            var filteredRecords = JSON.parse(returnValue);
+                            //console.log('returnValue length --- ', filteredRecords.length);
+                            if (filteredRecords.length > 1) {
 
-                            attributes = {
-                                'state' : 'Dialing',
-                                'recordName' : filteredRecords[0].Name,
-                                'stateId' : stateId,
-                                'phone' : number,
-                                'recordId' : filteredRecords[0].Id,
-                                'searchResults' : JSON.stringify(filteredRecords)
-                            };
-                            //console.log('attributes when multiple record returned after filtration --- ' , JSON.stringify(attributes));
+                                attributes = {
+                                    'state' : 'Dialing',
+                                    'recordName' : filteredRecords[0].Name,
+                                    'stateId' : stateId,
+                                    'phone' : number,
+                                    'recordId' : filteredRecords[0].Id,
+                                    'searchResults' : JSON.stringify(filteredRecords)
+                                };
+                                this.initiateCallPanel(cmp, attributes);
+                                //console.log('attributes when multiple record returned after filtration --- ' , JSON.stringify(attributes));
 
-                        }else if(filteredRecords.length == 1) {
+                            }else if(filteredRecords.length == 1) {
 
-                            attributes = {
-                                'state' : 'Dialing',
-                                'recordName' : filteredRecords[0].Name,
-                                'stateId' : stateId,
-                                'phone' : number,
-                                'recordId' : filteredRecords[0].Id,
-                                'searchResults' : JSON.stringify(filteredRecords)
-                            };
-                            //console.log('attributes when single record returned after filtration --- ' , JSON.stringify(attributes));
+                                attributes = {
+                                    'state' : 'Dialing',
+                                    'recordName' : filteredRecords[0].Name,
+                                    'stateId' : stateId,
+                                    'phone' : number,
+                                    'recordId' : filteredRecords[0].Id,
+                                    'searchResults' : JSON.stringify(filteredRecords)
+                                };
+                                this.initiateCallPanel(cmp, attributes);
+                                //console.log('attributes when single record returned after filtration --- ' , JSON.stringify(attributes));
 
-                        }else{
-                            
-                            attributes = {
-                                'state' : 'Dialing',
-                                'recordName' : number,
-                                'stateId' : stateId,
-                                'phone' : number,
-                                'searchResults' : JSON.stringify(filteredRecords)
-                            };
-                            //console.log('attributes when no record returned after filtration --- ' , JSON.stringify(attributes));
-                        }
-                        this.initiateCallPanel(cmp, attributes);
+                            }else{
+                                //console.log('Recursive call will be initiated');
+                                var searchObjectskeys = JSON.parse(cmp.get("v.searchObjectskeys"));
+                                //console.log('searchObjectskeys at callNumber --- ' + JSON.stringify(searchObjectskeys));
+                                //console.log('Objects to be searched --- ' ,  searchObjectskeys.length);
+                                //console.log('softphone layout at callNumber --- ' , cmp.get("v.softPhoneLayoutJSON"));
 
-                    } else {
-                        var errors = response.getError();
-                        if (errors) {
-                            if (errors[0] && errors[0].message) {
-                                console.error("Error message: " + errors[0].message);
+                                if(searchObjectskeys.length > 1){
+
+                                    var keysArray = searchObjectskeys;
+                                    var removedKey = keysArray.shift();  // Remove the first element
+                                    //console.log('removed key ---' , removedKey);
+                                    searchObjectskeys = JSON.stringify(keysArray);
+
+                                    //console.log('Updated searchObjectskeys --- ' + searchObjectskeys);
+                                    cmp.set("v.searchObjectskeys" , searchObjectskeys);
+                                    //console.log('get keys --- ' ,  cmp.get("v.searchObjectskeys"));
+
+                                    var softPhoneLayout = JSON.parse(cmp.get("v.softPhoneLayoutJSON"));
+
+                                    if (softPhoneLayout.returnValue.Inbound.objects.hasOwnProperty(removedKey)) {
+                                        delete softPhoneLayout.returnValue.Inbound.objects[removedKey];
+                                    }
+
+                                    cmp.set("v.softPhoneLayoutJSON" , JSON.stringify(softPhoneLayout));
+                                    //console.log('softPhoneLayoutJSON after update --- ' ,  cmp.get("v.softPhoneLayoutJSON"));
+
+                                    cmp.set("v.recursiveSearch" , true);
+                                    try {
+                                        _self.search(cmp, number, null);
+                                    } catch (error) {
+                                        console.log('Error calling search method:', error);
+                                    }
+                                    //console.log('attributes when no record returned after filtration --- ' , JSON.stringify(attributes));
+
+                                }else{
+
+                                    attributes = {
+                                        'state' : 'Dialing',
+                                        'recordName' : number,
+                                        'stateId' : stateId,
+                                        'phone' : number,
+                                        'searchResults' : JSON.stringify(filteredRecords)
+                                    };
+                                    //console.log('attributes when no record returned after filtration --- ' , JSON.stringify(attributes));
+                                    this.initiateCallPanel(cmp, attributes);
+
+                                }
                             }
+                            // this.initiateCallPanel(cmp, attributes);
+
                         } else {
-                            console.error("Unknown error");
+                            var errors = response.getError();
+                            if (errors) {
+                                if (errors[0] && errors[0].message) {
+                                    console.error("Error message: " + errors[0].message);
+                                }
+                            } else {
+                                console.error("Unknown error");
+                            }
                         }
-                    }
-                });
-                $A.enqueueAction(recordsfiltration);
+                    });
+                    $A.enqueueAction(recordsfiltration);
+
+                }else{
+
+                    //console.log('searchResult is empty');
+                    attributes = {
+                        'state' : 'Dialing',
+                        'recordName' : number,
+                        'stateId' : stateId,
+                        'phone' : number,
+                        'searchResults' : JSON.stringify(cmp.get('v.searchResults'))
+                    };
+                    //console.log('attributes when no record returned after filtration --- ' , JSON.stringify(attributes));
+                    this.initiateCallPanel(cmp, attributes);
+                }
             }
             else{
 
@@ -239,75 +298,161 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // find a matching record using Open CTI runApex()
     // optionally run a callback function onCompletion
     search: function(cmp, inputValue, onCompletion) {
-        try {
-            cmp.set('v.searchResults', []);
-            let _self = this;
-            sforce.opencti.getSoftphoneLayout({
-                callback: function(result) {
-                    var softPhoneLayoutJSON = JSON.stringify(result);
-                    var softPhoneLayoutJSONParsed = JSON.parse(softPhoneLayoutJSON);
-                    var NoMatchObject = softPhoneLayoutJSONParsed.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
-                    cmp.set("v.NoMatchObject" , NoMatchObject);
-                   
-                    if (inputValue != undefined) {
-                        if (inputValue.length < 2) {
-                            cmp.set('v.message', 'Enter at least two characters');
-                            return;
-                        };
-                        var softPhoneJSON = {
-                            'searchvalue': inputValue,
-                            'softPhoneLayoutJSON': softPhoneLayoutJSON
-                        };
-                        var args = {
-                            apexClass: 'DialShreeCTI2.SoftphoneContactSearchController',
-                            methodName: 'getContacts',
-                            methodParams: 'softPhoneParams=' + encodeURIComponent(JSON.stringify(softPhoneJSON)),
-                            //methodParams: 'name=' + mapString,
-                            callback: function(result) {
-                                if (result.success) {
-                                    var searchResults;
-                                    if (result.returnValue != null || result.returnValue != undefined) {
-                                        searchResults = JSON.parse(result.returnValue.runApex);
-                                        let obj = JSON.parse(softPhoneLayoutJSON);
-                                        let inboundObjects = Object.keys(obj.returnValue.Inbound.objects);
-                                        let records = _self.getRecordWithPriority(searchResults, inboundObjects);
-                                        //console.log('210 searchResults -----------' +JSON.stringify(searchResults));
-                                        //console.log('211 inboundObjects -----------------' +JSON.stringify(inboundObjects));
-                                        let record; 
-                                        let multirecords = cmp.set('v.searchResults', records);
-                                        //console.log('multirecords ----------' +JSON.stringify(cmp.get('v.searchResults')));
-                                        cmp.set('v.searchResults', records);
+        //console.log('In the search method');
 
-                                        if (!record || records.length == 0) {
-                                            cmp.set('v.message', 'No results found');
-                                        }
-                                        onCompletion && onCompletion(cmp, inputValue);
+        if(cmp.get('v.recursiveSearch') == true){
 
+            try {
+                let _self = this;
+                //console.log('performing recursive search');
+                var softPhoneLayoutJSON = cmp.get("v.softPhoneLayoutJSON");
+                //console.log('softPhoneLayoutJSON when recursive search happens --- ' , softPhoneLayoutJSON);
+                //console.log('Inputvalue --- ' , inputValue);
+
+                if (inputValue != undefined) {
+                    if (inputValue.length < 2) {
+                        cmp.set('v.message', 'Enter at least two characters');
+                        return;
+                    };
+                    var softPhoneJSON = {
+                        'searchvalue': inputValue,
+                        'softPhoneLayoutJSON':  softPhoneLayoutJSON
+                    };
+                    var args = {
+                        apexClass: 'DialShreeCTI2.SoftphoneContactSearchController',
+                        methodName: 'getContacts',
+                        methodParams: 'softPhoneParams=' + encodeURIComponent(JSON.stringify(softPhoneJSON)),
+                        callback: function(result) {
+                            if (result.success) {
+                                //console.log('SoftphoneContactSearchController is success and returned value from apex --- ' + JSON.stringify(result.returnValue));
+                                var searchResults ;
+                                if (result.returnValue != null || result.returnValue != undefined) {
+                            
+                                    searchResults = JSON.parse(result.returnValue.runApex);
+                                    //console.log('searchResults --- ' , JSON.stringify(searchResults));
+
+                                    let obj = JSON.parse(softPhoneLayoutJSON);
+                                    //console.log('obj --- ' , JSON.stringify(obj));
+
+                                    let inboundObjects = Object.keys(obj.returnValue.Inbound.objects);
+                                    //console.log('inboundObjects --- ' , JSON.stringify(inboundObjects));
+
+                                    let records = _self.getRecordWithPriority(searchResults, inboundObjects);
+                                    //console.log('records --- ' , JSON.stringify(records));
+                         
+                                    let record; 
+                                    cmp.set("v.searchResults", records);
+                                    //console.log('searchResults ----------' +JSON.stringify(cmp.get("v.searchResults")));
+
+                                    if (!record || records.length == 0) {
+                                        cmp.set('v.message', 'No results found');
                                     }
-                                } else {
-                                    throw new Error('Unable to perform a search using Open CTI. Contact your admin.');
+
+                                    try {
+                                        _self.callNumber(cmp, inputValue, null);
+                                    } catch (error) {
+                                        console.log('Error calling callNumber method:', error);
+                                    }
                                 }
+                            }else{
+                                throw new Error('Unable to perform a search using Open CTI. Contact your admin.');
                             }
-                        };
-                        sforce.opencti.runApex(args);
-                    }
+                        }
+                    };
+                    sforce.opencti.runApex(args);
                 }
-            });
-        } catch (error) {
-            console.log('error at search method of phonePanelHelper --- ' , JSON.stringify(error));
-            console.log('error message at search method of phonePanelHelper --- ' , JSON.stringify(error.message));
+            }catch (error) {
+                console.log('error message at search method of phonePanelHelper when recursive search happens --- ' , JSON.stringify(error.message));
+            }
+
+        }else{
+
+            try {
+                //console.log('performing initial search');
+
+                cmp.set('v.searchResults', []);
+                let _self = this;
+                sforce.opencti.getSoftphoneLayout({
+                    callback: function(result) {
+                        var softPhoneLayoutJSON = JSON.stringify(result);
+
+                        //console.log('softPhoneLayoutJSON when initial search happens --- ' , softPhoneLayoutJSON);
+                        cmp.set("v.softPhoneLayoutJSON" , softPhoneLayoutJSON);
+
+                        var softPhoneLayoutJSONParsed = JSON.parse(softPhoneLayoutJSON);
+                        var NoMatchObject = softPhoneLayoutJSONParsed.returnValue.Inbound.screenPopSettings.NoMatch.screenPopData;
+                        cmp.set("v.NoMatchObject" , NoMatchObject);
+
+                        var searchObjectsData = softPhoneLayoutJSONParsed.returnValue.Inbound.objects;
+                        //console.log('searchObjectsData --- ' , JSON.stringify(searchObjectsData));
+                        
+                        let searchObjectskeys = Object.keys(searchObjectsData);
+                        //console.log('searchObjectskeys --- ' , JSON.stringify(searchObjectskeys));
+                        cmp.set("v.searchObjectskeys" , JSON.stringify(searchObjectskeys));
+                    
+                        //console.log('Inputvalue --- ' , inputValue.length);
+
+                        if (inputValue != undefined) {
+                            if (inputValue.length < 2) {
+                                cmp.set('v.message', 'Enter at least two characters');
+                                return;
+                            };
+                            var softPhoneJSON = {
+                                'searchvalue': inputValue,
+                                'softPhoneLayoutJSON': softPhoneLayoutJSON
+                            };
+                            var args = {
+                                apexClass: 'DialShreeCTI2.SoftphoneContactSearchController',
+                                methodName: 'getContacts',
+                                methodParams: 'softPhoneParams=' + encodeURIComponent(JSON.stringify(softPhoneJSON)),
+                                //methodParams: 'name=' + mapString,
+                                callback: function(result) {
+                                    if (result.success) {
+                                        //console.log('SoftphoneContactSearchController is success and returned value from apex 404--- ' + JSON.stringify(result.returnValue));
+                                        var searchResults;
+                                        if (result.returnValue != null || result.returnValue != undefined) {
+                                            searchResults = JSON.parse(result.returnValue.runApex);
+                                            //console.log('searchResults 399--- ' , JSON.stringify(searchResults));
+                                            let obj = JSON.parse(softPhoneLayoutJSON);
+                                            let inboundObjects = Object.keys(obj.returnValue.Inbound.objects);
+                                            let records = _self.getRecordWithPriority(searchResults, inboundObjects);
+                                            //console.log('records returned from getRecordWithPriority 403 --- ' ,  JSON.stringify(records));
+                                            let record; 
+                                            cmp.set("v.searchResults", records);
+                                            //console.log('searchResults ----------' +JSON.stringify(cmp.get("v.searchResults")));
+    
+                                            if (!record || records.length == 0) {
+                                                cmp.set('v.message', 'No results found');
+                                            }
+                                            onCompletion && onCompletion(cmp, inputValue);
+    
+                                        }
+                                    } else {
+                                        throw new Error('Unable to perform a search using Open CTI. Contact your admin.');
+                                    }
+                                }
+                            };
+                            sforce.opencti.runApex(args);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.log('error at search method of phonePanelHelper --- ' , JSON.stringify(error));
+                console.log('error message at search method of phonePanelHelper --- ' , JSON.stringify(error.message));
+            }
         }
     },
 
     getRecordWithPriority : function(records , priorityList){
         try {
-            //console.log('239 records -----------' +JSON.stringify(records));
-            //console.log('240 priorityList -----------------' +JSON.stringify(priorityList));  
+            //console.log('records -----------' +JSON.stringify(records));
+            //console.log('priorityList -----------------' +JSON.stringify(priorityList));  
             for (let priorityType of priorityList) {
                 for (let record of records) {
                     if (record && record.length > 0 && record[0] && record[0].attributes) {
                         let recordType = record[0].attributes.type;
                         if (recordType.toLowerCase() === priorityType.toLowerCase()) {
+                            //console.log('record at getRecordWithPriority --- ' , JSON.stringify(record));
                             return record;
                         }
                     }

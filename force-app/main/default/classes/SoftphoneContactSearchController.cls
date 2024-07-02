@@ -38,7 +38,7 @@ global class SoftphoneContactSearchController {
                 objectKeys.add(key);
             }
             
-            String soslQueryString = 'FIND \'' + searchValue + '\' IN ALL FIELDS RETURNING ';
+            String soslQueryString = 'FIND \'' + searchValue + '\' IN PHONE FIELDS RETURNING ';
             String objQueryString ;
             
             for (String objectKey : objectKeys) {
