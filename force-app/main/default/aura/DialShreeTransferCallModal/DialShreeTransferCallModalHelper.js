@@ -26,7 +26,8 @@
                                 'wapperApiObj': component.get("v.wapperApiObj"),
                                 'baseUrl': component.get("v.baseUrl"),
                                 'dialUser': component.get("v.dialUser"),
-                                'campaignId' : component.get("v.campaignId")
+                                'campaignId' : component.get("v.campaignId"),
+                                'inputText' : component.get("v.inputText")
                             },
                         }).fire();
                     }
