@@ -3,7 +3,14 @@
 ({
     onInit : function(component, event, helper){   
         try {
-            helper.dispoListJquey(component, event, helper);
+            // Added timeout to delay loading of Disposition list by 2 seconds 
+            component.set('v.spinner', true); 
+            window.setTimeout(
+                $A.getCallback(function() {
+                    component.set('v.spinner', false);
+                    helper.dispoListJquey(component, event, helper);
+                }), 2000
+           );
         } catch (error) {
             console.log('error at onInit method of DialShreeDispositionController --- ' , JSON.stringify(error));
             console.log('error message at onInit method of DialShreeDispositionController --- ' , JSON.stringify(error.message));
@@ -12,7 +19,7 @@
     
     handleDblClick : function(component, event, helper){
         try {
-            // console.log('Input text from Agent' , component.get('v.inputText'));
+            //console.log('Input text from Agent' , component.get('v.inputText'));
             var eventVaule = event.currentTarget.dataset.id;
             if(eventVaule != 'CALLBK'){          
                 helper.dispoCodeJquey(component, eventVaule, event, helper);             
