@@ -19,6 +19,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 if (state === "SUCCESS") {
                     //console.log('dynamic record filtration --- ' , response.getReturnValue().DialShreeCTI2__Dynamic_Record_Filtration__c);         
                     cmp.set("v.dynamicFiltration", response.getReturnValue().DialShreeCTI2__Dynamic_Record_Filtration__c);
+                    cmp.set("v.filtrationApexClass", response.getReturnValue().DialShreeCTI2__Filtration_Apex_Class_Name__c);
                 }
             });
             $A.enqueueAction(recordsFiltration);

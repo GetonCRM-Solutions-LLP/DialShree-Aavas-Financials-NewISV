@@ -45,6 +45,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:handler event="c:statusDropdownEvent" action="{!c.handleStatusDropdownEvent}"/>
     <aura:attribute name="showTicker" type="Boolean" default="true"/>
     <aura:attribute name="dynamicFiltration" type="Boolean" default="false"/>
+    <aura:attribute name="filtrationApexClass" type="String" />
     <aura:attribute name="searchObjectskeys" type="String" />
     <aura:attribute name="softPhoneLayoutJSON" type="String" />
     <aura:attribute name="recursiveSearch" type="Boolean" default="false"/>

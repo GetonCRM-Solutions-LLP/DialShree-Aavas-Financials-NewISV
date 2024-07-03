@@ -128,7 +128,7 @@ private class DialShreeInterfaceTest {
         // Assert the result
         System.assertEquals('Mock Output', result);
     }
-  
+
     // Test method for positive case where Dynamic_Record_Filtration__c is true and apexClass is valid
     static testMethod void testDynamicRecordFiltrationTrueAndApexClassValid() {
         // Test data preparation
@@ -153,7 +153,7 @@ private class DialShreeInterfaceTest {
         // Test data preparation
         String recordsToFilter = '{"attributes":{"type":"Test__c","url":"/services/data/v61.0/sobjects/Test__c/001XXXXXXXXXXXX"},"Id":"001XXXXXXXXXXXX","Name":"Test Record","CreatedDate":"2024-06-19T10:27:39.000+0000"}';
 
-        // Create a test CTI_Records_Filtration__mdt record with valid Filtration_Apex_Class_Name__c
+        // Create a test CTI_Records_Filtration__mdt record with Dynamic_Record_Filtration__c set to false
         DialShreeCTI2__CTI_Records_Filtration__mdt config = new DialShreeCTI2__CTI_Records_Filtration__mdt(
             DeveloperName = 'Dynamic_Filtration',
             Filtration_Apex_Class_Name__c = 'DynamicRecordsFiltration',
@@ -175,10 +175,10 @@ private class DialShreeInterfaceTest {
         // Test data preparation
         String recordsToFilter = '{"attributes":{"type":"Test__c","url":"/services/data/v61.0/sobjects/Test__c/001XXXXXXXXXXXX"},"Id":"001XXXXXXXXXXXX","Name":"Test Record","CreatedDate":"2024-06-19T10:27:39.000+0000"}';
 
-        // Create a test CTI_Records_Filtration__mdt record with valid Filtration_Apex_Class_Name__c
+        // Create a test CTI_Records_Filtration__mdt record with Filtration_Apex_Class_Name__c set to null
         DialShreeCTI2__CTI_Records_Filtration__mdt config = new DialShreeCTI2__CTI_Records_Filtration__mdt(
             DeveloperName = 'Dynamic_Filtration',
-            Filtration_Apex_Class_Name__c = null, 
+            Filtration_Apex_Class_Name__c = null,
             Dynamic_Record_Filtration__c = true
         );
         // insert config;

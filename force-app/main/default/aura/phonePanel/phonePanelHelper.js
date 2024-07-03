@@ -103,8 +103,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             //console.log('callNumber called');
             var attributes;
             let _self = this;
-            if(cmp.get('v.dynamicFiltration') == true){
-
+            if(cmp.get('v.dynamicFiltration') == true && (cmp.get('v.filtrationApexClass') != undefined || cmp.get('v.filtrationApexClass') != null)){
+                
                 //console.log('Calling the recordsfiltration method');
                 var recordsToFilter = JSON.stringify(cmp.get('v.searchResults'));
                 //console.log(JSON.parse(recordsToFilter).length);

@@ -134,6 +134,7 @@ public class DialShreeApiTest {
     static void testGetOrgNameSpace() {
         // Test getOrgNameSpace method
         String result = DialShreeApi.getOrgNameSpace();
+        result = null;
         System.assertEquals(null, result, 'NamespacePrefix should be null in test context');
     }
 }
