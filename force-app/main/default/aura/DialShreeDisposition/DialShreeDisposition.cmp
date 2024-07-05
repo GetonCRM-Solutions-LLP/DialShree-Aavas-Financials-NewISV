@@ -29,20 +29,20 @@
     <aura:handler event="c:agentInputTransmit" action="{!c.onAgentInputTransmit}"/>
     <aura:attribute name="flag" type="boolean" default="false"/>
 
-    <!-- <div class="slds-panel">
-        <div class="slds-panel__section">
-            <lightning:input aura:id="inputText" value="{!v.inputText}" placeholder="Enter a Reference Id"/>
+    <div class="slds-panel" >
+        <div class="slds-panel__section" style="padding:12px;">
+            <lightning:input aura:id="inputText" value="{!v.inputText}" placeholder="Reference/Comments" />
         </div>
-    </div> -->
-    
+    </div>
+
     <div class="slds-grid slds-wrap slds-p-around_small">
         <aura:if isTrue="{!v.spinner}">
             <div class="loader-wrapper">
                 <div class="throbber-loader"></div>
             </div>
             <aura:set attribute="else">
-                <article class="slds-card slds-size_4-of-4">
-                    <div class="slds-card__header slds-grid custom-pad">
+                <article class="slds-card slds-size_4-of-4" style="border-color:#747474;">
+                    <div class="slds-card__header slds-grid custom-pad" style="border-color:#747474;">
                         <header class="slds-media slds-media_center slds-has-flexi-truncate">
                             <div class="slds-media__figure">
                                 <span class="slds-icon_container slds-icon-standard-task" title="task">
