@@ -131,7 +131,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
         try {
             var showDialPad = !cmp.get('v.showDialPad');
             cmp.set('v.showDialPad', showDialPad);
-            cmp.set('v.inputValue', '');
+            // cmp.set('v.inputValue', '');
             cmp.set('v.searchResults', []);
             if (showDialPad) {
                 var toggleMessage = cmp.find("message");

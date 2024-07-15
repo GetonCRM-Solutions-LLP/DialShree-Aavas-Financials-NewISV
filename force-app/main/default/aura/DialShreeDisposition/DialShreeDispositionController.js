@@ -1,4 +1,3 @@
-
 /* global $A */
 ({
     onInit : function(component, event, helper){   
@@ -53,6 +52,17 @@
             console.log('error at handleClick method of DialShreeDispositionController --- ' , JSON.stringify(error));
             console.log('error message at handleClick method of DialShreeDispositionController --- ' , JSON.stringify(error.message));
         }   
+    },
+
+    toggleDateTimePicker : function(component, event, helper){
+        var isOpen = event.type === 'focus';
+        if (isOpen) {
+            document.body.style.overflowY = 'hidden';
+            document.querySelector('.dispositionList').style.overflowY = 'auto';
+        } else {
+            document.querySelector('.dispositionList').style.overflowY = 'hidden';
+            document.body.style.overflowY = 'auto';
+        }
     },
 
     callBackSet :function(component, event, helper){
