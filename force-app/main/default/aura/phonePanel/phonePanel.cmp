@@ -49,6 +49,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:attribute name="searchObjectskeys" type="String" />
     <aura:attribute name="softPhoneLayoutJSON" type="String" />
     <aura:attribute name="recursiveSearch" type="Boolean" default="false"/>
+    <aura:attribute name="phoneNumberMasking" type="Boolean" default="false"/>
 
     <div class="slds-panel">
         <aura:if isTrue="{!v.spinner}">

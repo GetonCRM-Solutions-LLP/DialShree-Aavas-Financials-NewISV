@@ -182,10 +182,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             var status = liveStatusObj.data.status;
             var state = liveStatusObj.data.call_type;
             var callTypeInbound = liveStatusObj.data.call_type +' - '+liveStatusObj.data.ingroup;
-
-            // if(cmp.set('v.state') != state && cmp.set('v.state') != callTypeInbound){
-            //     cmp.set('v.state', state);
-            // }        
+            cmp.set("v.callType" , liveStatusObj.data.call_type);
 
             if(liveStatusObj.data.ingroup == ''){
                 cmp.set("v.state",state);
@@ -201,7 +198,9 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 cmp.set('v.isTransferParkActive', true);           
                 helper.parkGrabHangJquery(cmp, cmp.get("v.wapperApiObj").hangUp, "");
             }
+            helper.phoneNumberMaskingSingleRecord(cmp);
         }
+
         catch (error) {
             console.log('error at handleApplicationEvent method of callInitiatedPanelController --- ' , JSON.stringify(error));
             console.log('error message at handleApplicationEvent method of callInitiatedPanelController --- ' , JSON.stringify(error.message));
