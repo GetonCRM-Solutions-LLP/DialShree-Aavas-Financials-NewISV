@@ -13,7 +13,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 ({
     // get call center settings, to get the information about the call provider
     // then use open CTI to screen pop to the record, and runApex() to make a call
-    screenPopAndCall: function(cmp) {
+    screenPopAndCall: function(cmp,helper) {
         try {
             //console.log(JSON.stringify(cmp.get('v.searchResults')));
             //console.log("data at screenpop ---- " , cmp.get('v.searchResults'));
@@ -81,7 +81,12 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                                     url: '/apex/' + screenPopData + '?MobileNumber=' + encodeURIComponent(phoneNumber)
                                                 },
                                             });
-                                            //cmp.set('v.recordName' , phoneNumber);
+
+                                            cmp.set('v.spinner', true);
+                                            setTimeout(() => { 
+                                                helper.phoneNumberMaskingMultipleRecord(cmp, phoneNumber)
+                                            }, 2000);
+
                                         } else if (screenPopType === 'PopToFlow') {
                                             //console.log('Redirecting to Flow.');
                                             sforce.opencti.screenPop({
@@ -255,11 +260,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                         }
                     }).fire();
                     cmp.set("v.showCallPanel", false);
-
-                    // console.log('Got namespace ----' ,response.getReturnValue());
-                    // if(response.getReturnValue() != null && response.getReturnValue() != 'undefined'){
-                    //     orgNameSpace = response.getReturnValue();
-                    // }
                 }
             });
             $A.enqueueAction(getOrgNameSpace);
@@ -294,6 +294,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     
     apiData : function(cmp, event, helper) {  
         try{
+
             var action = cmp.get("c.getServiceSettings");
             action.setCallback(this,function(response){
                 var state = response.getState();
@@ -306,7 +307,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             var action2 = cmp.get("c.dialUserInfoCs");
             action2.setCallback(this,function(response){
                 var state = response.getState();
-                if (state === "SUCCESS") {                
+                if (state === "SUCCESS") {           
                     cmp.set("v.dialUser",response.getReturnValue().DialShreeCTI2__Dialshree_User__c);
                     cmp.set("v.dialPwd",response.getReturnValue().DialShreeCTI2__Dialshree_Password__c);
                 }
@@ -317,7 +318,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 var state = response.getState();
                 if (state === "SUCCESS") {
                     cmp.set("v.wapperApiObj",response.getReturnValue());
-                    this.screenPopAndCall(cmp);
+                    this.screenPopAndCall(cmp,helper);
                 }
             });
             $A.enqueueAction(action);
@@ -379,5 +380,38 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             console.log('error at parkGrabHangJquery method of callInitiatedPanelHelper --- ' , JSON.stringify(error));
             console.log('error message at parkGrabHangJquery method of callInitiatedPanelHelper --- ' , JSON.stringify(error.message));
         }  
+    },
+
+    phoneNumberMaskingSingleRecord : function(cmp) {
+
+        if (cmp.get("v.phoneNumberMasking") == true && cmp.get("v.callType") == 'INBOUND'){
+
+            let records = JSON.parse(cmp.get('v.searchResults'));
+
+            if (records != null) {
+                cmp.set("v.maskedphoneNumber" , cmp.get("v.phone").replace(/\d(?=\d{4})/g, '#'));
+            }else {
+                cmp.set("v.maskedphoneNumber" , cmp.get("v.phone"));
+            }
+            cmp.set("v.Isincoming" , true);
+
+        }else{
+            
+            cmp.set("v.maskedphoneNumber" , cmp.get("v.phone").replace(/\d(?=\d{4})/g, '#'));
+        }
+    },
+
+    phoneNumberMaskingMultipleRecord : function(cmp, phoneNumber) {
+
+        if(cmp.get("v.phoneNumberMasking") == true && cmp.get("v.callType") == "INBOUND"){
+
+            cmp.set("v.recordName" , phoneNumber.replace(/\d(?=\d{4})/g, '#'));
+            cmp.set("v.maskedphoneNumber" , phoneNumber.replace(/\d(?=\d{4})/g, '#'));
+
+        }else{
+    
+            cmp.set("v.recordName" , phoneNumber);
+        }
+        cmp.set('v.spinner', false); 
     }
 })

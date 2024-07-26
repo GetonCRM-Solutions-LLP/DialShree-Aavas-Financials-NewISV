@@ -13,53 +13,145 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // and renders the callInitiatedPanel panel with the event payload
     handleOutgoingCalls : function(cmp) {
         try {
-            var listener = function(payload) {
-                sforce.opencti.setSoftphonePanelVisibility({
-                    visible : true,
-                    callback : function() {
-                        if (cmp.isValid() && cmp.get('v.status') == 'PAUSED') {
-                            cmp.set('v.spinner', true); 
-                            
-                            var attributes = {
-                                'state' : cmp.get("v.callType"),
-                                'recordName' : payload.recordName,
-                                'phone' : payload.number,
-                                // 'title' : '',
-                                // 'account' : '',
-                                'presence' : cmp.get('v.presence'),
-                                'campaignId' : cmp.get('v.campaignId'),
-                                'recordId' : payload.recordId,
-                                'listViewCall' : true
-                            };
-                            //console.log('recordId ----------' +attributes.recordId);
-                            var phoneNo = attributes.phone;
-                            phoneNo = phoneNo.replace(/\D/g, "");
-                            var manaulDialUrl = cmp.get('v.baseUrl')+cmp.get('v.manualDialApi')+'&phone_code='+cmp.get('v.countryCodeMeta')+'&value='+phoneNo+'&agent_user='+cmp.get('v.dialUser');
-                            
-                            fetch(manaulDialUrl)
-                            .then(response => {
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data.status) {    
-                                    attributes.state = cmp.get("v.callType");
-                                    cmp.set('v.spinner', false);              
-                                    cmp.getEvent('renderPanel').setParams({
-                                        type : 'c:callInitiatedPanel',
-                                        attributes : attributes
-                                    }).fire();
+            var phoneNo;
+            var manaulDialUrl;
+
+            if(cmp.get("v.phoneNumberMasking") == true){
+                var unmaskedNumber;
+                var listener = function(payload) {
+                    sforce.opencti.setSoftphonePanelVisibility({
+                        visible : true,
+                        callback : function() {
+                            if (cmp.isValid() && cmp.get('v.status') == 'PAUSED') {
+                                cmp.set('v.spinner', true); 
+                                // console.log('The payload for masked user --- ' , payload);
+                                // console.log('The params --- ' , payload.params);
+                                // console.log('The number --- ' , payload.number);
+                                // console.log('The recordId --- ' , payload.recordId);
+                                // console.log('The objectType --- ' , payload.objectType);
+
+                                if(payload.params == undefined || payload.params == null){
+                                    
+                                    var attributes = {
+                                        'state' : cmp.get("v.callType"),
+                                        'recordName' : payload.recordName,
+                                        'phone' : payload.number,
+                                        // 'title' : '',
+                                        // 'account' : '',
+                                        'presence' : cmp.get('v.presence'),
+                                        'campaignId' : cmp.get('v.campaignId'),
+                                        'recordId' : payload.recordId,
+                                        'listViewCall' : true,
+                                        'phoneNumberMasking' : cmp.get("v.phoneNumberMasking")
+                                    };
+
+                                    phoneNo = payload.number.replace(/\D/g, "");
+                                    //console.log('phonenumber from list view call' ,phoneNo);
+                                    manaulDialUrl = cmp.get('v.baseUrl')+cmp.get('v.manualDialApi')+'&phone_code='+cmp.get('v.countryCodeMeta')+'&value='+phoneNo+'&agent_user='+cmp.get('v.dialUser');
+                                    //console.log('manaulDialUrl when masking is enabled and called from List view --- ' , manaulDialUrl);
+
+                                }else{
+                                    var keyValue = payload.params.split('=');
+                                    unmaskedNumber = keyValue[1].substring(1, keyValue[1].length - 1);
+                                    //console.log('unmaskedNumber --- ' , unmaskedNumber);
+
+                                    var attributes = {
+                                        'state' : cmp.get("v.callType"),
+                                        'recordName' : payload.recordName,
+                                        'phone' : unmaskedNumber,
+                                        // 'title' : '',
+                                        // 'account' : '',
+                                        'presence' : cmp.get('v.presence'),
+                                        'campaignId' : cmp.get('v.campaignId'),
+                                        'recordId' : payload.recordId,
+                                        'listViewCall' : true,
+                                        'phoneNumberMasking' : cmp.get("v.phoneNumberMasking")
+                                    };
+
+                                    phoneNo = unmaskedNumber.replace(/\D/g, "");
+                                    //console.log('phonenumber from component ' , phoneNo);
+                                    manaulDialUrl = cmp.get('v.baseUrl')+cmp.get('v.manualDialApi')+'&phone_code='+cmp.get('v.countryCodeMeta')+'&value='+phoneNo+'&agent_user='+cmp.get('v.dialUser');
+                                    //console.log('manaulDialUrl when masking is enabled and called from LWC--- ' , manaulDialUrl);
+
                                 }
-                            })
-                            .catch(error => {
-                                console.error(error);
-                            })
+
+                                fetch(manaulDialUrl)
+                                .then(response => {
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data.status) {    
+                                        attributes.state = cmp.get("v.callType");
+                                        cmp.set('v.spinner', false);              
+                                        cmp.getEvent('renderPanel').setParams({
+                                            type : 'c:callInitiatedPanel',
+                                            attributes : attributes
+                                        }).fire();
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                })
+                            }
                         }
-                    }
-                });
-            };
-            sforce.opencti.onClickToDial({
-                listener : listener
-            });      
+                    });
+                };
+                sforce.opencti.onClickToDial({
+                    listener : listener
+                }); 
+
+            }else{
+                var listener = function(payload) {
+                    sforce.opencti.setSoftphonePanelVisibility({
+                        visible : true,
+                        callback : function() {
+                            if (cmp.isValid() && cmp.get('v.status') == 'PAUSED') {
+                                cmp.set('v.spinner', true); 
+                                
+                                //console.log('The payload for unmasked user --- ' , payload);
+                                var attributes = {
+                                    'state' : cmp.get("v.callType"),
+                                    'recordName' : payload.recordName,
+                                    'phone' : payload.number,
+                                    // 'title' : '',
+                                    // 'account' : '',
+                                    'presence' : cmp.get('v.presence'),
+                                    'campaignId' : cmp.get('v.campaignId'),
+                                    'recordId' : payload.recordId,
+                                    'listViewCall' : true,
+                                    'phoneNumberMasking' : cmp.get("v.phoneNumberMasking")
+                                };
+                                //console.log('recordId ----------' +attributes.recordId);
+                                phoneNo = attributes.phone.replace(/\D/g, "");
+                                //console.log(phoneNo);
+                                manaulDialUrl = cmp.get('v.baseUrl')+cmp.get('v.manualDialApi')+'&phone_code='+cmp.get('v.countryCodeMeta')+'&value='+phoneNo+'&agent_user='+cmp.get('v.dialUser');
+                                //console.log('manaulDialUrl when masking is disabled --- ' , manaulDialUrl);
+
+                                fetch(manaulDialUrl)
+                                .then(response => {
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data.status) {    
+                                        attributes.state = cmp.get("v.callType");
+                                        cmp.set('v.spinner', false);              
+                                        cmp.getEvent('renderPanel').setParams({
+                                            type : 'c:callInitiatedPanel',
+                                            attributes : attributes
+                                        }).fire();
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                })
+                            }
+                        }
+                    });
+                };
+                sforce.opencti.onClickToDial({
+                    listener : listener
+                }); 
+            }     
         } catch (error) {
             console.log('error at handleOutgoingCalls method of phonePanelHelper --- ' , JSON.stringify(error));
             console.log('error message at handleOutgoingCalls method of phonePanelHelper --- ' , JSON.stringify(error.message));
@@ -131,7 +223,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                     'stateId' : stateId,
                                     'phone' : number,
                                     'recordId' : filteredRecords[0].Id,
-                                    'searchResults' : JSON.stringify(filteredRecords)
+                                    'searchResults' : JSON.stringify(filteredRecords),
+                                    'phoneNumberMasking' : cmp.get("v.phoneNumberMasking")
                                 };
                                 this.initiateCallPanel(cmp, attributes);
                                 //console.log('attributes when multiple record returned after filtration --- ' , JSON.stringify(attributes));
@@ -144,7 +237,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                     'stateId' : stateId,
                                     'phone' : number,
                                     'recordId' : filteredRecords[0].Id,
-                                    'searchResults' : JSON.stringify(filteredRecords)
+                                    'searchResults' : JSON.stringify(filteredRecords),
+                                    'phoneNumberMasking' : cmp.get("v.phoneNumberMasking")
                                 };
                                 this.initiateCallPanel(cmp, attributes);
                                 //console.log('attributes when single record returned after filtration --- ' , JSON.stringify(attributes));
@@ -191,7 +285,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                         'recordName' : number,
                                         'stateId' : stateId,
                                         'phone' : number,
-                                        'searchResults' : JSON.stringify(filteredRecords)
+                                        'searchResults' : JSON.stringify(filteredRecords),
+                                        'phoneNumberMasking' : cmp.get("v.phoneNumberMasking")
                                     };
                                     //console.log('attributes when no record returned after filtration --- ' , JSON.stringify(attributes));
                                     this.initiateCallPanel(cmp, attributes);
@@ -221,6 +316,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                         'recordName' : number,
                         'stateId' : stateId,
                         'phone' : number,
+                        'phoneNumberMasking' : cmp.get("v.phoneNumberMasking"),
                         'searchResults' : JSON.stringify(cmp.get('v.searchResults'))
                     };
                     //console.log('attributes when no record returned after filtration --- ' , JSON.stringify(attributes));
@@ -233,7 +329,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                     'state' : 'Dialing',
                     'recordName' : number,
                     'stateId' : stateId,
-                    'phone' : number
+                    'phone' : number,
+                    'phoneNumberMasking' : cmp.get("v.phoneNumberMasking")
                 };
         
                 if(cmp.get('v.searchResults')){
@@ -286,7 +383,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                 'phone' : cmp.get("v.inputValue"),
                 'title' : record.Title,
                 'account' : record.Account,
-                'recordId' : record.Id
+                'recordId' : record.Id,
+                'phoneNumberMasking' : cmp.get("v.phoneNumberMasking")
             };        
             this.initiateCallPanel(cmp, attributes);
         } catch (error) {

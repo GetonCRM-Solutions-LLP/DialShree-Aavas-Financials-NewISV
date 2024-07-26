@@ -72,7 +72,8 @@ public with sharing class DialShreeApi {
             dialCs = [SELECT Name,
                              Dialshree_User__c,
                              Dialshree_Password__c,
-                             Salesforce_User__c
+                             Salesforce_User__c,
+                             Phone_Number_Masking__c
                       FROM DialShree_UserInfo__c 
                       WHERE Salesforce_User__c =: UserInfo.getUserName() WITH SECURITY_ENFORCED limit 1 ];
         } catch(Exception e) {

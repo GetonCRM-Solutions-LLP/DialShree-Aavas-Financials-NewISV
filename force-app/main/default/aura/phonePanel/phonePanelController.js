@@ -12,12 +12,10 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     init: function(cmp, event, helper) { 
         try {
             cmp.set('v.searchResults', []);
-
             var recordsFiltration = cmp.get("c.getCTIRecordsFiltration");
             recordsFiltration.setCallback(this,function(response){
                 var state = response.getState();
-                if (state === "SUCCESS") {
-                    //console.log('dynamic record filtration --- ' , response.getReturnValue().DialShreeCTI2__Dynamic_Record_Filtration__c);         
+                if (state === "SUCCESS") {      
                     cmp.set("v.dynamicFiltration", response.getReturnValue().DialShreeCTI2__Dynamic_Record_Filtration__c);
                     cmp.set("v.filtrationApexClass", response.getReturnValue().DialShreeCTI2__Filtration_Apex_Class_Name__c);
                 }

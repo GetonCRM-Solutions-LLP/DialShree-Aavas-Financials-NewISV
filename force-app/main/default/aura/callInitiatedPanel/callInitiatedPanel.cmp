@@ -26,60 +26,122 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:attribute name="dialPwd" type="String" />
     <aura:attribute name="stateId" type="String" />
     <aura:attribute name="countryCode" type="String" description="Country code" />
-    <aura:attribute name="tickerTime" type="Object" description="ticker start time"/>
-    <aura:attribute name="isDoneRendering" type="Boolean" default="false"/>
-    <aura:attribute name="isDoneGrabRendering" type="Boolean" default="false"/>
-    <aura:attribute name="isDoneEndRendering" type="Boolean" default="false"/>
+    <aura:attribute name="tickerTime" type="Object" description="ticker start time" />
+    <aura:attribute name="isDoneRendering" type="Boolean" default="false" />
+    <aura:attribute name="isDoneGrabRendering" type="Boolean" default="false" />
+    <aura:attribute name="isDoneEndRendering" type="Boolean" default="false" />
     <aura:attribute name="countryCodeMeta" type="String"
         description="Defualt Country code store in Dialshree_API__mdt Custom Metadata" />
-    <aura:attribute name="liveStatusObj" type="Object"/>
+    <aura:attribute name="liveStatusObj" type="Object" />
     <aura:attribute name="isTransferParkActive" type="Boolean" default="true" />
-    <aura:attribute name="numEvents" type="Integer" default="0"/>
+    <aura:attribute name="numEvents" type="Integer" default="0" />
     <aura:attribute name="newLeadPage" type="Boolean" default="true" />
     <aura:attribute name="accountId" type="String" default="false" />
     <aura:attribute name="opportunityId" type="String" default="false" />
-    <aura:attribute name="NoMatchObject" type="String"/>
+    <aura:attribute name="NoMatchObject" type="String" />
     <!-- <aura:attribute name="inputText" type="String"/> -->
     <aura:attribute name="isChecked" type="Boolean" default="false" />
-    <aura:handler event="c:StatusCheckEvent" action="{!c.handleApplicationEvent}"/>
+    <aura:handler event="c:StatusCheckEvent" action="{!c.handleApplicationEvent}" />
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
     <!-- <aura:registerEvent name="dialogShow" type="c:dialogDisplayEvent"/> -->
-    <aura:attribute name="searchResults" type="Object" description="List of contact records"/>
-    <aura:attribute name="listViewCall" type="Boolean" default="false"/>
+    <aura:attribute name="searchResults" type="Object" description="List of contact records" />
+    <aura:attribute name="listViewCall" type="Boolean" default="false" />
+    <aura:attribute name="phoneNumberMasking" type="Boolean" default="false" />
+    <aura:attribute name="maskedphoneNumber" type="String" />
+    <aura:attribute name="callType" type="String" />
+    <aura:attribute name="spinner" type="boolean" default="false" />
 
-    <div class="slds-panel">
-        <!--  Top section: Information about the contact, including an avatar -->
-        <div class="slds-panel__section">
-            <div class="avatar slds-align--absolute-center">
-                <div class="slds-avatar slds-avatar--circle slds-avatar--large">
-                    <img src="{!$Resource.Avater + '/assets/images/avatar1.jpg'}" alt="Contact" />
-                </div>
+    <aura:if isTrue="{!v.spinner}">
+        <div class="slds-spinner_container">
+            <div class="slds-spinner slds-spinner--small" aria-hidden="false" role="alert">
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
             </div>
-            <div class="name slds-text-heading--large slds-text-color--weak slds-text-align--center">{!v.recordName}
-            </div>
-            <div class="incoming slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
-                {!v.state}&nbsp;
-                <ui:outputphone value="{!v.phone}" />...</div>
-            <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
-                <c:ticker tickerTime="{!v.tickerTime}"/>
-            </div>
-            <!-- <lightning:input aura:id="inputText" value="{!v.inputText}" placeholder="Enter the case number/reference number"/> -->
         </div>
+        <aura:set attribute="else">
+            <aura:if isTrue="{!and(v.phoneNumberMasking, or(v.listViewCall, v.Isincoming))}">
+                <!-- This code to be executed when phone Number masking is enabled -->
 
-        <!--  Bottom section: End button on Dialing; Decline and Accept buttons on Incoming or Transferring -->
-        <div class="bottom-panel slds-panel__section slds-align-bottom slds-grid" style="margin: 0%;">
-            <button class="slds-size--1-of-3 slds-button slds-button--destructive"
-                onclick="{!c.end}">{!$Label.c.Label_Hangup}</button>
-            <button class="slds-size--1-of-3 slds-button slds-button--brand"
-                onclick="{!c.transfer}" disabled="{!v.isTransferParkActive}">{!$Label.c.Label_Transfercall}</button>
-            <aura:if isTrue="{!v.isPark}">
-                <button class="slds-size--1-of-3 slds-button slds-button--brand"
-                    onclick="{!c.park}" disabled="{!v.isTransferParkActive}">{!$Label.c.Label_Park}</button>
+                <div class="slds-panel">
+                    <!--  Top section: Information about the contact, including an avatar -->
+                    <div class="slds-panel__section">
+                        <div class="avatar slds-align--absolute-center">
+                            <div class="slds-avatar slds-avatar--circle slds-avatar--large">
+                                <img src="{!$Resource.Avater + '/assets/images/avatar1.jpg'}" alt="Contact" />
+                            </div>
+                        </div>
+                        <div class="name slds-text-heading--large slds-text-color--weak slds-text-align--center">
+                            {!v.recordName}
+                        </div>
+                        <div class="incoming slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
+                            {!v.state}&nbsp;
+                            <ui:outputphone value="{!v.maskedphoneNumber}" />...
+                        </div>
+                        <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
+                            <c:ticker tickerTime="{!v.tickerTime}" />
+                        </div>
+                        <!-- <lightning:input aura:id="inputText" value="{!v.inputText}" placeholder="Enter the case number/reference number"/> -->
+                    </div>
+
+                    <!--  Bottom section: End button on Dialing; Decline and Accept buttons on Incoming or Transferring -->
+                    <div class="bottom-panel slds-panel__section slds-align-bottom slds-grid" style="margin: 0%;">
+                        <button class="slds-size--1-of-3 slds-button slds-button--destructive"
+                            onclick="{!c.end}">{!$Label.c.Label_Hangup}</button>
+                        <button class="slds-size--1-of-3 slds-button slds-button--brand" onclick="{!c.transfer}"
+                            disabled="{!v.isTransferParkActive}">{!$Label.c.Label_Transfercall}</button>
+                        <aura:if isTrue="{!v.isPark}">
+                            <button class="slds-size--1-of-3 slds-button slds-button--brand" onclick="{!c.park}"
+                                disabled="{!v.isTransferParkActive}">{!$Label.c.Label_Park}</button>
+                            <aura:set attribute="else">
+                                <button class="slds-size--1-of-3 slds-button slds-button--brand"
+                                    onclick="{!c.grab}">{!$Label.c.Label_Grab}</button>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                </div>
+
                 <aura:set attribute="else">
-                    <button class="slds-size--1-of-3 slds-button slds-button--brand"
-                        onclick="{!c.grab}">{!$Label.c.Label_Grab}</button>
+                    <!-- This code to be executed when phone Number masking is not enabled -->
+
+                    <div class="slds-panel">
+                        <!--  Top section: Information about the contact, including an avatar -->
+                        <div class="slds-panel__section">
+                            <div class="avatar slds-align--absolute-center">
+                                <div class="slds-avatar slds-avatar--circle slds-avatar--large">
+                                    <img src="{!$Resource.Avater + '/assets/images/avatar1.jpg'}" alt="Contact" />
+                                </div>
+                            </div>
+                            <div class="name slds-text-heading--large slds-text-color--weak slds-text-align--center">
+                                {!v.recordName}
+                            </div>
+                            <div class="incoming slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
+                                {!v.state}&nbsp;
+                                <ui:outputphone value="{!v.phone}" />...
+                            </div>
+                            <div class="slds-text-heading--x-small slds-text-color--weak slds-text-align--center">
+                                <c:ticker tickerTime="{!v.tickerTime}" />
+                            </div>
+                            <!-- <lightning:input aura:id="inputText" value="{!v.inputText}" placeholder="Enter the case number/reference number"/> -->
+                        </div>
+
+                        <!--  Bottom section: End button on Dialing; Decline and Accept buttons on Incoming or Transferring -->
+                        <div class="bottom-panel slds-panel__section slds-align-bottom slds-grid" style="margin: 0%;">
+                            <button class="slds-size--1-of-3 slds-button slds-button--destructive"
+                                onclick="{!c.end}">{!$Label.c.Label_Hangup}</button>
+                            <button class="slds-size--1-of-3 slds-button slds-button--brand" onclick="{!c.transfer}"
+                                disabled="{!v.isTransferParkActive}">{!$Label.c.Label_Transfercall}</button>
+                            <aura:if isTrue="{!v.isPark}">
+                                <button class="slds-size--1-of-3 slds-button slds-button--brand" onclick="{!c.park}"
+                                    disabled="{!v.isTransferParkActive}">{!$Label.c.Label_Park}</button>
+                                <aura:set attribute="else">
+                                    <button class="slds-size--1-of-3 slds-button slds-button--brand"
+                                        onclick="{!c.grab}">{!$Label.c.Label_Grab}</button>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </div>
                 </aura:set>
             </aura:if>
-        </div>
-    </div>
+        </aura:set>
+    </aura:if>
 </aura:component>

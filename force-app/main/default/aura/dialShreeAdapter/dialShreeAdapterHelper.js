@@ -178,7 +178,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             var action2 = cmp.get("c.dialUserInfoCs");
             action2.setCallback(this,function(response){
                 var state = response.getState();
-                if (state === "SUCCESS") {                
+                if (state === "SUCCESS") {      
+                    cmp.set("v.phoneNumberMasking",response.getReturnValue().DialShreeCTI2__Phone_Number_Masking__c);          
                     cmp.set("v.dialUser",response.getReturnValue().DialShreeCTI2__Dialshree_User__c);
                 }
             });
@@ -205,7 +206,6 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     wrapApiData : function(cmp, event, helper) { 
         try {
             this.callbackStatus(cmp,event,helper);
-       
             cmp.getEvent('renderPanel').setParams({
                 type : 'c:phonePanel',
                 toast : {'type': 'normal', 'message': 'Please start call.'},
@@ -217,7 +217,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                     'presence' : cmp.get("v.presence"),
                     'countryCodeMeta' : cmp.get("v.countryCodeMeta"),
                     'pauseLabel' : cmp.get("v.pauseLabel"),
-                    'agentLeadId' : cmp.get("v.agentLeadId")
+                    'agentLeadId' : cmp.get("v.agentLeadId"),
+                    'phoneNumberMasking' : cmp.get("v.phoneNumberMasking")
                 },           
             }).fire();
         } catch (error) {
