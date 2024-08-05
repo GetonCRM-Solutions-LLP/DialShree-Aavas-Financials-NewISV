@@ -83,9 +83,10 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                             });
 
                                             cmp.set('v.spinner', true);
+                                            //helper.phoneNumberMaskingMultipleRecord(cmp, phoneNumber);
                                             setTimeout(() => { 
                                                 helper.phoneNumberMaskingMultipleRecord(cmp, phoneNumber)
-                                            }, 2000);
+                                            }, 1000);
 
                                         } else if (screenPopType === 'PopToFlow') {
                                             //console.log('Redirecting to Flow.');
@@ -399,6 +400,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             
             cmp.set("v.maskedphoneNumber" , cmp.get("v.phone").replace(/\d(?=\d{4})/g, '#'));
         }
+        cmp.set('v.spinner', false);
     },
 
     phoneNumberMaskingMultipleRecord : function(cmp, phoneNumber) {
