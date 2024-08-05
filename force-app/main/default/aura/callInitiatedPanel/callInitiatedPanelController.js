@@ -11,6 +11,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     // screen pop to the contact home, and use the call provider to make a call
     init : function(cmp, event, helper) {  
         try{
+            cmp.set('v.spinner', true);
             if(cmp.get('v.tickerTime') == null){
                 var now = new Date();
                 cmp.set('v.tickerTime',now);
