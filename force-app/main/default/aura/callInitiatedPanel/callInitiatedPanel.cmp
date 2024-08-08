@@ -12,7 +12,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:attribute name="state" type="String" />
     <aura:attribute name="label" type="String" />
     <aura:attribute name="recordName" type="String" />
-    <aura:attribute name="Isincoming" type="boolean" />
+    <aura:attribute name="Isincoming" type="boolean" default="false"/>
     <aura:attribute name="recordId" type="String" />
     <aura:attribute name="account" type="Object" />
     <aura:attribute name="title" type="String" />
@@ -50,6 +50,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     <aura:attribute name="maskedphoneNumber" type="String" />
     <aura:attribute name="callType" type="String" />
     <aura:attribute name="spinner" type="boolean" default="false" />
+    <aura:attribute name="showMaskedComponent" type="Boolean" default ="false" />
 
     <aura:if isTrue="{!v.spinner}">
         <div class="slds-spinner_container">
@@ -59,7 +60,8 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             </div>
         </div>
         <aura:set attribute="else">
-            <aura:if isTrue="{!and(v.phoneNumberMasking, or(v.listViewCall, v.Isincoming))}">
+            <aura:if isTrue="{!and(v.phoneNumberMasking, v.showMaskedComponent)}">
+
                 <!-- This code to be executed when phone Number masking is enabled -->
 
                 <div class="slds-panel">

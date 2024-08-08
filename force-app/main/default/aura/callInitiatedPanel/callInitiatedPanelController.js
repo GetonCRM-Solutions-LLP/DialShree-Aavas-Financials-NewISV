@@ -183,7 +183,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
             var status = liveStatusObj.data.status;
             var state = liveStatusObj.data.call_type;
             var callTypeInbound = liveStatusObj.data.call_type +' - '+liveStatusObj.data.ingroup;
-            cmp.set("v.callType" , liveStatusObj.data.call_type);
+            cmp.set("v.callType" , state);
 
             if(liveStatusObj.data.ingroup == ''){
                 cmp.set("v.state",state);

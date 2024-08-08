@@ -86,7 +86,7 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
                                             //helper.phoneNumberMaskingMultipleRecord(cmp, phoneNumber);
                                             setTimeout(() => { 
                                                 helper.phoneNumberMaskingMultipleRecord(cmp, phoneNumber)
-                                            }, 1000);
+                                            }, 1500);
 
                                         } else if (screenPopType === 'PopToFlow') {
                                             //console.log('Redirecting to Flow.');
@@ -384,36 +384,85 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
     },
 
     phoneNumberMaskingSingleRecord : function(cmp) {
+        try{
 
-        if (cmp.get("v.phoneNumberMasking") == true && cmp.get("v.callType") == 'INBOUND'){
+            // console.log('callType --- ' , cmp.get('v.callType'));
+            // console.log('listviewCall log at helper &&& --- ' , cmp.get('v.listViewCall'));
+            // console.log('phone number at phoneNumberMaskingSingleRecord --- ' , cmp.get("v.phone"));
 
-            let records = JSON.parse(cmp.get('v.searchResults'));
+            if (cmp.get("v.phoneNumberMasking") == true){
 
-            if (records != null) {
+                //console.log('inside the phoneNumberMaskingSingleRecord');
+
+                let records = JSON.parse(cmp.get('v.searchResults'));  
+                //console.log('records --- ' , records.length);
+
+                if (records != null) {
+                    cmp.set("v.maskedphoneNumber" , cmp.get("v.phone").replace(/\d(?=\d{4})/g, '#'));
+                }else if (records == null && cmp.get('v.listViewCall')){
+                    cmp.set("v.maskedphoneNumber" , cmp.get("v.phone").replace(/\d(?=\d{4})/g, '#'));    
+                }else {
+                    cmp.set("v.maskedphoneNumber" , cmp.get("v.phone"));
+                }
+
+                if(cmp.get('v.callType') != "MANUAL OUTBOUND"){
+                    cmp.set("v.showMaskedComponent" , true);
+                }else if(cmp.get('v.callType') == "MANUAL OUTBOUND" && cmp.get('v.listViewCall') == true){
+                    cmp.set("v.showMaskedComponent" , true);
+                }else if(cmp.get('v.callType') == "MANUAL OUTBOUND"){
+                    cmp.set("v.showMaskedComponent" , false);
+                }
+
+                //console.log('showMaskedComponent after helper -- ' , cmp.get('v.showMaskedComponent'));
+
+                cmp.set('v.spinner', false);
+                
+            }else{
                 cmp.set("v.maskedphoneNumber" , cmp.get("v.phone").replace(/\d(?=\d{4})/g, '#'));
-            }else {
-                cmp.set("v.maskedphoneNumber" , cmp.get("v.phone"));
+                cmp.set('v.spinner', false);
             }
-            cmp.set("v.Isincoming" , true);
-
-        }else{
-            
-            cmp.set("v.maskedphoneNumber" , cmp.get("v.phone").replace(/\d(?=\d{4})/g, '#'));
         }
-        cmp.set('v.spinner', false);
+        catch (error) {
+            console.log('error at phoneNumberMaskingSingleRecord method of callInitiatedPanelHelper --- ' , JSON.stringify(error));
+            console.log('error message at phoneNumberMaskingSingleRecord method of callInitiatedPanelHelper --- ' , JSON.stringify(error.message));
+        } 
     },
 
     phoneNumberMaskingMultipleRecord : function(cmp, phoneNumber) {
 
-        if(cmp.get("v.phoneNumberMasking") == true && cmp.get("v.callType") == "INBOUND"){
+        try{
+            if(cmp.get("v.phoneNumberMasking") == true){
 
-            cmp.set("v.recordName" , phoneNumber.replace(/\d(?=\d{4})/g, '#'));
-            cmp.set("v.maskedphoneNumber" , phoneNumber.replace(/\d(?=\d{4})/g, '#'));
+                //console.log('inside the phoneNumberMaskingMultipleRecord');
 
-        }else{
-    
-            cmp.set("v.recordName" , phoneNumber);
+                if(cmp.get('v.callType') != "MANUAL OUTBOUND"){
+                    cmp.set("v.recordName" , phoneNumber.replace(/\d(?=\d{4})/g, '#'));
+                    cmp.set("v.maskedphoneNumber" , phoneNumber.replace(/\d(?=\d{4})/g, '#'));
+                    cmp.set("v.showMaskedComponent" , true);
+
+                }else if(cmp.get('v.callType') == "MANUAL OUTBOUND" && cmp.get('v.listViewCall') == true){
+                    cmp.set("v.recordName" , phoneNumber.replace(/\d(?=\d{4})/g, '#'));
+                    cmp.set("v.maskedphoneNumber" , phoneNumber.replace(/\d(?=\d{4})/g, '#'));
+                    cmp.set("v.showMaskedComponent" , true);
+
+                }else if(cmp.get('v.callType') == "MANUAL OUTBOUND"){
+                    cmp.set("v.recordName" , phoneNumber);
+                    cmp.set("v.showMaskedComponent" , false);
+                }
+
+                //console.log('showMaskedComponent after helper -- ' , cmp.get('v.showMaskedComponent'));
+                cmp.set('v.spinner', false); 
+
+            }else{
+        
+                cmp.set("v.recordName" , phoneNumber);
+                cmp.set('v.spinner', false); 
+
+            }
         }
-        cmp.set('v.spinner', false); 
+        catch (error) {
+            console.log('error at phoneNumberMaskingMultipleRecord method of callInitiatedPanelHelper --- ' , JSON.stringify(error));
+            console.log('error message at phoneNumberMaskingMultipleRecord method of callInitiatedPanelHelper --- ' , JSON.stringify(error.message));
+        } 
     }
 })
